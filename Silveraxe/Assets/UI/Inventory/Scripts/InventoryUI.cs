@@ -102,9 +102,11 @@ public class InventoryUI : UIBase
 	public void Hide() {
 		//iPanel.Hide(combinePanel);
 		iPanel.Hide();
+		PlayerManager.Instance.isClicOnUI = false;
 	}
 	public void Show() {
 		iPanel.Show();
+		PlayerManager.Instance.isClicOnUI = false;
 	}
 
 	/// <summary>
@@ -200,6 +202,8 @@ public class InventoryUI : UIBase
 					//}
 				}
 			}
+		} else {
+			uiManager.ShowLabel("Impossible d'utiliser cet objet ici", Input.mousePosition);
 		}
 	}
 

@@ -11,7 +11,7 @@ public class Target : InteractableObject
 	public List<ItemBase> avalableItems;
 	public List<ItemBase> forbiddenItems;
 
-	public override bool IsInteractable() => true;				// toujours actif
+	public override bool IsInteractable() => isFree;				// toujours actif
 
 	public bool isFree => !GetComponentInChildren<Loot>();      // ne peut contenir qu'un seul objet d'inventaire
 

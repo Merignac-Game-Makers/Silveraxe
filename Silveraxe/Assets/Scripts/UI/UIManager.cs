@@ -99,6 +99,7 @@ public class UIManager : MonoBehaviour
 		obj.SetActive(true);
 		yield return new WaitForSeconds(s);
 		obj.SetActive(false);
+		PlayerManager.Instance.isClicOnUI = false;
 	}
 
 }

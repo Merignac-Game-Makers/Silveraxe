@@ -56,7 +56,7 @@ public abstract class ItemBase : ScriptableObject
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(ItemBase))]
-public class ItemBaseEditor
+public class ItemBaseEditor : Editor
 {
 	SerializedProperty pNameProperty;
 	SerializedProperty pIconProperty;

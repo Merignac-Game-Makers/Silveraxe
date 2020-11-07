@@ -292,10 +292,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5501873739996842803}
     m_Modifications:
+    - target: {fileID: 109203204951567378, guid: cd406616d7b80dc4da196c6abc60bbef,
+        type: 3}
+      propertyPath: m_IgnoreLayers.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
     - target: {fileID: 3181439226571838617, guid: cd406616d7b80dc4da196c6abc60bbef,
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5905822892967812634, guid: cd406616d7b80dc4da196c6abc60bbef,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 512
       objectReference: {fileID: 0}
     - target: {fileID: 6749054390395526988, guid: cd406616d7b80dc4da196c6abc60bbef,
         type: 3}
@@ -305,7 +315,7 @@ PrefabInstance:
     - target: {fileID: 6749054390395526988, guid: cd406616d7b80dc4da196c6abc60bbef,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 6749054390395526988, guid: cd406616d7b80dc4da196c6abc60bbef,
         type: 3}

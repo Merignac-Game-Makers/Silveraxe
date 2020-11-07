@@ -39,7 +39,7 @@ public class PlayerManager : MonoBehaviour
 	//Activable m_TargetActivable = null;                             // objet magique avec lequel le joueur intéragit
 	Collider m_TargetCollider;                                      // collider de l'objet en cours d'intéraction
 	Entry m_DropItem = null;                                        // objet d'inventaire que le juoeur pose
-	public HighlightableObject m_Highlighted { get; set; }          // objet en surbrillance  sous le pointeur de la souris
+	HighlightableObject m_Highlighted; //    { get; set; }          // objet en surbrillance  sous le pointeur de la souris
 	CharacterData m_CurrentTargetCharacterData = null;              // caractéristiques du PNJ en intéraction
 	[HideInInspector]
 	public InventoryUI.DragData m_InvItemDragging = null;           // objet d'inventaire en cours de drag & drop
@@ -57,7 +57,7 @@ public class PlayerManager : MonoBehaviour
 	int m_PlayerLayer;                                              // layer du personnage
 	int m_SasLayer;                                                 // layer des sas
 	int raycastableLayers;                                          // tous les layers à tester pour le Raycast
-	bool isClicOnUI;                                                // le clic en cours a-t-il débuté sur un élément d'interface ?
+	public bool isClicOnUI { get; set; }                            // le clic en cours a-t-il débuté sur un élément d'interface ?
 
 	// Visuel
 	//public Renderer body;                                           // Mesh renderer du corps
@@ -158,8 +158,8 @@ public class PlayerManager : MonoBehaviour
 			ObjectsRaycasts(screenRay);                             // Mettre en surbrillance les objets intéractibles lorsqu'ils sont sous le pointeur de souris
 
 			if (m_InvItemDragging == null ) {          // éviter de déplacer le personnage si on est en cours de drag & drop		//&& magicManager?.dragging == null
-				if (Input.GetMouseButton(0)) {                                          // si le bouton de la souris est appuyé
-					if (inventoryUI.selectedEntry == null) {                            // si aucun objet d'inventaire n'est sélectionné
+				if (Input.GetMouseButton(0)) {											// si le bouton de la souris est appuyé
+					if (inventoryUI.selectedEntry == null) {								// si aucun objet d'inventaire n'est sélectionné
 						if (m_TargetInteractable == null && m_CurrentTargetCharacterData == null) {     // s'il n'y a pas d'intéraction en cours		//&& m_TargetActivable == null 
 							InteractableObject obj = m_Highlighted as InteractableObject;
 							if (obj) {                                                                  // si on a cliqué sur un objet intéractible
@@ -177,7 +177,7 @@ public class PlayerManager : MonoBehaviour
 								}
 							}
 						}
-					} else {
+					} else {																// si un objet d'inventaire est sélectionné
 						if (m_DropItem == null) {
 							m_DropItem = inventoryUI.selectedEntry.entry;
 							inventoryUI.DropOn3D(inventoryUI.selectedEntry.entry);          // DROP

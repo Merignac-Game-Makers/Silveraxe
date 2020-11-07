@@ -180,6 +180,7 @@ public class DialoguesUI : UIBase
 		VD.OnNodeChange -= UpdateUI;
 		VD.OnEnd -= End;
 		VD.EndDialogue();
+		PlayerManager.Instance.isClicOnUI = false;
 	}
 	private void OnDisable() {
 		if (container_NPC != null)

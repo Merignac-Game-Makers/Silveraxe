@@ -93,7 +93,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.3
+  m_Radius: 0.5
   m_Center: {x: 0.000000014901161, y: 0.24570568, z: -0.000000074505806}
 --- !u!114 &1315080543899474661
 MonoBehaviour:
@@ -110,7 +110,7 @@ MonoBehaviour:
   isOn: 1
   mode: 0
   Clicked: 0
-  item: {fileID: 0}
+  item: {fileID: 11400000, guid: 272654243ad216d42b57465b92e98aa6, type: 2}
 --- !u!1001 &2514936408714849223
 PrefabInstance:
   m_ObjectHideFlags: 0

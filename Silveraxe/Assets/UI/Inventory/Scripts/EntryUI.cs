@@ -93,8 +93,8 @@ public abstract class EntryUI : MonoBehaviour, IPointerClickHandler, IPointerEnt
 		RectTransform t = transform as RectTransform;
 		transform.SetParent(inventoryUI.currentlyDragged.originalParent, true);         // rattacher au parent original
 		inventoryUI.currentlyDragged = null;                                            // supprimer le 'dragData'
-		t.offsetMax = -Vector2.one * 4;
-		t.offsetMin = Vector2.one * 4;
+		t.offsetMax = Vector2.zero;//-Vector2.one * 4;
+		t.offsetMin = Vector2.zero;//Vector2.one * 4;
 	}
 
 	public virtual void Toggle() {

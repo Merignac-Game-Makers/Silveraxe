@@ -46,6 +46,7 @@ public class InventoryPanel : MonoBehaviour
 			foreach (ItemEntryUI entry in GetComponentsInChildren<ItemEntryUI>()) {
 				entry.Select(false);
 			}
+			PlayerManager.Instance.isClicOnUI = false;
 		}
 	}
 
@@ -53,6 +54,7 @@ public class InventoryPanel : MonoBehaviour
 		if (!isOn) {
 			GetComponentInChildren<Animator>().SetTrigger("Up");
 			topButton.sprite = invDown;
+			PlayerManager.Instance.isClicOnUI = false;
 		}
 	}
 
