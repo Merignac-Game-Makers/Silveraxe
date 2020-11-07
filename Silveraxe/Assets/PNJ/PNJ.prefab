@@ -79,6 +79,7 @@ MonoBehaviour:
   - demo_Narration
   - Example3Dialogue
   - Example4_dialogue
+  - Grunt000
   - Item_LookUp
   - Laura
   - Litch
@@ -89,8 +90,8 @@ MonoBehaviour:
   - TriggeredDude
   - Witch
   - ZZZ
-  assignedIndex: 12
-  assignedID: 55919
+  assignedIndex: 13
+  assignedID: 93006
   assignedDialogue: PNJDefault
   interactionCount: 0
   alias: 
@@ -106,6 +107,100 @@ MonoBehaviour:
   langs: []
   S_playerDiags: []
   S_actionNodes: []
+--- !u!1 &5183601447622096310
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8595639288801120328}
+  - component: {fileID: 281293262084036084}
+  - component: {fileID: 9009925973950251926}
+  m_Layer: 8
+  m_Name: PortraitCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &8595639288801120328
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5183601447622096310}
+  m_LocalRotation: {x: -0, y: 0.99938667, z: 0.035018604, w: 0}
+  m_LocalPosition: {x: -0, y: 1.165, z: 2.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5501873739996842803}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 180.00002, z: 0}
+--- !u!20 &281293262084036084
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5183601447622096310}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 50
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 40
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 8400000, guid: 470aeefb7eb107c49a13fb778f015509, type: 2}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!1183024399 &9009925973950251926
+LookAtConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5183601447622096310}
+  m_Enabled: 1
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_Roll: 0
+  m_WorldUpObject: {fileID: 0}
+  m_UseUpObject: 0
+  m_IsContraintActive: 1
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
 --- !u!1 &5501873739996842767
 GameObject:
   m_ObjectHideFlags: 0
@@ -138,6 +233,7 @@ Transform:
   m_Children:
   - {fileID: 894202577121726683}
   - {fileID: 2769027192082842947}
+  - {fileID: 8595639288801120328}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -171,8 +267,8 @@ MonoBehaviour:
   mode: 0
   Clicked: 0
   PNJName: 
-  image: {fileID: 0}
   onTheFlyRadius: 0
+  PNJcam: {fileID: 0}
 --- !u!208 &2266802089898505946
 NavMeshObstacle:
   m_ObjectHideFlags: 0

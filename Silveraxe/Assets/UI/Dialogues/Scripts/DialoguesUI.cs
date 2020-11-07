@@ -27,8 +27,8 @@ public class DialoguesUI : UIBase
 	public GameObject Buttons;
 	public TMP_Text[] choices;
 
-	public GameObject NPC_PrefabHolder;
-	public LookAtConstraint NPC_Camera;
+	[HideInInspector]
+	public GameObject currentPNJcam;
 
 	UIManager uiManager;
 
@@ -58,9 +58,18 @@ public class DialoguesUI : UIBase
 		}
 	}
 
+	/// <summary>
+	/// Commencer le dialogue
+	/// </summary>
+	/// <param name="dialog"></param>
 	public void Begin(VIDE_Assign dialog) {
 		PlayerManager.Instance.StopAgent();
 		//panel.SetActive(true);
+		currentPNJcam = dialog.GetComponentInParent<PNJ>().PNJcam;
+		if (currentPNJcam!=null)
+			currentPNJcam.SetActive(true);
+		if (string.IsNullOrEmpty(dialog.alias))
+			dialog.alias = dialog.GetComponentInParent<PNJ>().PNJName;
 		Show();
 		VD.OnNodeChange += UpdateUI;
 		VD.OnEnd += End;
@@ -158,9 +167,14 @@ public class DialoguesUI : UIBase
 	}
 
 	
-
+	/// <summary>
+	/// Terminer le dialogue
+	/// </summary>
+	/// <param name="data"></param>
 	public void End(VD.NodeData data) {
 		Hide();
+		if (currentPNJcam!=null)
+			currentPNJcam.SetActive(false);
 		container_NPC.SetActive(false);
 		container_PLAYER.SetActive(false);
 		VD.OnNodeChange -= UpdateUI;

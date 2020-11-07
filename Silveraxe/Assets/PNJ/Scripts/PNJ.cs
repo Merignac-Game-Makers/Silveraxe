@@ -15,10 +15,10 @@ using UnityEditor;
 public class PNJ : InteractableObject
 {
 	public string PNJName;          // nom du PNJ (pour les dialogues)
-	public GameObject Character;    // visuel pour les dialogues
-	public GameObject CameraTarget;	// cible visuelle pour les dialogues
-	//public Sprite image;            // image du PNJ (pour les dialogues)
 	public int onTheFlyRadius;  // rayon d'action du mode onTheFlyOnce
+
+	[HideInInspector]
+	public GameObject PNJcam;
 
 	float initialRadius = 1.5f;
 	CapsuleCollider cCollider;
@@ -27,15 +27,16 @@ public class PNJ : InteractableObject
 
 	protected override void Start() {
 		base.Start();
-		var dialogue = gameObject.GetComponentInChildren<VIDE_Assign>();
-		if (dialogue != null) {									// s'il y a un dialogue
-			//if (image != null) {								//		et un image pour le PNJ
-			//	dialogue.defaultNPCSprite = image;				//		=> affecter l'image du PNJ au dialogue
-			//}
-			if (!String.IsNullOrEmpty(PNJName)) {				//		et un nom
-				dialogue.alias = PNJName;						//		=> affecter le nom du PNJ au dialogue
-			}
-		}
+		//var dialogue = gameObject.GetComponentInChildren<VIDE_Assign>();
+		//if (dialogue != null) {									// s'il y a un dialogue
+		//if (image != null) {								//		et un image pour le PNJ
+		//	dialogue.defaultNPCSprite = image;				//		=> affecter l'image du PNJ au dialogue
+		//}
+		//if (!string.IsNullOrEmpty(PNJName)) {				//		et un nom
+		//	dialogue.alias = PNJName;						//		=> affecter le nom du PNJ au dialogue
+		//}
+		//}
+		PNJcam = GetComponentInChildren<Camera>(true).gameObject;			// récupérer la caméra pour les dialogues
 		if (mode != Mode.onClick) {										// si le mode est onTheFlyOnce
 			cCollider = gameObject.GetComponent<CapsuleCollider>();		
 			if (cCollider && onTheFlyRadius> cCollider.radius) {		// et qu'il y a un CapsuleCollider
@@ -89,8 +90,6 @@ public class PNJEditor : Editor
 	SerializedProperty p_mode;
 	SerializedProperty p_radius;
 	SerializedProperty p_PNJName;
-	SerializedProperty p_character;
-	SerializedProperty p_cameraTarget;
 
 	PNJ m_PNJ;
 
@@ -98,8 +97,6 @@ public class PNJEditor : Editor
 		m_PNJ = (PNJ)target;
 		p_mode = serializedObject.FindProperty(nameof(m_PNJ.mode));
 		p_PNJName = serializedObject.FindProperty(nameof(m_PNJ.PNJName));
-		p_character = serializedObject.FindProperty(nameof(m_PNJ.Character));
-		p_cameraTarget = serializedObject.FindProperty(nameof(m_PNJ.CameraTarget));
 		p_radius = serializedObject.FindProperty(nameof(m_PNJ.onTheFlyRadius));
 	}
 
@@ -113,11 +110,7 @@ public class PNJEditor : Editor
 			EditorGUILayout.PropertyField(p_radius);
 		}
 		EditorGUILayout.PropertyField(p_PNJName);
-		EditorGUILayout.PropertyField(p_character);
-		EditorGUILayout.PropertyField(p_cameraTarget);
 		EditorGUILayout.PropertyField(p_radius);
-
-		//p_character.objectReferenceValue = (Sprite)EditorGUILayout.ObjectField(new GUIContent("Default NPC Sprite", "Default NPC sprite for this component"), m_PNJ.image, typeof(Sprite), false);
 
 		serializedObject.ApplyModifiedProperties();
 	}

@@ -32,16 +32,9 @@ public class DialogueTrigger : MonoBehaviour
 			if (dispatcher != null) {
 				dispatcher.SetStartNode();
 			}
-			// supprimer l'avatar du PNJ précédent
-			foreach (Transform c in dialoguesUI.NPC_PrefabHolder.transform)
-				Destroy(c.gameObject);
-			// mettre en place l'avatar du PNJ
-			Instantiate(pnj, dialoguesUI.NPC_PrefabHolder.transform);
-			var constraintSources = new List<UnityEngine.Animations.ConstraintSource>();
-			var aim = new UnityEngine.Animations.ConstraintSource();
-			aim.sourceTransform = pnj.CameraTarget.transform;
-			constraintSources.Add(aim);
-			dialoguesUI.NPC_Camera.SetSources(constraintSources);
+			//// activer la caméra du PNJ
+			//pnj.PNJcam.SetActive(true);
+
 			dialoguesUI.Begin(dialogue);
 		} 
 	}
