@@ -102,11 +102,9 @@ public class InventoryUI : UIBase
 	public void Hide() {
 		//iPanel.Hide(combinePanel);
 		iPanel.Hide();
-		PlayerManager.Instance.isClicOnUI = false;
 	}
 	public void Show() {
 		iPanel.Show();
-		PlayerManager.Instance.isClicOnUI = false;
 	}
 
 	/// <summary>
