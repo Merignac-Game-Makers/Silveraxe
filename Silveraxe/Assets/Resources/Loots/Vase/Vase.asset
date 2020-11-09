@@ -15,8 +15,7 @@ MonoBehaviour:
   ItemName: Vase
   ItemSprite: {fileID: 21300000, guid: 4655c6fcbc893744ab5ba89391e6abc4, type: 3}
   Description: Un vase utilisable
-  WorldObjectPrefab: {fileID: 1879678454775751807, guid: 75c8e296dd641e24d907e6f5ed1d6a79,
-    type: 3}
+  WorldObjectPrefab: {fileID: 100000, guid: 65a171ea06543b04fa7aa086cd66702d, type: 3}
   animate: 1
   dropable: 1
   UsageEffects: []

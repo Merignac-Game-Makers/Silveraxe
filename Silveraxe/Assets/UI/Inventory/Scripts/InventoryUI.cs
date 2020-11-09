@@ -41,7 +41,7 @@ public class InventoryUI : UIBase
 	public EntryUI selectedEntry { get; set; }
 	EntryUI hoveredItem;
 	InventoryPanel iPanel;
-	HighlightableObject item;
+	//HighlightableObject item;
 	UIManager uiManager;
 
 	bool? prevStatus = false;
@@ -110,9 +110,8 @@ public class InventoryUI : UIBase
 	/// <summary>
 	/// Actualiser l'affichage de toutes les entrés d'iventaire
 	/// </summary>
-	/// <param name="item"></param>
-	public void UpdateEntries(HighlightableObject item) {
-		this.item = item;
+	public void UpdateEntries() {
+		//this.item = item;
 		for (int i = entries.Count - 1; i > 0; i--) {
 			if ((entries[i].entry as InventoryEntry).count <= 0) {
 				Destroy(entries[i].gameObject);
@@ -212,7 +211,7 @@ public class InventoryUI : UIBase
 	/// <param name="entry">l'entrée d'inventaire </param>
 	public void DropItem(Target target, Entry entry) {
 		if (entry is InventoryEntry) {
-			ItemBase item = (entry as InventoryEntry).item;
+			Loot item = (entry as InventoryEntry).item;
 			item.animate = true;
 			CreateWorldRepresentation(item, target);													// créer l'objet 3D
 			if (currentlyDragged != null)                                                               // si on est dans un 'drag & drop'
@@ -236,14 +235,22 @@ public class InventoryUI : UIBase
 
 	//}
 
-	void CreateWorldRepresentation(ItemBase item, Target target) {
-		var pos = target.gameObject.transform.position + Vector3.up * item.WorldObjectPrefab.gameObject.transform.localScale.y / 2;
+	void CreateWorldRepresentation(Loot item, Target target) {
+		var pos = target.gameObject.transform.position + Vector3.up * item.prefab.gameObject.transform.localScale.y / 2;
 		// if the item have a world object prefab set use that...
-		if (item.WorldObjectPrefab != null) {
-			var obj = Instantiate(item.WorldObjectPrefab, pos, new Quaternion());
+		if (item.prefab != null) {
+			var obj = Instantiate(item.prefab, pos, new Quaternion());
 			obj.transform.parent = target.gameObject.transform;
 			obj.layer = LayerMask.NameToLayer("Interactable");
 		}
+	}
+
+	void CreatePrefab() {
+		//var v = System.AppDomain.CurrentDomain.GetAssemblies()
+			//.SelectMany(assembly => assembly.GetTypes())
+			//.Where(x => x.IsClass && !x.IsAbstract && x.IsSubclassOf(lookup))
+			//.Select(type => type.Name)
+			//.ToList();
 	}
 
 	public void SaveAndHide() {

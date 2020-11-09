@@ -70,11 +70,11 @@ public class MovementInput : MonoBehaviour
 	#region PlayerMovement
 	void InputMagnitude() {
 		//Calculate Input Vectors
-		inputX = agent.velocity.x;
-		inputZ = agent.velocity.z;
+		inputX = agent.velocity.x;			// latéral
+		inputZ = agent.velocity.z;			// avant/arrière
 
-		anim.SetFloat("InputX", inputX, animSmoothTime, Time.deltaTime * 2f);
-		anim.SetFloat("InputZ", inputZ, animSmoothTime, Time.deltaTime * 2f);
+		anim.SetFloat("InputX", inputX, animSmoothTime, Time.deltaTime );	//* 2f
+		anim.SetFloat("InputZ", inputZ, animSmoothTime, Time.deltaTime );   //* 2f
 
 		//Physically move player
 		anim.SetFloat("velocity", agent.velocity.sqrMagnitude, animSmoothTime, Time.deltaTime);
@@ -109,7 +109,7 @@ public class MovementInput : MonoBehaviour
 		if (enableFeetIk == false) { return; }
 		if (anim == null) { return; }
 
-		MovePelvisHeight();
+		//MovePelvisHeight();
 
 		//right foot ik position and rotation -- utilise the pro features in here
 		anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1);

@@ -25,7 +25,7 @@ public class UsableItem : ItemBase
 
 	public List<UsageEffect> UsageEffects;
 
-	public override bool UsedBy(CharacterData user) {
+	public override bool Used(CharacterData user) {
 		bool wasUsed = false;
 		foreach (var effect in UsageEffects) {
 			wasUsed |= effect.Use(user);

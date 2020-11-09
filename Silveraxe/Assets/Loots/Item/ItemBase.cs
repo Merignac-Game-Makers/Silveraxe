@@ -26,14 +26,14 @@ public abstract class ItemBase : ScriptableObject
 	//public Chapter chapter;                                         // chapitre du journal
 
 
-	public InventoryEntry entry = null; // L'entrée d'inventaire lorsque l'objet a été ramassé
+	public InventoryEntry entry = null;								// L'entrée d'inventaire lorsque l'objet a été ramassé
 
 	/// <summary>
 	/// Called by the inventory system when the object is "used" (double clicked)
 	/// </summary>
 	/// <param name="user">The CharacterDate that used that item</param>
 	/// <returns>If it was actually used (allow the inventory to know if it can remove the object or not)</returns>
-	public virtual bool UsedBy(CharacterData user) {
+	public virtual bool Used(CharacterData user) {
 		return false;
 	}
 

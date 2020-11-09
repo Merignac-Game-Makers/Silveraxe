@@ -19,21 +19,26 @@ public class Loot : InteractableObject
 
 	static float AnimationTime = 0.1f;
 
-	public ItemBase item;
+	public string ItemName;
+	public GameObject prefab;
+	public Sprite ItemSprite;
+	public string Description;
+	public bool animate = true;
+	public bool dropable = true;
+	public LootCategory lootCategory;
+
+	[Header("---")]
+	public GameObject lootTemplate;
 	public static InventoryUI inventoryUI;
+	public InventoryEntry entry { get; set; } = null;                             // L'entrée d'inventaire lorsque l'objet a été ramassé
 
 	public override bool IsInteractable() {                         // l'objet est intéractif si
 		return !animate || m_AnimationTimer >= AnimationTime;       // l'animation de mise en place est terminée ou désactivée
 	}
 
-	public bool animate => item.animate;
-
 	Vector3 m_OriginalPosition;
 	Vector3 m_TargetPoint;
 	float m_AnimationTimer = 0.0f;
-
-	//ZoomBase zoom;                                                  // script Zoom si ce volume est un zoom (il doit être porté par un parent)
-	//ChapterManager chapterManager;									// script pour gérer l'avancement du journal
 
 	void Awake() {
 		m_OriginalPosition = transform.position;                    // préparation
@@ -44,9 +49,9 @@ public class Loot : InteractableObject
 	protected override void Start() {
 		base.Start();
 		inventoryUI = InventoryUI.Instance;
-		//zoom = GetComponentInParent<ZoomBase>();                    // non null si l'objet est dans une zone couverte par un zoom
 
-		//chapterManager = GetComponentInChildren<ChapterManager>();  // non null si l'objet induit une mise à jour du journal
+		var obj = GetComponentInChildren<MeshFilter>().gameObject;
+		obj.AddComponent<MeshCollider>();
 	}
 
 
@@ -69,36 +74,28 @@ public class Loot : InteractableObject
 	/// <param name="action">l'action : prendre ou poser</param>
 	public override void InteractWith(CharacterData character, HighlightableObject target = null, Action action = take) {
 		base.InteractWith(character, target, action);
-		//var chapters = DiaryBookContent.Instance.GetComponentsInChildren<DiaryPageMaker>();
-		//foreach (DiaryPageMaker dpm in chapters) {
-		//	if (dpm.chapter == item.chapter) {
-		//		chapterManager = dpm.chapterManager;
-		//		break;
-		//	}
-		//}		
-		// si on ramasse l'objet
+
 		if (action == take) {
+			// si on ramasse l'objet
 			SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });
-
-			InventoryManager.Instance.AddItem(item);
-
-			inventoryUI.UpdateEntries(target);
+			InventoryManager.Instance.AddItem(this);
 			Destroy(gameObject);
-
-			//if (zoom) {				// si l'objet est dans un zoom
-			//	zoom.LootTaken(this);
-			//}
-
-			//if (chapterManager) {   // si l'action sur l'objet induit une mise à jour du journal
-			//	chapterManager.Act(item);
-			//}
-
 		} else
-		// si on dépose l'objet sur une cible
-		if (action == drop && target is Target) {
-			if ((target as Target).isAvailable(item) ) {					// et que cet emplacement est disponible pour cet objet
-				inventoryUI.DropItem(target as Target, item.entry);         // déposer l'objet d'inventaire
+			// si on dépose l'objet sur une cible
+			if (action == drop && target is Target) {
+			if ((target as Target).isAvailable(this)) {                // et que cet emplacement est disponible pour cet objet
+				inventoryUI.DropItem(target as Target, entry);         // déposer l'objet d'inventaire
 			}
+		}
+	}
+
+	void CreateWorldRepresentation() {
+		var pos = transform.position + Vector3.up * prefab.gameObject.transform.localScale.y / 2;
+		// if the item have a world object prefab set use that...
+		if (prefab != null) {
+			var obj = Instantiate(prefab, pos, new Quaternion());
+			obj.transform.parent = transform;
+			obj.layer = LayerMask.NameToLayer("Interactable");
 		}
 	}
 }

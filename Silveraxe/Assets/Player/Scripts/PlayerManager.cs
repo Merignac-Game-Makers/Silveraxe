@@ -75,7 +75,6 @@ public class PlayerManager : MonoBehaviour
 	void Start() {
 		inventoryUI = InventoryUI.Instance;                         // gestionnaire d'inventaire
 		uiManager = UIManager.Instance;                             // gestionnaire d'interface utilisateur
-		//magicManager = MagicManager.Instance;                       // gestionnaire de magie
 
 		characterData = GetComponent<CharacterData>();              // caractéristiques du joueur
 		characterData.Init();                                       // ... initialisation
@@ -83,8 +82,7 @@ public class PlayerManager : MonoBehaviour
 		m_Agent = GetComponent<NavMeshAgent>();                     // préparation de la navigation
 
 		m_InteractableLayer = 1 << LayerMask.NameToLayer("Interactable");       // layer des objets intéractibles
-		m_PlayerLayer = 1 << LayerMask.NameToLayer("Player");                   // layer des objets intéractibles
-		m_SasLayer = 1 << LayerMask.NameToLayer("Sas");                         // layer des osas
+		m_PlayerLayer = 1 << LayerMask.NameToLayer("Player");                   // layer du joueur
 
 		var postProcessingMask = 1 << LayerMask.NameToLayer("PostProcess");
 		var ignoreRaycastMask = 1 << LayerMask.NameToLayer("Ignore Raycast");

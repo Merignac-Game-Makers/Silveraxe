@@ -8,19 +8,19 @@ using UnityEngine;
 /// </summary>
 public class Target : InteractableObject
 {
-	public List<ItemBase> avalableItems;
-	public List<ItemBase> forbiddenItems;
+	public List<LootCategory> avalableItems;
+	public List<LootCategory> forbiddenItems;
 
 	public override bool IsInteractable() => isFree;				// toujours actif
 
 	public bool isFree => !GetComponentInChildren<Loot>();      // ne peut contenir qu'un seul objet d'inventaire
 
-	public bool isAvailable(ItemBase item) {
+	public bool isAvailable(Loot item) {
 		if (!isFree) return false;
 		//if (item.combinable) return false;
 		if (!item.dropable) return false;
-		if (avalableItems.Count > 0 && !avalableItems.Contains(item)) return false;
-		if (forbiddenItems.Count > 0 && forbiddenItems.Contains(item)) return false;
+		if (avalableItems.Count > 0 && !avalableItems.Contains(item.lootCategory)) return false;
+		if (forbiddenItems.Count > 0 && forbiddenItems.Contains(item.lootCategory)) return false;
 		return true;
 	}
 

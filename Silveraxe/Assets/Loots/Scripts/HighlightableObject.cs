@@ -11,7 +11,7 @@ using UnityEngine;
 public class HighlightableObject : MonoBehaviour
 {
 
-	public bool isOn = false;               // flag allumé ?
+	public bool isOn { get; set; } = false;               // flag allumé ?
 
 	// pour les projecteurs
 	ProjectorDriver projector;

@@ -7,7 +7,7 @@ public class ItemEntryUI : EntryUI
 	public Image plus;
 
 	ItemEntryUI[] all;
-	public ItemBase item;
+	public Loot item;
 	//ChapterManager chapterManager;
 
 	private void Start() {
@@ -53,10 +53,7 @@ public class ItemEntryUI : EntryUI
 		//	combineEntry.ui.Init(combineEntry);                                     //		mettre à jour l'interface de cette entrée
 		//	inventoryUI.combineUI.SetObject(combineEntry);                          //		afficher l'objet obtenu dans le pannea 'combine'
 		//	inventoryUI.RemoveEntry(this);                                          //		supprimer l'entrée de l'objet utilisé pour la combinaison
-		//	//SetChapter();
-		//	//if (chapterManager != null) {
-		//	//	chapterManager.Act(combineEntry.item);
-		//	//}
+
 		//} else {                                                                    // sinon
 			all = inventoryUI.GetComponentsInChildren<ItemEntryUI>();
 			foreach (ItemEntryUI entry in all) {                                    // désélectionner toutes les autres entrées de l'inventaire
@@ -71,15 +68,4 @@ public class ItemEntryUI : EntryUI
 			//}
 		//}
 	}
-
-	//private void SetChapter() {
-	//	var chapters = DiaryBookContent.Instance.GetComponentsInChildren<DiaryPageMaker>();
-	//	foreach (DiaryPageMaker dpm in chapters) {
-	//		if (dpm.chapter == item.chapter) {
-	//			chapterManager = dpm.chapterManager;
-	//			break;
-	//		}
-	//	}
-
-	//}
 }

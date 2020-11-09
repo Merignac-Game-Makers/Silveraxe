@@ -22,8 +22,12 @@ public abstract class InteractableObject : HighlightableObject
 	public abstract bool IsInteractable();					// m'objet est-il actif pour l'intéraction ?
 
 	[HideInInspector]
-	public bool Clicked;									// flag clic sur l'objet ?
+	public bool Clicked;                                    // flag clic sur l'objet ?
 
+	protected override void Start() {
+		base.Start();
+		gameObject.AddComponent<MeshCollider>();
+	}
 
 	public virtual void InteractWith(CharacterData character, HighlightableObject target = null, Action action = take) {
 		Clicked = false;
