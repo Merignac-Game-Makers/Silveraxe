@@ -22,6 +22,8 @@ public class MovementInput : MonoBehaviour
 	private Quaternion leftFootIkRotation, rightFootIkRotation;
 	private float lastPelvisPositionY, lastRightFootPositionY, lastLeftFootPositionY;
 
+	private NavMeshPath path;
+
 	//[Range(0.01f, 1f)] public float timeScale = 1;
 
 	[Header("Feet Grounder")]
@@ -79,6 +81,7 @@ public class MovementInput : MonoBehaviour
 		//Physically move player
 		anim.SetFloat("velocity", agent.velocity.sqrMagnitude, animSmoothTime, Time.deltaTime);
 		bool shouldMove = agent.velocity.magnitude > .1f && agent.remainingDistance > agent.radius;
+
 		anim.SetBool("move", shouldMove);       // trigger => déplacement
 
 	}

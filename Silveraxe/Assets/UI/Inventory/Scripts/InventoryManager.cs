@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// This handles the inventory of our character. Each slot can hold one
@@ -38,6 +39,7 @@ public class InventoryManager
 				found = true;                               // trouvé
 				entries[i].ui.UpdateEntry();                // mettre l'objet d'interface associé à jour	
 				item.entry = entries[i];
+				item.transform.position = new Vector3(0, -50, 0);
 				break;
 			}
 		}
@@ -46,8 +48,9 @@ public class InventoryManager
 			InventoryEntry entry = new InventoryEntry(item);// créer une nouvelle entrée
 			entry.ui =                                      // créer l'ojet d'interface associé
 				inventoryUI.AddItemEntry(entries.Count - 1, entry);
+			entry.item.entry = entry;
 			entries.Add(entry);
-			item.entry = entry;
+			item.transform.position = new Vector3(0, -50, 0);
 		}
 		inventoryUI.UpdateEntries();
 	}

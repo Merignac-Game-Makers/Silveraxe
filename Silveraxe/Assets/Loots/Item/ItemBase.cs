@@ -61,7 +61,7 @@ public class ItemBaseEditor : Editor
 	SerializedProperty pNameProperty;
 	SerializedProperty pIconProperty;
 	SerializedProperty pDescriptionProperty;
-	SerializedProperty pWorldObjectPrefabProperty;
+	SerializedProperty pPrefab;
 	SerializedProperty pAnimate;
 	//SerializedProperty pCombinable;
 	//SerializedProperty pCombineWith;
@@ -76,7 +76,7 @@ public class ItemBaseEditor : Editor
 		pNameProperty = target.FindProperty(nameof(ItemBase.ItemName));
 		pIconProperty = target.FindProperty(nameof(ItemBase.ItemSprite));
 		pDescriptionProperty = target.FindProperty(nameof(ItemBase.Description));
-		pWorldObjectPrefabProperty = target.FindProperty(nameof(ItemBase.WorldObjectPrefab));
+		pPrefab = target.FindProperty(nameof(ItemBase.WorldObjectPrefab));
 		pAnimate = target.FindProperty(nameof(ItemBase.animate));
 		//pCombinable = target.FindProperty(nameof(Item.combinable));
 		//pCombineWith = target.FindProperty(nameof(Item.combineWith));
@@ -90,7 +90,7 @@ public class ItemBaseEditor : Editor
 		EditorGUILayout.PropertyField(pIconProperty);
 		EditorGUILayout.PropertyField(pNameProperty);
 		EditorGUILayout.PropertyField(pDescriptionProperty, GUILayout.MinHeight(128));
-		EditorGUILayout.PropertyField(pWorldObjectPrefabProperty);
+		EditorGUILayout.PropertyField(pPrefab);
 		//EditorGUILayout.PropertyField(pChapter);
 		EditorGUILayout.PropertyField(pAnimate);
 

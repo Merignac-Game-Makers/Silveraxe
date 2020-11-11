@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 
 /// <summary>
 /// All object that can be highlighted (enemies, interactable object etc.) derive from this class, which takes care
@@ -11,6 +15,9 @@ using UnityEngine;
 public class HighlightableObject : MonoBehaviour
 {
 
+	public bool isHighlightable = true;
+	public bool useLight = true;
+
 	public bool isOn { get; set; } = false;               // flag allumé ?
 
 	// pour les projecteurs
@@ -19,6 +26,8 @@ public class HighlightableObject : MonoBehaviour
 	MagicParticles particles;
 	// pour les tores
 	SelectionRing ring;
+	// pour les highlighters
+	Highlighter highlighter;
 
 	protected virtual void Start() {
 		// pour les projecteurs
@@ -27,6 +36,8 @@ public class HighlightableObject : MonoBehaviour
 		particles = GetComponentInChildren<MagicParticles>();
 		// pour les tores
 		ring = GetComponentInChildren<SelectionRing>();
+		// pour les highlighters
+		highlighter = GetComponentInChildren<Highlighter>();
 
 		Highlight(false);
 	}
@@ -35,18 +46,27 @@ public class HighlightableObject : MonoBehaviour
 	/// true  : allumer le projecteur
 	/// false : éteindre le projecteur
 	/// </summary>
-	public virtual void Highlight(bool on) {
-		// pour les projecteurs
-		if (projector)
-			projector.Highlight(on);
-		// pour les systèmes de particules
-		if (particles)
-			particles.Highlight(on);
-		// pour les tores
-		if (ring)
-			ring.Highlight(on);
+	public virtual bool Highlight(bool on) {
+		bool found = false;
 
-		isOn = on;
+		if (isHighlightable) {
+			// pour les projecteurs
+			if (projector)
+				found = projector.Highlight(on, useLight);
+			// pour les systèmes de particules
+			if (particles)
+				found = particles.Highlight(on, useLight);
+			// pour les tores
+			if (ring)
+				found = ring.Highlight(on, useLight);
+			// pour les highlighters
+			if (highlighter)
+				found = highlighter.Highlight(on, useLight);
+
+			isOn = on;
+		}
+
+		return found;
 	}
 
 	public void SetColor(Color color) {
@@ -59,6 +79,32 @@ public class HighlightableObject : MonoBehaviour
 		// pour les tores
 		if (ring)
 			ring.SetColor(color);
+		// pour les highlighters
+		if (highlighter)
+			highlighter.SetColor(color);
+
 	}
 
 }
+
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(HighlightableObject))]
+public class HighlightableEditor : Editor
+{
+	SerializedProperty pHighlightable;
+	SerializedProperty pUseLight;
+
+	public void Init(SerializedObject target) {
+		pHighlightable = target.FindProperty(nameof(HighlightableObject.isHighlightable));
+		pUseLight = target.FindProperty(nameof(HighlightableObject.useLight));
+	}
+
+	public void GUI(HighlightableObject item) {
+		item.isHighlightable = pHighlightable.boolValue = EditorGUILayout.Toggle("Is Highlightable", pHighlightable.boolValue);
+		if (item.isHighlightable) {
+			item.useLight = pUseLight.boolValue = EditorGUILayout.Toggle("Use Light", pUseLight.boolValue);
+		}
+	}
+}
+#endif

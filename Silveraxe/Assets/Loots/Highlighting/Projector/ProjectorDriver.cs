@@ -30,13 +30,18 @@ public class ProjectorDriver : MonoBehaviour
 	/// true  : allumer 
 	/// false : éteindre 
 	/// </summary>
-	public virtual void Highlight(bool on) {
-		if (animator)
-			animator.enabled = on;		// animation
-		if (projector)
-			projector.enabled = on;		// motif
-		if (light)
-			light.enabled = on;			// lumière
+	public virtual bool Highlight(bool on, bool useLight) {
+
+		if (animator) 
+			animator.enabled = on;      // animation
+		
+		if (projector) 
+			projector.enabled = on;     // motif
+		
+		if (light && useLight) 
+			light.enabled = on;         // lumière
+		
+		return projector || (light && useLight);
 	}
 
 	public void SetColor(Color color) {

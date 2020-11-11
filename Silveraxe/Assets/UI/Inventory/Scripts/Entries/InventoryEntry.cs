@@ -17,6 +17,8 @@ public class InventoryEntry : Entry
 
 	public InventoryEntry(Loot item) {
 		this.item = item;
+		//this.item = GameObject.Instantiate(item);
+		//this.item = new Loot(item);
 	}
 }
 

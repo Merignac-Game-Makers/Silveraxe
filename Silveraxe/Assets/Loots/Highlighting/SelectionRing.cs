@@ -18,11 +18,15 @@ public class SelectionRing : MonoBehaviour
 	/// true  : allumer 
 	/// false : éteindre 
 	/// </summary>
-	public virtual void Highlight(bool on) {
+	public virtual bool Highlight(bool on, bool useLight) {
+
 		if (renderer)
 			renderer.enabled = on;
-		if (light)
+
+		if (light && useLight)
 			light.gameObject.SetActive(on);
+
+		return renderer || (light && useLight);
 	}
 
 	public void SetColor(Color color) {

@@ -189,7 +189,8 @@ public class InventoryUI : UIBase
 							PlayerManager.Instance.RequestInteraction(data);                            // aller jusqu'à la cible puis déposer l'objet d'inventaire
 							break;
 						} else {
-							uiManager.ShowLabel("Impossible d'utiliser cet objet ici", Input.mousePosition);
+							uiManager.Forbidden(Input.mousePosition, 1);
+							//uiManager.ShowLabel("Impossible d'utiliser cet objet ici", Input.mousePosition);
 						}
 					} 
 					//else if (entry is OrbEntry) {                                                     // si on dépose un orbe de magie
@@ -200,7 +201,8 @@ public class InventoryUI : UIBase
 				}
 			}
 		} else {
-			uiManager.ShowLabel("Impossible d'utiliser cet objet ici", Input.mousePosition);
+			uiManager.Forbidden(Input.mousePosition, 1);
+			//uiManager.ShowLabel("Impossible d'utiliser cet objet ici", Input.mousePosition);
 		}
 	}
 
@@ -238,19 +240,14 @@ public class InventoryUI : UIBase
 	void CreateWorldRepresentation(Loot item, Target target) {
 		var pos = target.gameObject.transform.position + Vector3.up * item.prefab.gameObject.transform.localScale.y / 2;
 		// if the item have a world object prefab set use that...
-		if (item.prefab != null) {
-			var obj = Instantiate(item.prefab, pos, new Quaternion());
-			obj.transform.parent = target.gameObject.transform;
-			obj.layer = LayerMask.NameToLayer("Interactable");
-		}
-	}
-
-	void CreatePrefab() {
-		//var v = System.AppDomain.CurrentDomain.GetAssemblies()
-			//.SelectMany(assembly => assembly.GetTypes())
-			//.Where(x => x.IsClass && !x.IsAbstract && x.IsSubclassOf(lookup))
-			//.Select(type => type.Name)
-			//.ToList();
+		//if (item.prefab != null) {
+		//	var obj = Instantiate(item.prefab, pos, new Quaternion());
+		//	obj.transform.parent = target.gameObject.transform;
+		//	obj.layer = LayerMask.NameToLayer("Interactable");
+		//}
+		//item.transform.SetParent(target.transform, false);
+		item.transform.position = pos;
+		item.StartAnimation();
 	}
 
 	public void SaveAndHide() {

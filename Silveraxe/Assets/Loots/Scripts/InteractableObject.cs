@@ -26,7 +26,13 @@ public abstract class InteractableObject : HighlightableObject
 
 	protected override void Start() {
 		base.Start();
-		gameObject.AddComponent<MeshCollider>();
+		// ajouter des MeshColliders si nécessaire
+		var meshes = GetComponentsInChildren<MeshFilter>();
+		foreach (MeshFilter m in meshes) {
+			if (m.GetComponent<MeshCollider>()==null)
+				m.gameObject.AddComponent<MeshCollider>();
+
+		}
 	}
 
 	public virtual void InteractWith(CharacterData character, HighlightableObject target = null, Action action = take) {

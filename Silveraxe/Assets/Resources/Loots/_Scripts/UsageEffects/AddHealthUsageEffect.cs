@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AddHealthUsageEffect : UsableItem.UsageEffect
+public class AddHealthUsageEffect : UsageEffect
 {
-    public int HealthPurcentageAmount = 20;
+    public int Percentage = 20;
     
     public override bool Use(CharacterData user)
     {
@@ -13,7 +13,7 @@ public class AddHealthUsageEffect : UsableItem.UsageEffect
 
 		//VFXManager.PlayVFX(VFXType.Healing, user.transform.position);
 
-		user.Stats.ChangeHealth(Mathf.FloorToInt(HealthPurcentageAmount / 100.0f * user.Stats.stats.health));
+		user.Stats.ChangeHealth(Mathf.FloorToInt(Percentage / 100.0f * user.Stats.stats.health));
 
 		return true;
     }

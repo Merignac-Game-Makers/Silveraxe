@@ -16,13 +16,6 @@ using UnityEditor;
 [CreateAssetMenu(fileName = "UsableItem", menuName = "Custom/Usable Item", order = -999)]
 public class UsableItem : ItemBase
 {
-	public abstract class UsageEffect : ScriptableObject
-	{
-		public string Description;
-		//return true if could be used, false otherwise.
-		public abstract bool Use(CharacterData user);
-	}
-
 	public List<UsageEffect> UsageEffects;
 
 	public override bool Used(CharacterData user) {
@@ -71,7 +64,7 @@ public class UsableItemEditor : Editor
 		m_ItemEditor = new ItemBaseEditor();
 		m_ItemEditor.Init(serializedObject);
 
-		var lookup = typeof(UsableItem.UsageEffect);
+		var lookup = typeof(UsageEffect);
 		m_AvailableUsageType = System.AppDomain.CurrentDomain.GetAssemblies()
 			.SelectMany(assembly => assembly.GetTypes())
 			.Where(x => x.IsClass && !x.IsAbstract && x.IsSubclassOf(lookup))
@@ -99,7 +92,8 @@ public class UsableItemEditor : Editor
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.BeginVertical();
 			var item = m_UsageEffectListProperty.GetArrayElementAtIndex(i);
-			SerializedObject obj = new SerializedObject(item.objectReferenceValue);
+
+			//SerializedObject obj = new SerializedObject(item.objectReferenceValue);
 
 			Editor.CreateCachedEditor(item.objectReferenceValue, null, ref ed);
 
