@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// This handles the inventory of our character. Each slot can hold one
@@ -30,7 +31,7 @@ public class InventoryManager
 	///			si NON => ajouter une entrée
 	/// </summary>
 	/// <param name="item">l'objet à ajouter</param>
-	public void AddItem(ItemBase item) {
+	public void AddItem(Loot item) {
 		bool found = false;
 		for (int i = 0; i < entries.Count; ++i) {           // pour chaque entrée existante
 			if (entries[i].item == item) {                  // si l'objet contenu est identique
@@ -38,6 +39,7 @@ public class InventoryManager
 				found = true;                               // trouvé
 				entries[i].ui.UpdateEntry();                // mettre l'objet d'interface associé à jour	
 				item.entry = entries[i];
+				item.transform.position = new Vector3(0, -50, 0);
 				break;
 			}
 		}
@@ -46,11 +48,13 @@ public class InventoryManager
 			InventoryEntry entry = new InventoryEntry(item);// créer une nouvelle entrée
 			entry.ui =                                      // créer l'ojet d'interface associé
 				inventoryUI.AddItemEntry(entries.Count - 1, entry);
+			entry.item.entry = entry;
 			entries.Add(entry);
-			item.entry = entry;
+			item.transform.position = new Vector3(0, -50, 0);
 		}
-
+		inventoryUI.UpdateEntries();
 	}
+
 
 	/// <summary>
 	/// This will *try* to use the item. If the item return true when used, this will decrement the stack count and
@@ -61,16 +65,15 @@ public class InventoryManager
 	/// <returns></returns>
 	public bool UseItem(Entry entry) {
 		if (entry is InventoryEntry) {
-			entry = entry as InventoryEntry;
-			if ((entry as InventoryEntry).item.UsedBy(owner)) {							 // si l'objet est utilisable
-				SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { // jouer le son associé
-					Clip = (entry as InventoryEntry).item is EquipmentItem ? SFXManager.ItemEquippedSound : SFXManager.ItemUsedSound 
-				});
-				(entry as InventoryEntry).count -= 1;                                   // retirer 1 à la quantité
-				entry.ui.UpdateEntry();													// mettre l'ui à jour
-				return true;
-			}
-
+			//entry = entry as InventoryEntry;
+			//if ((entry as InventoryEntry).item.Used(owner)) {							 // si l'objet est utilisable
+			//	SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { // jouer le son associé
+			//		Clip = (entry as InventoryEntry).item is EquipmentItem ? SFXManager.ItemEquippedSound : SFXManager.ItemUsedSound 
+			//	});
+			//	(entry as InventoryEntry).count -= 1;                                   // retirer 1 à la quantité
+			//	entry.ui.UpdateEntry();													// mettre l'ui à jour
+			//	return true;
+			//}
 		}
 		return false;
 	}

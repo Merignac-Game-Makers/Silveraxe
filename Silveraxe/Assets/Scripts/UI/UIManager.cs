@@ -30,6 +30,7 @@ public class UIManager : MonoBehaviour
 	//public Button diaryButton;                  // bouton du journal		
 
 	public GameObject messageLabel;
+	public GameObject forbidden;
 
 	Coroutine coroutine;
 
@@ -93,6 +94,18 @@ public class UIManager : MonoBehaviour
 		if (coroutine != null)
 			StopCoroutine(coroutine);
 		coroutine = StartCoroutine(IShow(messageLabel, 2));
+	}
+
+	/// <summary>
+	/// afficher un message
+	/// </summary>
+	/// <param name="text">le message</param>
+	/// <param name="position">la position d'affichage</param>
+	public void Forbidden(Vector2 position, int delay) {
+		forbidden.transform.position = position;
+		if (coroutine != null)
+			StopCoroutine(coroutine);
+		coroutine = StartCoroutine(IShow(forbidden, delay));
 	}
 
 	IEnumerator IShow(GameObject obj, float s) {

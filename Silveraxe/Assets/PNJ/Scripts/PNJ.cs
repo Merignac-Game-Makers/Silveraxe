@@ -2,6 +2,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using static InteractableObject.Action;
+using System.Collections;
+using UnityEngine.Animations;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -14,33 +16,41 @@ using UnityEditor;
 [Serializable]
 public class PNJ : InteractableObject
 {
-	public string PNJName;          // nom du PNJ (pour les dialogues)
-	public int onTheFlyRadius;  // rayon d'action du mode onTheFlyOnce
+	public enum Alignment { friend, neutral, ennemy }    // comportements possibles
+
+	public string PNJName;                          // nom du PNJ (pour les dialogues)
+	public int onTheFlyRadius = 1;                  // rayon d'action du mode onTheFlyOnce
+	public Alignment alignment = Alignment.neutral; // comportement
 
 	[HideInInspector]
 	public GameObject PNJcam;
 
 	float initialRadius = 1.5f;
 	CapsuleCollider cCollider;
+	float timer = 0f;
 
 	public override bool IsInteractable() => true;
 
 	protected override void Start() {
 		base.Start();
-		//var dialogue = gameObject.GetComponentInChildren<VIDE_Assign>();
-		//if (dialogue != null) {									// s'il y a un dialogue
-		//if (image != null) {								//		et un image pour le PNJ
-		//	dialogue.defaultNPCSprite = image;				//		=> affecter l'image du PNJ au dialogue
-		//}
-		//if (!string.IsNullOrEmpty(PNJName)) {				//		et un nom
-		//	dialogue.alias = PNJName;						//		=> affecter le nom du PNJ au dialogue
-		//}
-		//}
-		PNJcam = GetComponentInChildren<Camera>(true).gameObject;			// récupérer la caméra pour les dialogues
-		if (mode != Mode.onClick) {										// si le mode est onTheFlyOnce
-			cCollider = gameObject.GetComponent<CapsuleCollider>();		
-			if (cCollider && onTheFlyRadius> cCollider.radius) {		// et qu'il y a un CapsuleCollider
-				initialRadius = cCollider.radius;						//	=> mettre en place le rayon élargi
+		PNJcam = GetComponentInChildren<Camera>(true).gameObject;       // récupérer la caméra pour les dialogues
+
+		switch (alignment) {
+			case Alignment.friend:
+				SetColor(Color.green);
+				break;
+			case Alignment.neutral:
+				SetColor(Color.white);
+				break;
+			case Alignment.ennemy:
+				SetColor(Color.red);
+				break;
+		}
+
+		if (mode != Mode.onClick) {                                     // si le mode est onTheFlyOnce
+			cCollider = gameObject.GetComponent<CapsuleCollider>();
+			if (cCollider && onTheFlyRadius > cCollider.radius) {       // et qu'il y a un CapsuleCollider
+				initialRadius = cCollider.radius;                       //	=> mettre en place le rayon élargi
 				SetColliderRadius(onTheFlyRadius);
 			}
 		}
@@ -73,13 +83,33 @@ public class PNJ : InteractableObject
 
 			if (mode == Mode.onTheFlyOnce) {                                // si le PNJ est en mode 'onTheFlyOnce'
 				Collider dtc = dt.gameObject.GetComponent<Collider>();      // et qu'il existe un collider spécifique de ce mode
-				ResetColliderRadius();										// restaurer le rayon initial du collider (pour éviter à l'avenir une intéraction sur un rayon élargi)
+				ResetColliderRadius();                                      // restaurer le rayon initial du collider (pour éviter à l'avenir une intéraction sur un rayon élargi)
 			}
 		}
 
 		base.InteractWith(character, target, action);                      // intéraction par défaut
 	}
 
+	Coroutine coroutine;
+	public void FaceTo(GameObject other) {
+
+		var delta =  other.transform.position - transform.position;
+		delta.y = 0;
+		var rotation = Quaternion.LookRotation(delta);
+
+			if (coroutine != null)
+				StopCoroutine(coroutine);
+			coroutine = StartCoroutine(IFaceTo(rotation, 1));
+		}
+	
+	IEnumerator IFaceTo(Quaternion rot, float s) {
+		timer = 0;
+		while (timer <= s) {
+			timer += Time.deltaTime;
+			transform.rotation = Quaternion.Slerp(transform.rotation, rot, timer);
+			yield return new WaitForEndOfFrame();
+		}
+	}
 }
 
 #if UNITY_EDITOR
@@ -88,6 +118,7 @@ public class PNJ : InteractableObject
 public class PNJEditor : Editor
 {
 	SerializedProperty p_mode;
+	SerializedProperty p_alignment;
 	SerializedProperty p_radius;
 	SerializedProperty p_PNJName;
 
@@ -96,6 +127,7 @@ public class PNJEditor : Editor
 	public void OnEnable() {
 		m_PNJ = (PNJ)target;
 		p_mode = serializedObject.FindProperty(nameof(m_PNJ.mode));
+		p_alignment = serializedObject.FindProperty(nameof(m_PNJ.alignment));
 		p_PNJName = serializedObject.FindProperty(nameof(m_PNJ.PNJName));
 		p_radius = serializedObject.FindProperty(nameof(m_PNJ.onTheFlyRadius));
 	}
@@ -105,11 +137,12 @@ public class PNJEditor : Editor
 		EditorStyles.textField.wordWrap = true;
 		serializedObject.Update();
 
+		EditorGUILayout.PropertyField(p_PNJName);
+		EditorGUILayout.PropertyField(p_alignment);
 		EditorGUILayout.PropertyField(p_mode);
-		if (m_PNJ.mode != InteractableObject.Mode.onClick) {
+		if (m_PNJ.mode == InteractableObject.Mode.onTheFlyOnce) {
 			EditorGUILayout.PropertyField(p_radius);
 		}
-		EditorGUILayout.PropertyField(p_PNJName);
 		EditorGUILayout.PropertyField(p_radius);
 
 		serializedObject.ApplyModifiedProperties();

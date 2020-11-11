@@ -16,7 +16,6 @@ TagManager:
   - Player
   - Interactable
   - Navigation
-  - Target
   - 
   - 
   - 
@@ -37,6 +36,7 @@ TagManager:
   - 
   - 
   - 
+  - PostProcess
   m_SortingLayers:
   - name: Default
     uniqueID: 0

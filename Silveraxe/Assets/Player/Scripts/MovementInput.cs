@@ -22,6 +22,8 @@ public class MovementInput : MonoBehaviour
 	private Quaternion leftFootIkRotation, rightFootIkRotation;
 	private float lastPelvisPositionY, lastRightFootPositionY, lastLeftFootPositionY;
 
+	private NavMeshPath path;
+
 	//[Range(0.01f, 1f)] public float timeScale = 1;
 
 	[Header("Feet Grounder")]
@@ -70,15 +72,16 @@ public class MovementInput : MonoBehaviour
 	#region PlayerMovement
 	void InputMagnitude() {
 		//Calculate Input Vectors
-		inputX = agent.velocity.x;
-		inputZ = agent.velocity.z;
+		inputX = agent.velocity.x;			// latéral
+		inputZ = agent.velocity.z;			// avant/arrière
 
-		anim.SetFloat("InputX", inputX, animSmoothTime, Time.deltaTime * 2f);
-		anim.SetFloat("InputZ", inputZ, animSmoothTime, Time.deltaTime * 2f);
+		anim.SetFloat("InputX", inputX, animSmoothTime, Time.deltaTime );	//* 2f
+		anim.SetFloat("InputZ", inputZ, animSmoothTime, Time.deltaTime );   //* 2f
 
 		//Physically move player
 		anim.SetFloat("velocity", agent.velocity.sqrMagnitude, animSmoothTime, Time.deltaTime);
 		bool shouldMove = agent.velocity.magnitude > .1f && agent.remainingDistance > agent.radius;
+
 		anim.SetBool("move", shouldMove);       // trigger => déplacement
 
 	}
@@ -109,7 +112,7 @@ public class MovementInput : MonoBehaviour
 		if (enableFeetIk == false) { return; }
 		if (anim == null) { return; }
 
-		MovePelvisHeight();
+		//MovePelvisHeight();
 
 		//right foot ik position and rotation -- utilise the pro features in here
 		anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1);

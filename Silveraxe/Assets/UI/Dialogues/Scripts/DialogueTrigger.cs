@@ -35,6 +35,7 @@ public class DialogueTrigger : MonoBehaviour
 			//// activer la caméra du PNJ
 			//pnj.PNJcam.SetActive(true);
 
+			pnj.FaceTo(PlayerManager.Instance.gameObject);
 			dialoguesUI.Begin(dialogue);
 		} 
 	}

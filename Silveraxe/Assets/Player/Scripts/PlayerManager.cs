@@ -19,7 +19,7 @@ public class PlayerManager : MonoBehaviour
 
 	InventoryUI inventoryUI;                                        // gestionnaire d'inventaire
 	UIManager uiManager;                                            // gestionnaire d'interface utilisateur
-	//MagicManager magicManager;                                      // gestionnaire de magie
+																	//MagicManager magicManager;                                      // gestionnaire de magie
 
 	public static PlayerManager Instance { get; protected set; }    // instance statique de cette classe
 
@@ -32,19 +32,19 @@ public class PlayerManager : MonoBehaviour
 	bool MoveAcrossNavMeshesStarted = false;                        // flag : est-on sur un nav mesh link ? (pour gérer la vitesse)
 	[HideInInspector]
 	public bool inTransit;                                          // l'agent est-il dans un transit (chagement de zone assisté)
-	//public bool canInterruptTransit;                                // un transit peut-il être interrompu ?
+																	//public bool canInterruptTransit;                                // un transit peut-il être interrompu ?
 
 	// Interactions
 	InteractableObject m_TargetInteractable = null;                 // objet avec lequel le joueur intéragit
-	//Activable m_TargetActivable = null;                             // objet magique avec lequel le joueur intéragit
+																	//Activable m_TargetActivable = null;                             // objet magique avec lequel le joueur intéragit
 	Collider m_TargetCollider;                                      // collider de l'objet en cours d'intéraction
 	Entry m_DropItem = null;                                        // objet d'inventaire que le juoeur pose
 	HighlightableObject m_Highlighted; //    { get; set; }          // objet en surbrillance  sous le pointeur de la souris
 	CharacterData m_CurrentTargetCharacterData = null;              // caractéristiques du PNJ en intéraction
 	[HideInInspector]
 	public InventoryUI.DragData m_InvItemDragging = null;           // objet d'inventaire en cours de drag & drop
-	//[HideInInspector]
-	//public MagicOrb m_MagicOrb = null;                              // orbe magique
+																	//[HideInInspector]
+																	//public MagicOrb m_MagicOrb = null;                              // orbe magique
 
 	// CharacterData
 	[HideInInspector]
@@ -75,7 +75,6 @@ public class PlayerManager : MonoBehaviour
 	void Start() {
 		inventoryUI = InventoryUI.Instance;                         // gestionnaire d'inventaire
 		uiManager = UIManager.Instance;                             // gestionnaire d'interface utilisateur
-		//magicManager = MagicManager.Instance;                       // gestionnaire de magie
 
 		characterData = GetComponent<CharacterData>();              // caractéristiques du joueur
 		characterData.Init();                                       // ... initialisation
@@ -83,8 +82,7 @@ public class PlayerManager : MonoBehaviour
 		m_Agent = GetComponent<NavMeshAgent>();                     // préparation de la navigation
 
 		m_InteractableLayer = 1 << LayerMask.NameToLayer("Interactable");       // layer des objets intéractibles
-		m_PlayerLayer = 1 << LayerMask.NameToLayer("Player");                   // layer des objets intéractibles
-		m_SasLayer = 1 << LayerMask.NameToLayer("Sas");                         // layer des osas
+		m_PlayerLayer = 1 << LayerMask.NameToLayer("Player");                   // layer du joueur
 
 		var postProcessingMask = 1 << LayerMask.NameToLayer("PostProcess");
 		var ignoreRaycastMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
@@ -128,7 +126,7 @@ public class PlayerManager : MonoBehaviour
 
 		// récupération des objets en cours de drag & drop 
 		m_InvItemDragging = inventoryUI.currentlyDragged;         // objet d'inventaire
-		//m_MagicOrb = magicManager.dragging;                    // orbe magique
+																  //m_MagicOrb = magicManager.dragging;                    // orbe magique
 
 		// zoom
 		float mouseWheel = Input.GetAxis("Mouse ScrollWheel");
@@ -152,14 +150,14 @@ public class PlayerManager : MonoBehaviour
 		//	inTransit = false;
 		//}
 
+			ObjectsRaycasts(screenRay);                             // Mettre en surbrillance les objets intéractibles lorsqu'ils sont sous le pointeur de souris
 		// Gestion de la souris (mouseHover et clic)
 		if (!isClicOnUI) {                                          // éviter de déplacer le personnage si on pointe sur un objet d'interface
 
-			ObjectsRaycasts(screenRay);                             // Mettre en surbrillance les objets intéractibles lorsqu'ils sont sous le pointeur de souris
 
-			if (m_InvItemDragging == null ) {          // éviter de déplacer le personnage si on est en cours de drag & drop		//&& magicManager?.dragging == null
-				if (Input.GetMouseButton(0)) {											// si le bouton de la souris est appuyé
-					if (inventoryUI.selectedEntry == null) {								// si aucun objet d'inventaire n'est sélectionné
+			if (m_InvItemDragging == null) {          // éviter de déplacer le personnage si on est en cours de drag & drop		//&& magicManager?.dragging == null
+				if (Input.GetMouseButton(0)) {                                          // si le bouton de la souris est appuyé
+					if (inventoryUI.selectedEntry == null) {                                // si aucun objet d'inventaire n'est sélectionné
 						if (m_TargetInteractable == null && m_CurrentTargetCharacterData == null) {     // s'il n'y a pas d'intéraction en cours		//&& m_TargetActivable == null 
 							InteractableObject obj = m_Highlighted as InteractableObject;
 							if (obj) {                                                                  // si on a cliqué sur un objet intéractible
@@ -177,7 +175,7 @@ public class PlayerManager : MonoBehaviour
 								}
 							}
 						}
-					} else {																// si un objet d'inventaire est sélectionné
+					} else {                                                                // si un objet d'inventaire est sélectionné
 						if (m_DropItem == null) {
 							m_DropItem = inventoryUI.selectedEntry.entry;
 							inventoryUI.DropOn3D(inventoryUI.selectedEntry.entry);          // DROP
@@ -236,9 +234,9 @@ public class PlayerManager : MonoBehaviour
 			for (int i = 0; i < count; ++i) {                                                                                   // pour chacun d'entre eux
 				InteractableObject obj = m_RaycastHitCache[i].collider.gameObject.GetComponentInParent<InteractableObject>();   // si c'est bien un intéractible => dans obj
 				if (obj != null && obj.IsInteractable()) {                                                                      // et s'il est au statut 'actif'
-					SwitchHighlightedObject(obj);                                                                               // mettre en surbrillance
+					bool done = SwitchHighlightedObject(obj);                                                                               // mettre en surbrillance
 					somethingFound = true;                                                                                      // flag : on a trouvé quelque chose
-					break;                                                                                                      // on s'arrête au 1er objet trouvé
+					break;
 				}
 			}
 		}
@@ -266,19 +264,18 @@ public class PlayerManager : MonoBehaviour
 	/// le material de l'objet doit utiliser un shader comportant une 'rim color'
 	/// </summary>
 	/// <param name="obj"></param>
-	void SwitchHighlightedObject(HighlightableObject obj) {
+	bool SwitchHighlightedObject(HighlightableObject obj) {
+		bool done = false;
+
 		if (m_Highlighted != null && m_Highlighted != obj) {    // si un autre objet est en surbrillance
-			//var a = m_Highlighted as Activable;                 // si c'est un 'activable' (magie) => dans a
-			//if (!(a && a.IsActive))                            // si ce n'est pas un objet magique activé
-				m_Highlighted.Highlight(false);                 //		=> éteindre l'objet précédent
+			m_Highlighted.Highlight(false);                 //		=> éteindre l'objet précédent
 		}
 		m_Highlighted = obj;
 		if (m_Highlighted && !m_Highlighted.isOn) {             // si le paramètre transmis est non null => il faut allumer l'objet
-			//var a = m_Highlighted as Activable;                 // si c'est un 'activable' (magie) => dans a
-			//if ((!a || !a.IsActive))                            // si ce n'est pas un activable OU si l'activable est NON activé
-				m_Highlighted.Highlight(true);                  //		=> allumer
-
+			done = m_Highlighted.Highlight(true);                  //		=> allumer
 		}
+
+		return done;
 	}
 
 	/// <summary>
@@ -314,7 +311,8 @@ public class PlayerManager : MonoBehaviour
 	void CheckInteractableRange() {
 		Vector3 distance = m_TargetCollider.ClosestPointOnBounds(transform.position) - transform.position;  // calcul de la distance
 		if (m_TargetInteractable is Target && inventoryUI.selectedEntry != null && distance.sqrMagnitude < sqrInteractionDistance) {
-			inventoryUI.DropItem(m_TargetInteractable as Target, inventoryUI.selectedEntry.entry);                     // déposer l'objet d'inventaire
+			(inventoryUI.selectedEntry.entry as InventoryEntry).item.Drop(m_TargetInteractable as Target);
+			//inventoryUI.DropItem(m_TargetInteractable as Target, inventoryUI.selectedEntry.entry);                     // déposer l'objet d'inventaire
 			inventoryUI.selectedEntry = null;
 		} else if ((m_TargetInteractable.mode != InteractableObject.Mode.onClick || m_TargetInteractable.Clicked)
 			&& distance.sqrMagnitude < sqrInteractionDistance) {
@@ -330,15 +328,15 @@ public class PlayerManager : MonoBehaviour
 	/// <param name="obj">l'objet avec lequel intéragir</param>
 	public void RequestInteraction(InteractableObject obj) {
 		if (obj.IsInteractable()) {                                         // si l'objet est au statut 'actif'
-			//Activable activable = obj.GetComponentInChildren<Activable>();
-			//if (activable != null && activable.isOn) {                        // si l'objet est un objet magique activable
-			//	activable.Toggle();                                         //	- basculer l'état de l'objet (activé/désactivé)
-			//	m_TargetActivable = obj as Activable;                       //	- mémoriser l'objet magique (pour éviter les intéractions multiples)
-			//} else {                                                        // sinon 
-				m_TargetInteractable = obj;                                 //	- mémoriser l'intéractible (il sera testé dans le prochain update pour déclencher l'intéraction 'AU CONTACT')
-				m_TargetCollider = obj.GetComponentInChildren<Collider>();  //	- mémoriser le collider
-				m_Agent.SetDestination(obj.transform.position);             //	- diriger le joueur vers l'objet
-			//}
+																			//Activable activable = obj.GetComponentInChildren<Activable>();
+																			//if (activable != null && activable.isOn) {                        // si l'objet est un objet magique activable
+																			//	activable.Toggle();                                         //	- basculer l'état de l'objet (activé/désactivé)
+																			//	m_TargetActivable = obj as Activable;                       //	- mémoriser l'objet magique (pour éviter les intéractions multiples)
+																			//} else {                                                        // sinon 
+			m_TargetInteractable = obj;                                 //	- mémoriser l'intéractible (il sera testé dans le prochain update pour déclencher l'intéraction 'AU CONTACT')
+			m_TargetCollider = obj.GetComponentInChildren<Collider>();  //	- mémoriser le collider
+			m_Agent.SetDestination(obj.transform.position);             //	- diriger le joueur vers l'objet
+																		//}
 		}
 	}
 

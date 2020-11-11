@@ -8,7 +8,7 @@ public class CombineUI : MonoBehaviour
     public Transform objectHolder;
     [Range(100f, 350f)] public float size = 250;
 
-    public ItemBase item { get; private set; }
+    public Loot item { get; private set; }
     public InventoryEntry entry { get; private set; }
 
     private void Start() {
@@ -19,7 +19,7 @@ public class CombineUI : MonoBehaviour
         Clear();
         this.entry = entry;
         item = entry.item;
-        GameObject obj = Instantiate(item.WorldObjectPrefab, objectHolder, false);
+        GameObject obj = Instantiate(item.prefab, objectHolder, false);
         item.animate = false;
         SetObjLayer(obj);
         obj.transform.localPosition = Vector3.zero;

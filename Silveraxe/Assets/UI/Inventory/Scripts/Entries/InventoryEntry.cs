@@ -11,12 +11,14 @@ using UnityEngine;
 /// </summary>
 public class InventoryEntry : Entry
 {
-	public ItemBase item;
+	public Loot item;
 	public int count = 1;
 	public new ItemEntryUI ui;
 
-	public InventoryEntry(ItemBase item) {
+	public InventoryEntry(Loot item) {
 		this.item = item;
+		//this.item = GameObject.Instantiate(item);
+		//this.item = new Loot(item);
 	}
 }
 
