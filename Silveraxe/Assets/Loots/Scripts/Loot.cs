@@ -96,6 +96,8 @@ public class Loot : InteractableObject
 	public override void InteractWith(CharacterData character, HighlightableObject target = null, Action action = take) {
 		base.InteractWith(character, target, action);
 
+		PlayerManager.Instance.StopAgent();
+
 		if (action == take) {
 			// si on ramasse l'objet
 			SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });
