@@ -190,6 +190,7 @@ public class PlayerManager : MonoBehaviour
 			MoveAcrossNavMeshesStarted = true;
 			StartCoroutine(MoveAcrossNavMeshLink(m_Agent.destination));
 		}
+
 	}
 
 	#region Visuel
@@ -217,16 +218,6 @@ public class PlayerManager : MonoBehaviour
 	/// <param name="screenRay">lancer de rayon</param>
 	void ObjectsRaycasts(Ray screenRay) {
 		bool somethingFound = false;
-
-		//int count = Physics.SphereCastNonAlloc(screenRay, .2f, m_RaycastHitCache, 1000.0f, m_SasLayer);                         // objets du calque 'Sas' sous la souris
-		//if (count > 0) {
-		//	for (int i = 0; i < count; ++i) {                                                                                   // pour chacun d'entre eux
-		//		EnterHouse obj = m_RaycastHitCache[i].collider.gameObject.GetComponentInParent<EnterHouse>();                   // si c'est bien un sas => dans obj
-		//		if (obj != null && Input.GetMouseButtonDown(0)) {
-		//			obj.Enter();
-		//		}
-		//	}
-		//}
 
 		//check for interactable Object
 		int count = Physics.SphereCastNonAlloc(screenRay, .2f, m_RaycastHitCache, 1000.0f, m_InteractableLayer);                // objets du calque 'Interactable' sous la souris

@@ -72,7 +72,7 @@ public class CameraController : MonoBehaviour
 	//	ppv.sharedProfile.TryGetSettings<DepthOfField>(out pr);
 	//	var camPos = GameplayCamera.transform.position;
 	//	var targetPos = vCams.Peek().LookAt.transform.position;
-		
+
 	//	pr.focusDistance.value = Vector3.Distance(targetPos, camPos);
 	//}
 }
