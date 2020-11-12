@@ -311,7 +311,8 @@ public class PlayerManager : MonoBehaviour
 	void CheckInteractableRange() {
 		Vector3 distance = m_TargetCollider.ClosestPointOnBounds(transform.position) - transform.position;  // calcul de la distance
 		if (m_TargetInteractable is Target && inventoryUI.selectedEntry != null && distance.sqrMagnitude < sqrInteractionDistance) {
-			(inventoryUI.selectedEntry.entry as InventoryEntry).item.Drop(m_TargetInteractable as Target);
+			(inventoryUI.selectedEntry.entry as InventoryEntry).item.InteractWith(characterData, m_TargetInteractable as Target, drop);
+			//(inventoryUI.selectedEntry.entry as InventoryEntry).item.Drop(m_TargetInteractable as Target);
 			//inventoryUI.DropItem(m_TargetInteractable as Target, inventoryUI.selectedEntry.entry);                     // déposer l'objet d'inventaire
 			inventoryUI.selectedEntry = null;
 		} else if ((m_TargetInteractable.mode != InteractableObject.Mode.onClick || m_TargetInteractable.Clicked)
