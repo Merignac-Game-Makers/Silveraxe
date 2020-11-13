@@ -1,237 +1,163 @@
-//Copyright Filmstorm (C) 2018 - Movement Controller for Root Motion and built in IK solver
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-//This script requires you to have setup your animator with 3 parameters, "InputMagnitude", "InputX", "InputZ"
-//With a blend tree to control the inputmagnitude and allow blending between animations.
-[RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(NavMeshAgent))]
 public class MovementInput : MonoBehaviour
 {
-	#region Variables
-	private float inputX;		//Left and Right Inputs
-	private float inputZ;		//Forward and Back Inputs
+	public float rotationSensitivity = .4f;   //How sensitive it with mouse
 
-	private Animator anim;										//Animator
-	private NavMeshAgent agent;									//Navigation agent
+	public NavMeshAgent navAgent { get; private set; }
 
-	private Vector3 rightFootPosition, leftFootPosition, leftFootIkPosition, rightFootIkPosition;
-	private Quaternion leftFootIkRotation, rightFootIkRotation;
-	private float lastPelvisPositionY, lastRightFootPositionY, lastLeftFootPositionY;
+	// déplacements
+	private float normalSpeed;
+	private float shiftSpeedFactor = 2f;
+	NavMeshPath path;
+	bool isMovingWithKeyboard = false;
+	// rotation
+	RaycastHit[] m_RaycastHitCache = new RaycastHit[16];            // cache des résultats de lancer de rayon
+	RaycastHit m_HitInfo = new RaycastHit();                        // résultat unitaire du lancer de rayon
+	int m_NavLayer;                                                 // layer de la navigation
 
-	private NavMeshPath path;
+	private float totalRun = 1.0f;
+	private Vector3 p;
+	private Vector3 rot;
+	float mainSpeed = 1f;           // regular speed
+	float shiftAdd = 5.0f;          // multiplied by how long shift is held.  Basically running
+	float maxShift = 100.0f;        // Maximum speed when holdin gshift
 
-	//[Range(0.01f, 1f)] public float timeScale = 1;
-
-	[Header("Feet Grounder")]
-	public bool enableFeetIk = true;
-	[Range(0, 9)] [SerializeField] private float heightFromGroundRaycast = 1.14f;
-	[Range(0, 10)] [SerializeField] private float raycastDownDistance = 1.5f;
-	//[SerializeField] private LayerMask environmentLayer;
-	public LayerMask environmentLayer;
-	[SerializeField] private float pelvisOffset = 0f;
-	[Range(0, 1)] [SerializeField] private float pelvisUpAndDownSpeed = 0.28f;
-	[Range(0, 1)] [SerializeField] private float feetToIkPositionSpeed = 0.5f;
-
-	//public string leftFootAnimVariableName = "LeftFootCurve";
-	//public string rightFootAnimVariableName = "RightFootCurve";
-
-	//public bool useProIkFeature = false;
-	public bool showSolverDebug = true;
-
-
-	[Header("Animation Smoothing")]
-	[Range(0, 1f)]
-	public float animSmoothTime = 0.2f; //velocity dampening
-
-	public LayerMask EnvironmentLayer { get => EnvironmentLayer2; set => EnvironmentLayer2 = value; }
-	public LayerMask EnvironmentLayer1 { get => EnvironmentLayer2; set => EnvironmentLayer2 = value; }
-	public LayerMask EnvironmentLayer2 { get => environmentLayer; set => environmentLayer = value; }
-
-	#endregion
-
-	#region Initialization
-	// Initialization of variables
+	private void Awake() {
+		navAgent = GetComponent<NavMeshAgent>();
+	}
+	// Start is called before the first frame update
 	void Start() {
-		//timeScale = 1f;
-
-		anim = GetComponent<Animator>();
-		agent = GetComponent<NavMeshAgent>();
-
-		if (anim == null)
-			Debug.LogError("We require " + transform.name + " game object to have an animator. This will allow for Foot IK to function");
-		if (agent == null)
-			Debug.LogError("We require " + transform.name + " game object to have a Nav Mesh Agent. This will allow for Foot IK to function");
-	}
-	#endregion
-
-
-	#region PlayerMovement
-	void InputMagnitude() {
-		//Calculate Input Vectors
-		inputX = agent.velocity.x;			// lat�ral
-		inputZ = agent.velocity.z;			// avant/arri�re
-
-		anim.SetFloat("InputX", inputX, animSmoothTime, Time.deltaTime );	//* 2f
-		anim.SetFloat("InputZ", inputZ, animSmoothTime, Time.deltaTime );   //* 2f
-
-		//Physically move player
-		anim.SetFloat("velocity", agent.velocity.sqrMagnitude, animSmoothTime, Time.deltaTime);
-		bool shouldMove = agent.velocity.magnitude > .1f && agent.remainingDistance > agent.radius;
-
-		anim.SetBool("move", shouldMove);       // trigger => d�placement
-
+		path = new NavMeshPath();
+		m_NavLayer = 1 << LayerMask.NameToLayer("Navigation");              // layer de la navigation
+		normalSpeed = navAgent.speed;                                       // vitesse du player
 	}
 
-	#endregion
 
-
-	#region FeetGrounding
-
+	Vector3 direction = Vector3.zero;
+	Vector3 point;
 	// Update is called once per frame
 	void Update() {
-		InputMagnitude();
-		//Time.timeScale = timeScale;
-
-
-		if (enableFeetIk == false) { return; }
-		if (anim == null) { return; }
-
-		AdjustFeetTarget(ref rightFootPosition, HumanBodyBones.RightFoot);
-		AdjustFeetTarget(ref leftFootPosition, HumanBodyBones.LeftFoot);
-
-		//find and raycast to the ground to find positions
-		FeetPositionSolver(rightFootPosition, ref rightFootIkPosition, ref rightFootIkRotation); // handle the solver for right foot
-		FeetPositionSolver(leftFootPosition, ref leftFootIkPosition, ref leftFootIkRotation); //handle the solver for the left foot
-	}
-
-	private void OnAnimatorIK(int layerIndex) {
-		if (enableFeetIk == false) { return; }
-		if (anim == null) { return; }
-
-		//MovePelvisHeight();
-
-		//right foot ik position and rotation -- utilise the pro features in here
-		anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1);
-
-		//if (useProIkFeature) {
-		//	anim.SetIKRotationWeight(AvatarIKGoal.RightFoot, anim.GetFloat(rightFootAnimVariableName));
-		//}
-
-		MoveFeetToIkPoint(AvatarIKGoal.RightFoot, rightFootIkPosition, rightFootIkRotation, ref lastRightFootPositionY);
-
-		//left foot ik position and rotation -- utilise the pro features in here
-		anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1);
-
-		//if (useProIkFeature) {
-		//	anim.SetIKRotationWeight(AvatarIKGoal.LeftFoot, anim.GetFloat(leftFootAnimVariableName));
-		//}
-
-		MoveFeetToIkPoint(AvatarIKGoal.LeftFoot, leftFootIkPosition, leftFootIkRotation, ref lastLeftFootPositionY);
-	}
-
-	#endregion
-
-
-
-	#region FeetGroundingMethods
-
-	/// <summary>
-	/// Moves the feet to ik point.
-	/// </summary>
-	/// <param name="foot">Foot.</param>
-	/// <param name="positionIkHolder">Position ik holder.</param>
-	/// <param name="rotationIkHolder">Rotation ik holder.</param>
-	/// <param name="lastFootPositionY">Last foot position y.</param>
-	void MoveFeetToIkPoint(AvatarIKGoal foot, Vector3 positionIkHolder, Quaternion rotationIkHolder, ref float lastFootPositionY) {
-		Vector3 targetIkPosition = anim.GetIKPosition(foot);
-
-		if (positionIkHolder != Vector3.zero) {
-			targetIkPosition = transform.InverseTransformPoint(targetIkPosition);
-			positionIkHolder = transform.InverseTransformPoint(positionIkHolder);
-
-			float yVariable = Mathf.Lerp(lastFootPositionY, positionIkHolder.y, feetToIkPositionSpeed);
-			targetIkPosition.y += yVariable;
-
-			lastFootPositionY = yVariable;
-
-			targetIkPosition = transform.TransformPoint(targetIkPosition);
-
-			anim.SetIKRotation(foot, rotationIkHolder);
+		//------------------------
+		// déplacements au clavier
+		//------------------------
+		if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.UpArrow)) {
+			MoveForward();
+		} else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) {
+			MoveBackward();
+		} else if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow)) {
+			MoveLeft();
+		} else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) {
+			MoveRight();
+		} else {
+			isMovingWithKeyboard = false;
 		}
 
-		anim.SetIKPosition(foot, targetIkPosition);
-	}
-	/// <summary>
-	/// Moves the height of the pelvis.
-	/// </summary>
-	private void MovePelvisHeight() {
 
-		if (rightFootIkPosition == Vector3.zero || leftFootIkPosition == Vector3.zero || lastPelvisPositionY == 0) {
-			lastPelvisPositionY = anim.bodyPosition.y;
-			return;
+		//------------------------
+		// rotation à la souris
+		//------------------------
+
+
+		// sensibilité de la rotation à la souris
+		if (Input.GetKeyDown(KeyCode.KeypadPlus) || Input.GetKeyDown(KeyCode.Plus)) {
+			StartCoroutine(ISensitivity(+1));
+		} else if (Input.GetKeyDown(KeyCode.KeypadMinus) || Input.GetKeyDown(KeyCode.Minus)) {
+			StartCoroutine(ISensitivity(-1));
 		}
 
-		float lOffsetPosition = leftFootIkPosition.y - transform.position.y;
-		float rOffsetPosition = rightFootIkPosition.y - transform.position.y;
-
-		float totalOffset = (lOffsetPosition < rOffsetPosition) ? lOffsetPosition : rOffsetPosition;
-
-		Vector3 newPelvisPosition = anim.bodyPosition + Vector3.up * totalOffset;
-
-		newPelvisPosition.y = Mathf.Lerp(lastPelvisPositionY, newPelvisPosition.y, pelvisUpAndDownSpeed);
-
-		anim.bodyPosition = newPelvisPosition;
-
-		lastPelvisPositionY = anim.bodyPosition.y;
-
 	}
 
-	/// <summary>
-	/// We are locating the Feet position via a Raycast and then Solving
-	/// </summary>
-	/// <param name="fromSkyPosition">From sky position.</param>
-	/// <param name="feetIkPositions">Feet ik positions.</param>
-	/// <param name="feetIkRotations">Feet ik rotations.</param>
-	private void FeetPositionSolver(Vector3 fromSkyPosition, ref Vector3 feetIkPositions, ref Quaternion feetIkRotations) {
-		//raycast handling section 
-		RaycastHit feetOutHit;
-
-		if (showSolverDebug)
-			Debug.DrawLine(fromSkyPosition, fromSkyPosition + Vector3.down * raycastDownDistance, Color.yellow);
-
-		if (Physics.Raycast(fromSkyPosition, Vector3.down, out feetOutHit, raycastDownDistance + heightFromGroundRaycast, EnvironmentLayer2)) {
-			//finding our feet ik positions from the sky position
-			feetIkPositions = fromSkyPosition;
-			feetIkPositions.y = feetOutHit.point.y + pelvisOffset;
-			feetIkRotations = Quaternion.FromToRotation(Vector3.up, feetOutHit.normal) * transform.rotation;
-
-			return;
+	private void SetToMouseDirection() {
+		// Préparation du lancer de rayon de la caméra vers le pointeur de souris
+		Ray screenRay = CameraController.Instance.GameplayCamera.ScreenPointToRay(Input.mousePosition);
+		int count = Physics.SphereCastNonAlloc(screenRay, .2f, m_RaycastHitCache, 1000.0f, m_NavLayer);                // objets du calque 'Navigation' sous la souris
+		if (count > 0) {
+			point = m_RaycastHitCache[0].point;
+			direction = point - PlayerManager.Instance.transform.position.normalized;
 		}
 
-		feetIkPositions = Vector3.zero; //it didn't work :(
-
+		if (isMovingWithKeyboard && navAgent.velocity.magnitude > .2f)
+			FaceTo(point);
 	}
+
+
+	Coroutine coroutine;
+	Vector3 delta;
+	Quaternion rotation;
+	float timer = 0f;
+	public void FaceTo(Vector3 other) {
+		delta = other - transform.position;
+		delta.y = 0;
+		rotation = Quaternion.LookRotation(delta);
+
+		if (coroutine != null)
+			StopCoroutine(coroutine);
+		coroutine = StartCoroutine(IFaceTo(rotation, 1));
+	}
+
+	IEnumerator IFaceTo(Quaternion rot, float s) {
+		timer = 0;
+		while (timer <= s) {
+			timer += Time.deltaTime;
+			transform.rotation = Quaternion.Slerp(transform.rotation, rot, timer);
+			yield return new WaitForEndOfFrame();
+		}
+	}
+
+
+	IEnumerator ISensitivity(int k) {
+		if (k < 0) {
+			rotationSensitivity /= 1.2f;
+			//sensitivity.sprite = s_minus;
+		} else {
+			rotationSensitivity *= 1.2f;
+			//sensitivity.sprite = s_plus;
+		}
+		//sensitivity.enabled = true;
+		yield return new WaitForSeconds(0.5f);
+		//sensitivity.enabled = false;
+	}
+
+	private void MoveForward() {
+		isMovingWithKeyboard = true;
+		SetToMouseDirection();
+		navAgent.CalculatePath(transform.position + transform.forward * 1f, path);
+		if (path.corners.Length <= 4)
+			navAgent.SetDestination(transform.position + transform.forward * 1f);
+	}
+	private void MoveBackward() {
+		isMovingWithKeyboard = true;
+		SetToMouseDirection();
+		navAgent.CalculatePath(transform.position + transform.forward * -.5f, path);
+		if (path.corners.Length <= 4)
+			navAgent.updateRotation = false;
+		GoTo(transform.position + transform.forward * -.5f);
+	}
+	private void MoveLeft() {
+		isMovingWithKeyboard = true;
+		navAgent.CalculatePath(transform.position + transform.right * -.5f, path);
+		if (path.corners.Length <= 4)
+			navAgent.updateRotation = false;
+		GoTo(transform.position + transform.right * -.5f);
+	}
+	private void MoveRight() {
+		isMovingWithKeyboard = true;
+		navAgent.CalculatePath(transform.position + transform.right * .5f, path);
+		if (path.corners.Length <= 4)
+			navAgent.updateRotation = false;
+		GoTo(transform.position + transform.right * .5f);
+	}
+
 	/// <summary>
-	/// Adjusts the feet target.
+	/// Aller à un point donné
 	/// </summary>
-	/// <param name="feetPositions">Feet positions.</param>
-	/// <param name="foot">Foot.</param>
-	private void AdjustFeetTarget(ref Vector3 feetPositions, HumanBodyBones foot) {
-		feetPositions = anim.GetBoneTransform(foot).position;				// r�cup�rer la postion du pied
-		feetPositions.y = transform.position.y + heightFromGroundRaycast;	// repmonter la position pour la source du raycast
-
+	/// <param name="destination">le point à atteindre</param>
+	public void GoTo(Vector3 destination) {
+		navAgent.SetDestination(destination);
 	}
-
-	#endregion
-
 
 }
-
-
-
-
-

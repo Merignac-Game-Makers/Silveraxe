@@ -25,7 +25,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 285638712752910972}
-  m_LocalRotation: {x: -0, y: 0.99040234, z: 0.13821453, w: 0}
+  m_LocalRotation: {x: -0, y: 0.9954885, z: 0.094882414, w: 0}
   m_LocalPosition: {x: 0, y: 1.12, z: 1.27}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -106,8 +106,11 @@ GameObject:
   - component: {fileID: 6607747296377349638}
   - component: {fileID: 5447536950172193483}
   - component: {fileID: 3413440680727103309}
+  - component: {fileID: 5928925421831498529}
   - component: {fileID: 4848952214074941617}
   - component: {fileID: 6093410246715224229}
+  - component: {fileID: 5725420211316721758}
+  - component: {fileID: 6132971901834916954}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -158,8 +161,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aca64b3b95148e343a152e0e191c41ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isOn: 0
+  isHighlightable: 1
+  useLight: 1
   CharacterName: Hero
+  Stats:
+    baseStats:
+      health: 0
+      strength: 0
+      defense: 0
+      agility: 0
+      elementalProtection: 00000000000000000000000000000000
+      elementalBoosts: 00000000000000000000000000000000
   HitClip: []
 --- !u!195 &3413440680727103309
 NavMeshAgent:
@@ -172,7 +184,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 5
-  m_Acceleration: 15
+  m_Acceleration: 5
   avoidancePriority: 50
   m_AngularSpeed: 1200
   m_StoppingDistance: 0
@@ -183,6 +195,18 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &5928925421831498529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783252841455135458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcc6a9aedf3cca24caeef0835f2db35d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!143 &4848952214074941617
 CharacterController:
   m_ObjectHideFlags: 0
@@ -217,6 +241,48 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!95 &5725420211316721758
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783252841455135458}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: e4aa31f274820b94eb0d0b764e0f383b, type: 3}
+  m_Controller: {fileID: 9100000, guid: 1de6bb7e24a3aa9488379378e8f37973, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &6132971901834916954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783252841455135458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3f8bd49933313b46b55b6fc1247c778, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableFeetIk: 1
+  heightFromGroundRaycast: 2
+  raycastDownDistance: 2
+  environmentLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  pelvisOffset: 0
+  pelvisUpAndDownSpeed: 0.28
+  feetToIkPositionSpeed: 0.5
+  showSolverDebug: 1
+  animSmoothTime: 1
 --- !u!1 &6805881874309904534
 GameObject:
   m_ObjectHideFlags: 0
@@ -571,7 +637,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 95905397883882224, guid: c647a6e9ba715004ebbf4dc6d7bd1e7a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 95905397883882224, guid: c647a6e9ba715004ebbf4dc6d7bd1e7a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c647a6e9ba715004ebbf4dc6d7bd1e7a, type: 3}
 --- !u!4 &285995212641164801 stripped
 Transform:
