@@ -27,15 +27,16 @@ public class CamZones : MonoBehaviour
                 var camZone = zone.GetComponent<CamZone>();
                 zone.layer = gameObject.layer;
 
-                camZone.vCam.LookAt = PlayerManager.Instance.transform;
+                //camZone.vCam.LookAt = PlayerManager.Instance.transform;
                 //camZone.vCam.m_Lens.FieldOfView = 20;
-                camZone.vCam.gameObject.SetActive(false);
+                //camZone.vCam.gameObject.SetActive(false);
 
-                if (i == 0 && j == 0)
-                    playerZone = camZone;
+                //if (i == 0 && j == 0)
+                //    playerZone = camZone;
             }
         }
-        playerZone.vCam.gameObject.SetActive(true);
+        playerZone = GameObject.Find("CZ00").GetComponent<CamZone>();
+        playerZone.ToggleCamera(true);
    }
 
     // Update is called once per frame
@@ -45,8 +46,8 @@ public class CamZones : MonoBehaviour
     }
 
     public void SwapCams(CamZone caller) {
-        playerZone.vCam.gameObject.SetActive(false);
+        playerZone.ToggleCamera(false);
         playerZone = caller;
-        playerZone.vCam.gameObject.SetActive(true);
+        playerZone.ToggleCamera(true);
     }
 }
