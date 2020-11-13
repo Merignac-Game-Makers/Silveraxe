@@ -9537,60 +9537,12 @@ Transform:
   m_Father: {fileID: 53444463}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1220921081 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 783252841455135458, guid: 9a241f8156176cb4881213b835c11588,
-    type: 3}
-  m_PrefabInstance: {fileID: 285638713241183492}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1220921082 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6332155931055358765, guid: 9a241f8156176cb4881213b835c11588,
     type: 3}
   m_PrefabInstance: {fileID: 285638713241183492}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1220921083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1220921081}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3f8bd49933313b46b55b6fc1247c778, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enableFeetIk: 1
-  heightFromGroundRaycast: 2
-  raycastDownDistance: 2
-  environmentLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  pelvisOffset: 0
-  pelvisUpAndDownSpeed: 0.28
-  feetToIkPositionSpeed: 0.5
-  showSolverDebug: 1
-  animSmoothTime: 1
---- !u!95 &1220921084
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1220921081}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: e4aa31f274820b94eb0d0b764e0f383b, type: 3}
-  m_Controller: {fileID: 9100000, guid: 1de6bb7e24a3aa9488379378e8f37973, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &1221406527
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17695,15 +17647,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1098783190}
     m_Modifications:
-    - target: {fileID: 189841225145499063, guid: 9a241f8156176cb4881213b835c11588,
+    - target: {fileID: 285638712752910973, guid: 9a241f8156176cb4881213b835c11588,
         type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 081111fd1834f42469e07a9a2ce295c6, type: 2}
-    - target: {fileID: 189841225145499063, guid: 9a241f8156176cb4881213b835c11588,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
+      propertyPath: m_LocalRotation.x
+      value: -0.000000079951164
       objectReference: {fileID: 0}
     - target: {fileID: 285638712752910973, guid: 9a241f8156176cb4881213b835c11588,
         type: 3}
@@ -17717,11 +17664,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 285638712752910973, guid: 9a241f8156176cb4881213b835c11588,
         type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.000000079951164
-      objectReference: {fileID: 0}
-    - target: {fileID: 285638712752910973, guid: 9a241f8156176cb4881213b835c11588,
-        type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.00000083883924
       objectReference: {fileID: 0}
@@ -17730,20 +17672,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 3413440680727103309, guid: 9a241f8156176cb4881213b835c11588,
+    - target: {fileID: 1729629488552424742, guid: 9a241f8156176cb4881213b835c11588,
         type: 3}
-      propertyPath: m_Speed
-      value: 5
+      propertyPath: m_CullingMode
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3413440680727103309, guid: 9a241f8156176cb4881213b835c11588,
+    - target: {fileID: 5928925421831498529, guid: 9a241f8156176cb4881213b835c11588,
         type: 3}
-      propertyPath: m_Acceleration
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3413440680727103309, guid: 9a241f8156176cb4881213b835c11588,
-        type: 3}
-      propertyPath: m_AngularSpeed
-      value: 1200
+      propertyPath: rotationSensitivity
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 6332155931055358765, guid: 9a241f8156176cb4881213b835c11588,
         type: 3}

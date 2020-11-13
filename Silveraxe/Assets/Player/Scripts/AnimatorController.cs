@@ -9,7 +9,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(NavMeshAgent))]
-public class MovementInput : MonoBehaviour
+public class AnimatorController : MonoBehaviour
 {
 	#region Variables
 	private float inputX;		//Left and Right Inputs
