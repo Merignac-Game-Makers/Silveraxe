@@ -16729,7 +16729,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 1
   m_VoxelSize: 0.1
   m_BuildHeightMesh: 0
-  m_NavMeshData: {fileID: 23800000, guid: d1ee624dc72951046a19a0b245d27d19, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 0760145876a9a49409e9a69fc8120795, type: 2}
 --- !u!1001 &2063321269
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17548,7 +17548,7 @@ PrefabInstance:
     - target: {fileID: 3413440680727103309, guid: 9a241f8156176cb4881213b835c11588,
         type: 3}
       propertyPath: m_AngularSpeed
-      value: 1200
+      value: 3600
       objectReference: {fileID: 0}
     - target: {fileID: 6332155931055358765, guid: 9a241f8156176cb4881213b835c11588,
         type: 3}
