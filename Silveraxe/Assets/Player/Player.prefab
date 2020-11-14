@@ -207,6 +207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcc6a9aedf3cca24caeef0835f2db35d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotationSensitivity: 0.4
 --- !u!143 &4848952214074941617
 CharacterController:
   m_ObjectHideFlags: 0
