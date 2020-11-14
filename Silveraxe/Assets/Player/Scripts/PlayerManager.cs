@@ -29,6 +29,7 @@ public class PlayerManager : MonoBehaviour
 	// navigation
 	[HideInInspector]
 	public NavMeshAgent m_Agent;                                    // agent de navigation
+	bool hasKeybordMovementInput => GetComponent<MovementInput>().enabled;	// flag : la gestion des déplacements au clavier est-elle activéee ?
 	bool MoveAcrossNavMeshesStarted = false;                        // flag : est-on sur un nav mesh link ? (pour gérer la vitesse)
 	[HideInInspector]
 	public bool inTransit;                                          // l'agent est-il dans un transit (chagement de zone assisté)
@@ -170,7 +171,8 @@ public class PlayerManager : MonoBehaviour
 																										// il pourrait être utilisé pour afficher un panneau de statistiques ou tout autre chose
 								} else {                                                                // sinon => navigation
 									if (Physics.Raycast(screenRay, out m_HitInfo, 5000, raycastableLayers) && (!inTransit)) {
-										m_Agent.SetDestination(m_HitInfo.point);                        // aller vers le point sélectionné
+										if (!hasKeybordMovementInput)
+											m_Agent.SetDestination(m_HitInfo.point);                        // aller vers le point sélectionné
 									}
 								}
 							}
