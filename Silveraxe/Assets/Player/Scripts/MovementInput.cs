@@ -38,17 +38,18 @@ public class MovementInput : MonoBehaviour
 		hasMouseTarget =Physics.Raycast(playerCam.ScreenPointToRay(Input.mousePosition), out mouseTarget, 1000f, m_NavLayer);
 		distance = (mouseTarget.point - PlayerManager.Instance.transform.position).magnitude;
 		if (hasMouseTarget && distance>navAgent.radius*5) {
-			if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.UpArrow)) {
+			if (Input.GetAxis("Vertical") > 0) {
 				MoveForward();
-			} else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) {
+			} else if (Input.GetAxis("Vertical") < 0) {
 				MoveBackward();
-			} else if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow)) {
+			} else if (Input.GetAxis("Horizontal") < 0) {
 				MoveLeft();
-			} else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) {
+			} else if (Input.GetAxis("Horizontal") > 0) {
 				MoveRight();
 			} else {
-				isMovingWithKeyboard = false;
+				isMovingWithKeyboard = true;
 			}
+			SetToMouseDirection();
 		}
 
 
@@ -61,12 +62,10 @@ public class MovementInput : MonoBehaviour
 
 	}
 
-	private void SetToMouseDirection() {
+    private void SetToMouseDirection() {
 		// Lancer de rayon de la caméra vers le pointeur de souris
 		if (Physics.Raycast(playerCam.ScreenPointToRay(Input.mousePosition), out mouseTarget, 1000f, m_NavLayer)) {
-			if (isMovingWithKeyboard && navAgent.velocity.magnitude > .2f)
 				FaceTo(mouseTarget.point);
-
 		}
 	}
 
