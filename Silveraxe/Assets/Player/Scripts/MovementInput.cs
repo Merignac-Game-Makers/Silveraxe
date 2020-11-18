@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class MovementInput : MonoBehaviour
 {
-	public float rotationSensitivity = .4f;   //How sensitive it with mouse
+	public float rotationSensitivity = .4f;   // How sensitive it with mouse
 
 	public NavMeshAgent navAgent { get; private set; }
 	private Camera playerCam;
@@ -13,9 +13,18 @@ public class MovementInput : MonoBehaviour
 	// déplacements
 	NavMeshPath path;
 	bool isMovingWithKeyboard = false;
+	Vector2 playerScreenPos;
+	Vector2 mouseScreenPos;
+	float dScreen;
+	float threshold;
+	float speedFactor = 1;
+	float standardAgentSpeed;
+
 	// rotation
 	RaycastHit mouseTarget = new RaycastHit();                      // résultat du lancer de rayon vers le pointeur de la souris
 	int m_NavLayer;                                                 // layer de la navigation
+
+
 
 	private void Awake() {
 		navAgent = GetComponent<NavMeshAgent>();
@@ -25,6 +34,13 @@ public class MovementInput : MonoBehaviour
 		playerCam = CameraController.Instance.GameplayCamera;
 		path = new NavMeshPath();
 		m_NavLayer = 1 << LayerMask.NameToLayer("Navigation");              // layer de la navigation
+
+		playerScreenPos = playerCam.WorldToScreenPoint(PlayerManager.Instance.transform.position);
+		threshold = (Screen.height - playerScreenPos.y) / 6;
+		//threshold = navAgent.radius * 10;
+
+		standardAgentSpeed = navAgent.speed;
+
 	}
 
 
@@ -35,9 +51,23 @@ public class MovementInput : MonoBehaviour
 		//------------------------
 		// déplacements au clavier
 		//------------------------
-		hasMouseTarget =Physics.Raycast(playerCam.ScreenPointToRay(Input.mousePosition), out mouseTarget, 1000f, m_NavLayer);
-		distance = (mouseTarget.point - PlayerManager.Instance.transform.position).magnitude;
-		if (hasMouseTarget && distance>navAgent.radius*5) {
+		//hasMouseTarget = Physics.Raycast(playerCam.ScreenPointToRay(Input.mousePosition), out mouseTarget, 1000f, m_NavLayer);
+		//distance = (mouseTarget.point - PlayerManager.Instance.transform.position).magnitude;
+		//speedFactor = Mathf.Max(distance - threshold, threshold) / threshold;
+
+		playerScreenPos = playerCam.WorldToScreenPoint(PlayerManager.Instance.transform.position);
+		mouseScreenPos = Input.mousePosition;
+		dScreen = Vector2.Distance(playerScreenPos, mouseScreenPos);
+
+
+		if (dScreen > threshold) {
+			//if (Mathf.Abs(navAgent.velocity.z) > Mathf.Abs(navAgent.velocity.x) * 2) {
+			//	speedFactor = Mathf.Max(dScreen - threshold, threshold) / threshold;
+			//} else {
+			//	speedFactor = 1;
+			//}
+
+			//if (hasMouseTarget && distance > navAgent.radius * 5) {
 			if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.UpArrow)) {
 				MoveForward();
 			} else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) {
@@ -61,12 +91,21 @@ public class MovementInput : MonoBehaviour
 
 	}
 
+	Ray ray;
+	RaycastHit hit;
 	private void SetToMouseDirection() {
 		// Lancer de rayon de la caméra vers le pointeur de souris
-		if (Physics.Raycast(playerCam.ScreenPointToRay(Input.mousePosition), out mouseTarget, 1000f, m_NavLayer)) {
+		ray = playerCam.ScreenPointToRay(Input.mousePosition);
+		if (Physics.Raycast(ray, out mouseTarget, 1000f, m_NavLayer)) {
 			if (isMovingWithKeyboard && navAgent.velocity.magnitude > .2f)
 				FaceTo(mouseTarget.point);
-
+		} else {
+			ray.origin = ray.GetPoint(1000);
+			ray.direction = -ray.direction;
+			if (Physics.Raycast(ray, out mouseTarget, 1000f)) {
+				if (isMovingWithKeyboard && navAgent.velocity.magnitude > .2f)
+					FaceTo(mouseTarget.point);
+			}
 		}
 	}
 
@@ -111,24 +150,28 @@ public class MovementInput : MonoBehaviour
 	private void MoveForward() {
 		isMovingWithKeyboard = true;
 		SetToMouseDirection();
+		//navAgent.speed = standardAgentSpeed * speedFactor;
 		navAgent.CalculatePath(transform.position + transform.forward * 1f, path);
 		navAgent.SetDestination(transform.position + transform.forward * 1f);
 	}
 	private void MoveBackward() {
 		isMovingWithKeyboard = true;
 		SetToMouseDirection();
+		//navAgent.speed = standardAgentSpeed;
 		navAgent.CalculatePath(transform.position + transform.forward * -.5f, path);
 		navAgent.updateRotation = false;
 		GoTo(transform.position + transform.forward * -.5f);
 	}
 	private void MoveLeft() {
 		isMovingWithKeyboard = true;
+		//navAgent.speed = standardAgentSpeed;
 		navAgent.CalculatePath(transform.position + transform.right * -.5f, path);
 		navAgent.updateRotation = false;
 		GoTo(transform.position + transform.right * -.5f);
 	}
 	private void MoveRight() {
 		isMovingWithKeyboard = true;
+		//navAgent.speed = standardAgentSpeed;
 		navAgent.CalculatePath(transform.position + transform.right * .5f, path);
 		navAgent.updateRotation = false;
 		GoTo(transform.position + transform.right * .5f);

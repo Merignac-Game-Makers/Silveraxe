@@ -112,6 +112,8 @@ public class EdgeDetect : MonoBehaviour
 	}
 
 	public void Init(int width, int height) {
+		cam = GetComponent<Camera>();
+
 		normalsCapturingCamera.orthographic = depthCapturingCamera.orthographic = cam.orthographic;
 		normalsCapturingCamera.cullingMask = depthCapturingCamera.cullingMask = cam.cullingMask;
 
