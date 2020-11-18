@@ -9,6 +9,7 @@ public class MovementInput : MonoBehaviour
 
 	public NavMeshAgent navAgent { get; private set; }
 	private Camera playerCam;
+	private Quaternion targetLookRotation;
 
 	// déplacements
 	NavMeshPath path;
@@ -25,6 +26,7 @@ public class MovementInput : MonoBehaviour
 		playerCam = CameraController.Instance.GameplayCamera;
 		path = new NavMeshPath();
 		m_NavLayer = 1 << LayerMask.NameToLayer("Navigation");              // layer de la navigation
+		targetLookRotation = Quaternion.identity;
 	}
 
 
@@ -62,9 +64,14 @@ public class MovementInput : MonoBehaviour
 
 	}
 
-    private void SetToMouseDirection() {
+    private void FixedUpdate()
+    {
+		transform.rotation = Quaternion.Slerp(transform.rotation, targetLookRotation, Time.fixedDeltaTime);
+	}
+
+	private void SetToMouseDirection() {
 		// Lancer de rayon de la caméra vers le pointeur de souris
-		if (Physics.Raycast(playerCam.ScreenPointToRay(Input.mousePosition), out mouseTarget, 1000f, m_NavLayer)) {
+		if ((Input.mousePosition.y > (Screen.height * .3)) && Physics.Raycast(playerCam.ScreenPointToRay(Input.mousePosition), out mouseTarget, 1000f, m_NavLayer)) {
 				FaceTo(mouseTarget.point);
 		}
 	}
@@ -77,20 +84,7 @@ public class MovementInput : MonoBehaviour
 	public void FaceTo(Vector3 other) {
 		delta = other - transform.position;
 		delta.y = 0;
-		rotation = Quaternion.LookRotation(delta);
-
-		if (coroutine != null)
-			StopCoroutine(coroutine);
-		coroutine = StartCoroutine(IFaceTo(rotation, 1));
-	}
-
-	IEnumerator IFaceTo(Quaternion rot, float s) {
-		timer = 0;
-		while (timer <= s) {
-			timer += Time.deltaTime * 5f;
-			transform.rotation = Quaternion.Slerp(transform.rotation, rot, timer);
-			yield return new WaitForEndOfFrame();
-		}
+		targetLookRotation = Quaternion.LookRotation(delta);
 	}
 
 
