@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class MovementInput : MonoBehaviour
 {
-	public float rotationSensitivity = .4f;   //How sensitive it with mouse
+	public float rotationSensitivity = .4f;   // How sensitive it with mouse
 
 	public NavMeshAgent navAgent { get; private set; }
 	private Camera playerCam;
@@ -14,9 +14,18 @@ public class MovementInput : MonoBehaviour
 	// déplacements
 	NavMeshPath path;
 	bool isMovingWithKeyboard = false;
+	Vector2 playerScreenPos;
+	Vector2 mouseScreenPos;
+	float dScreen;
+	float threshold;
+	float speedFactor = 1;
+	float standardAgentSpeed;
+
 	// rotation
 	RaycastHit mouseTarget = new RaycastHit();                      // résultat du lancer de rayon vers le pointeur de la souris
 	int m_NavLayer;                                                 // layer de la navigation
+
+
 
 	private void Awake() {
 		navAgent = GetComponent<NavMeshAgent>();
@@ -104,24 +113,28 @@ public class MovementInput : MonoBehaviour
 	private void MoveForward() {
 		isMovingWithKeyboard = true;
 		SetToMouseDirection();
+		//navAgent.speed = standardAgentSpeed * speedFactor;
 		navAgent.CalculatePath(transform.position + transform.forward * 1f, path);
 		navAgent.SetDestination(transform.position + transform.forward * 1f);
 	}
 	private void MoveBackward() {
 		isMovingWithKeyboard = true;
 		SetToMouseDirection();
+		//navAgent.speed = standardAgentSpeed;
 		navAgent.CalculatePath(transform.position + transform.forward * -.5f, path);
 		navAgent.updateRotation = false;
 		GoTo(transform.position + transform.forward * -.5f);
 	}
 	private void MoveLeft() {
 		isMovingWithKeyboard = true;
+		//navAgent.speed = standardAgentSpeed;
 		navAgent.CalculatePath(transform.position + transform.right * -.5f, path);
 		navAgent.updateRotation = false;
 		GoTo(transform.position + transform.right * -.5f);
 	}
 	private void MoveRight() {
 		isMovingWithKeyboard = true;
+		//navAgent.speed = standardAgentSpeed;
 		navAgent.CalculatePath(transform.position + transform.right * .5f, path);
 		navAgent.updateRotation = false;
 		GoTo(transform.position + transform.right * .5f);
