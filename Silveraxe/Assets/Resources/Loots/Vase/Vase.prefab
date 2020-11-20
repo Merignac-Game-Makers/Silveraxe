@@ -41,6 +41,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6178253903767330512}
   - component: {fileID: 3312031369783478554}
+  - component: {fileID: 5431517636113288785}
+  - component: {fileID: 294116091}
   m_Layer: 9
   m_Name: Vase
   m_TagString: Untagged
@@ -55,7 +57,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6175975749511798606}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.552, y: -0.289, z: 0.602}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -76,8 +78,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6513ca36828d39e48b4b0f9a2946a7f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHighlihtable: 0
-  useLight: 0
+  isHighlightable: 1
+  useLight: 1
   mode: 0
   Clicked: 0
   ItemName: Vase
@@ -90,6 +92,35 @@ MonoBehaviour:
   usable: 1
   UsageEffects:
   - {fileID: 0}
+--- !u!135 &5431517636113288785
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6175975749511798606}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!208 &294116091
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6175975749511798606}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &7882850212915933940
 GameObject:
   m_ObjectHideFlags: 0

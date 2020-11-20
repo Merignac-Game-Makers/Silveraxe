@@ -29,11 +29,16 @@ public class PNJ : InteractableObject
 	CapsuleCollider cCollider;
 	float timer = 0f;
 
+	DialogueTrigger dialogueTrigger;
+	DialogueDispatcher dialogueDispatcher;
+
 	public override bool IsInteractable() => true;
 
 	protected override void Start() {
 		base.Start();
 		PNJcam = GetComponentInChildren<Camera>(true).gameObject;       // récupérer la caméra pour les dialogues
+		dialogueTrigger = GetComponentInChildren<DialogueTrigger>();     // si le PNJ a-t-il un dialogue trigger
+		dialogueDispatcher = GetComponentInChildren<DialogueDispatcher>();
 
 		switch (alignment) {
 			case Alignment.friend:
@@ -74,16 +79,27 @@ public class PNJ : InteractableObject
 		cCollider.isTrigger = false;
 	}
 
+	void OnMouseEnter() {
+		UIManager.Instance.SetCursor( dialogueTrigger.dialogueCursor);
+	}
+
+	private void OnMouseExit() {
+		UIManager.Instance.ResetCursor();
+	}
+
+	public override bool Highlight(bool on) {
+		return base.Highlight(on);
+	}
+
 	// intéraction avec un PNJ
 	public override void InteractWith(CharacterData character, HighlightableObject target = null, Action action = talk) {
-		DialogueTrigger dt = GetComponentInChildren<DialogueTrigger>();     // si le PNJ a un dialogue
-		if (dt) {
+		if (dialogueTrigger.HasDialogue()) {								// si le PNJ a un dialogue
 			PlayerManager.Instance.StopAgent();                             //	stopper la navigation
 			GetComponentInChildren<DialogueTrigger>().Run();                //	démarrer le dialogue	
 
-			if (mode == Mode.onTheFlyOnce) {                                // si le PNJ est en mode 'onTheFlyOnce'
-				Collider dtc = dt.gameObject.GetComponent<Collider>();      // et qu'il existe un collider spécifique de ce mode
-				ResetColliderRadius();                                      // restaurer le rayon initial du collider (pour éviter à l'avenir une intéraction sur un rayon élargi)
+			if (mode == Mode.onTheFlyOnce) {											// si le PNJ est en mode 'onTheFlyOnce'
+				//Collider dtc = dialogueTrigger.gameObject.GetComponent<Collider>();   // et qu'il existe un collider spécifique de ce mode
+				ResetColliderRadius();													// restaurer le rayon initial du collider (pour éviter à l'avenir une intéraction sur un rayon élargi)
 			}
 		}
 

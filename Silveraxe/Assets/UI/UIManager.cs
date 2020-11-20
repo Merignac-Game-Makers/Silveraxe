@@ -19,8 +19,8 @@ public class UIManager : MonoBehaviour
 
 	public DialoguesUI dialoguesUI;             // interface Dialogues
 	public InventoryUI inventoryUI;             // interface Inventaire
-	//public DiaryBookContent diaryBookContent;   // pages du journal
-	//public MagicUI magicUI;                     // interface Magie
+												//public DiaryBookContent diaryBookContent;   // pages du journal
+												//public MagicUI magicUI;                     // interface Magie
 	public QuitUI quitUi;                       // interface Quit
 
 	//public GameObject magicButton;              // bouton du grimoire		
@@ -32,7 +32,13 @@ public class UIManager : MonoBehaviour
 	public GameObject messageLabel;
 	public GameObject forbidden;
 
+	public int defaultCursorSize = 64;
+
 	Coroutine coroutine;
+
+	Texture2D cursor;
+	Stack<Texture2D> cursorStack;
+
 
 	void Awake() {
 		Instance = this;
@@ -41,10 +47,7 @@ public class UIManager : MonoBehaviour
 	private void Start() {
 		dialoguesUI.Init(this);                 // initialisation du gestionnaire de dialogues
 		inventoryUI.Init(this);                 // initialisation du gestionnaire d'inventaire
-		//diaryBookContent.Init();                // initialisation des pages du journal
-		//magicUI.Init(this);                     // intialisation du gestionnaire de magie
-		//questButton.gameObject.SetActive(false);            // masquer le bouton des quêtes
-		//diaryButton.gameObject.SetActive(false);            // masquer le bouton du journal
+		cursorStack = new Stack<Texture2D>();
 	}
 
 	public void ShowQuitUi() {
@@ -59,24 +62,20 @@ public class UIManager : MonoBehaviour
 	public void ManageButtons(State state) {
 		prevState = this.state;                 // mémoriser l'état précédent de l'UI
 		this.state = state;                     // mémoriser le nouvel état de l'UI
-			//magicButton.SetActive(false);
-			//questButton.gameObject.SetActive(false);
-			//diaryButton.gameObject.SetActive(false);
-			//artifactButton.gameObject.SetActive(false);
-			switch (state) {
-				case State.dialog:
-					inventoryUI.SaveAndHide();
-					//exitButton.SaveAndHide();
-					break;
-				case State.quit:
-					inventoryUI.SaveAndHide();
-					//exitButton.SaveAndHide();
-					break;
-				default:
-					inventoryUI.Restore();
-					//exitButton.Restore();
-					break;
-			}
+		switch (state) {
+			case State.dialog:
+				inventoryUI.SaveAndHide();
+				//exitButton.SaveAndHide();
+				break;
+			case State.quit:
+				inventoryUI.SaveAndHide();
+				//exitButton.SaveAndHide();
+				break;
+			default:
+				inventoryUI.Restore();
+				//exitButton.Restore();
+				break;
+		}
 	}
 
 	public void RestoreButtonsPreviousState() {
@@ -113,6 +112,54 @@ public class UIManager : MonoBehaviour
 		yield return new WaitForSeconds(s);
 		obj.SetActive(false);
 		PlayerManager.Instance.isClicOnUI = false;
+	}
+
+	/// <summary>
+	/// Redimensionner une texture
+	/// </summary>
+	RenderTexture rt;
+	Texture2D tempTexture;
+	public Texture2D Resize(Texture2D tex, int size) {
+		rt = new RenderTexture(size, size, 32);
+		RenderTexture.active = rt;
+		Graphics.Blit(tex, rt);
+		tempTexture = new Texture2D(size, size, TextureFormat.RGBA32, false);
+		tempTexture.ReadPixels(new Rect(0, 0, size, size), 0, 0);
+		tempTexture.alphaIsTransparency = true;
+		tempTexture.Apply();
+		return tempTexture;
+	}
+
+
+	public void SetCursor(Texture2D tex) {
+		SetCursor(tex, defaultCursorSize);
+	}
+
+	public void SetCursor(Texture2D tex, int size) {
+		cursor = Resize(tex, size);
+		cursorStack.Push(cursor);
+
+		Cursor.SetCursor(cursor, new Vector2(size / 2, size / 2), CursorMode.ForceSoftware);
+	}
+
+	public void ResetCursor() {
+		if (cursorStack.Count > 0) {
+			cursorStack.Pop();
+			if (cursorStack.Count > 0) {
+				cursor = cursorStack.Peek();
+				Cursor.SetCursor(cursor, new Vector2(cursor.width / 2, cursor.height / 2), CursorMode.ForceSoftware);
+			} else {
+				SetBaseCursor(PlayerManager.Instance.GetComponent<MovementInput>().shouldMove);
+			}
+		}
+	}
+
+	public void SetBaseCursor(bool shouldMove) {
+		if (shouldMove) {
+			Cursor.SetCursor(Resize(PlayerManager.Instance.GetComponent<MovementInput>().footSteps, defaultCursorSize), new Vector2(defaultCursorSize/2, defaultCursorSize / 2), CursorMode.ForceSoftware);
+		} else {
+			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+		}
 	}
 
 }

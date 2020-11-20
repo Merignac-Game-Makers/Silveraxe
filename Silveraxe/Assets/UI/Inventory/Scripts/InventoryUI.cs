@@ -146,6 +146,10 @@ public class InventoryUI : UIBase
 		}
 	}
 
+	/// <summary>
+	/// 'dropper' un objet dans l'inventaire 
+	/// </summary>
+	/// <param name="position"></param>
 	public void HandledDroppedEntry(Vector3 position) {
 		// check for drop on ItemSlots
 		for (int i = 0; i < content.transform.childCount; ++i) {                                // pour chaque slot
@@ -163,7 +167,6 @@ public class InventoryUI : UIBase
 			}
 		}
 		// check for drop on 3D target
-		//DropOn3D(PlayerManager.Instance.m_InvItemDragging.draggedEntry.entry);
 		DropOn3D(currentlyDragged.draggedEntry.entry);
 	}
 

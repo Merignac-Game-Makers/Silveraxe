@@ -119,6 +119,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6180141738370616328}
   - component: {fileID: 6393091688630265808}
+  - component: {fileID: 4871020365175171128}
   m_Layer: 9
   m_Name: TargetTemplate
   m_TagString: Untagged
@@ -155,13 +156,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 288414cdaae9f3a44aa6012a3086c5ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHighlihtable: 1
+  isHighlightable: 1
   useLight: 1
   mode: 0
   Clicked: 0
   prefab: {fileID: 0}
   filterMode: 0
   filterItems: 01000000
+--- !u!135 &4871020365175171128
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4457505555344695085}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &4148221411949808107
 PrefabInstance:
   m_ObjectHideFlags: 0

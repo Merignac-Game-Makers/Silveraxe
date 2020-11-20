@@ -5,7 +5,10 @@ using UnityEngine.AI;
 
 public class MovementInput : MonoBehaviour
 {
-	public float rotationSensitivity = .4f;   // How sensitive it with mouse
+	public float rotationSensitivity = 1f;   // How sensitive it with mouse
+	public Texture2D footSteps;
+	public int footstepsSize = 32;
+
 
 	public NavMeshAgent navAgent { get; private set; }
 	private Camera playerCam;
@@ -13,6 +16,7 @@ public class MovementInput : MonoBehaviour
 
 	// déplacements
 	NavMeshPath path;
+	public bool shouldMove { get; private set; }
 	bool isMovingWithKeyboard = false;
 	Vector2 playerScreenPos;
 	Vector2 mouseScreenPos;
@@ -20,25 +24,38 @@ public class MovementInput : MonoBehaviour
 	float threshold;
 	float speedFactor = 1;
 	float standardAgentSpeed;
+	Vector2 hotspot;
 
 	// rotation
 	RaycastHit mouseTarget = new RaycastHit();                      // résultat du lancer de rayon vers le pointeur de la souris
 	int m_NavLayer;                                                 // layer de la navigation
 
-
-
+	float playerFeet;
+	Texture2D cursor;
 	private void Awake() {
 		navAgent = GetComponent<NavMeshAgent>();
 	}
 	// Start is called before the first frame update
 	void Start() {
-		playerCam = CameraController.Instance.GameplayCamera;
-		path = new NavMeshPath();
+		playerCam = CameraController.Instance.GameplayCamera;               // la caméra du player
+		path = new NavMeshPath();                                           // le chemin à suivre
 		m_NavLayer = 1 << LayerMask.NameToLayer("Navigation");              // layer de la navigation
-		targetLookRotation = Quaternion.identity;
+		targetLookRotation = Quaternion.identity;                           // rotation initiale = 'pas de rotation'
+		playerFeet = playerCam.WorldToScreenPoint(PlayerManager.Instance.transform.position).y / Screen.height;
+		cursor = Resize(footSteps, footstepsSize, footstepsSize);
+
+		hotspot = new Vector2(footstepsSize / 2, footstepsSize / 2); 
 	}
 
-
+	Texture2D Resize(Texture2D texture2D, int targetX, int targetY) {
+		RenderTexture rt = new RenderTexture(targetX, targetY, 24);
+		RenderTexture.active = rt;
+		Graphics.Blit(texture2D, rt);
+		Texture2D result = new Texture2D(targetX, targetY);
+		result.ReadPixels(new Rect(0, 0, targetX, targetY), 0, 0);
+		result.Apply();
+		return result;
+	}
 
 	float distance;
 	bool hasMouseTarget;
@@ -46,9 +63,8 @@ public class MovementInput : MonoBehaviour
 		//------------------------
 		// déplacements au clavier
 		//------------------------
-		hasMouseTarget =Physics.Raycast(playerCam.ScreenPointToRay(Input.mousePosition), out mouseTarget, 1000f, m_NavLayer);
-		distance = (mouseTarget.point - PlayerManager.Instance.transform.position).magnitude;
-		if (hasMouseTarget && distance>navAgent.radius*5) {
+		shouldMove = ShouldMove();
+		if (shouldMove) {
 			if (Input.GetAxis("Vertical") > 0) {
 				MoveForward();
 			} else if (Input.GetAxis("Vertical") < 0) {
@@ -60,66 +76,63 @@ public class MovementInput : MonoBehaviour
 			} else {
 				isMovingWithKeyboard = true;
 			}
-			SetToMouseDirection();
-		}
-
-
-		//// sensibilité de la rotation à la souris
-		//if (Input.GetKeyDown(KeyCode.KeypadPlus) || Input.GetKeyDown(KeyCode.Plus)) {
-		//	StartCoroutine(ISensitivity(+1));
-		//} else if (Input.GetKeyDown(KeyCode.KeypadMinus) || Input.GetKeyDown(KeyCode.Minus)) {
-		//	StartCoroutine(ISensitivity(-1));
-		//}
-
+		} 
 	}
 
-    private void FixedUpdate()
-    {
-		transform.rotation = Quaternion.Slerp(transform.rotation, targetLookRotation, Time.fixedDeltaTime);
-	}
+	Vector3 dir;
+	float k;
+	private void FixedUpdate() {
+		if (navAgent.velocity.magnitude > .2f || Input.GetKey(KeyCode.Space)) {
 
-	private void SetToMouseDirection() {
-		// Lancer de rayon de la caméra vers le pointeur de souris
-		if ((Input.mousePosition.y > (Screen.height * .3)) && Physics.Raycast(playerCam.ScreenPointToRay(Input.mousePosition), out mouseTarget, 1000f, m_NavLayer)) {
-				FaceTo(mouseTarget.point);
+			dir = mouseTarget.point - transform.position;
+			dir.y = 0;
+
+			k = (Camera.main.WorldToScreenPoint(transform.position).x - mouseTarget.point.x) / Screen.width;
+
+			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), Time.fixedDeltaTime * rotationSensitivity);
 		}
 	}
 
+	bool ShouldMove() {
+		if (IsMouseInActiveArea()) {
+			hasMouseTarget = Physics.Raycast(playerCam.ScreenPointToRay(Input.mousePosition), out mouseTarget, 1000f, m_NavLayer);
+			distance = (mouseTarget.point - PlayerManager.Instance.transform.position).magnitude;
+		} else {
+			hasMouseTarget = false;
+			distance = 0;
+		}
 
-	Coroutine coroutine;
-	Vector3 delta;
-	Quaternion rotation;
-	float timer = 0f;
-	public void FaceTo(Vector3 other) {
-		delta = other - transform.position;
-		delta.y = 0;
-		targetLookRotation = Quaternion.LookRotation(delta);
+		bool result = distance > navAgent.radius * 5f;
+		if (result != shouldMove) {
+			if (result) {
+				UIManager.Instance.SetBaseCursor(true);
+			} else {
+				UIManager.Instance.SetBaseCursor(false);
+				UIManager.Instance.ResetCursor();
+			}
+		}
+		return result;
+	}
+
+	bool IsMouseInActiveArea() {
+		return Input.mousePosition.x > 0 &&
+			Input.mousePosition.x < Screen.width &&
+			Input.mousePosition.y > Screen.height * playerFeet &&
+			Input.mousePosition.y < Screen.height;
 	}
 
 
-	//IEnumerator ISensitivity(int k) {
-	//	if (k < 0) {
-	//		rotationSensitivity /= 1.2f;
-	//		//sensitivity.sprite = s_minus;
-	//	} else {
-	//		rotationSensitivity *= 1.2f;
-	//		//sensitivity.sprite = s_plus;
-	//	}
-	//	//sensitivity.enabled = true;
-	//	yield return new WaitForSeconds(0.5f);
-	//	//sensitivity.enabled = false;
-	//}
 
 	private void MoveForward() {
 		isMovingWithKeyboard = true;
-		SetToMouseDirection();
+		//SetToMouseDirection();
 		//navAgent.speed = standardAgentSpeed * speedFactor;
 		navAgent.CalculatePath(transform.position + transform.forward * 1f, path);
 		navAgent.SetDestination(transform.position + transform.forward * 1f);
 	}
 	private void MoveBackward() {
 		isMovingWithKeyboard = true;
-		SetToMouseDirection();
+		//SetToMouseDirection();
 		//navAgent.speed = standardAgentSpeed;
 		navAgent.CalculatePath(transform.position + transform.forward * -.5f, path);
 		navAgent.updateRotation = false;

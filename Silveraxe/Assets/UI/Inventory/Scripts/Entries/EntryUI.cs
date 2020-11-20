@@ -11,6 +11,7 @@ public abstract class EntryUI : MonoBehaviour, IPointerClickHandler, IPointerEnt
 
 	public InventoryUI inventoryUI { get; set; }
 	public int Index { get; set; }
+	public Loot item { get; set; }
 
 	protected bool selected = false;
 

@@ -21,7 +21,7 @@ public class Target : InteractableObject
 	Transform target;                 
 
 	public override bool IsInteractable() => isFree 
-		&& (PlayerManager.Instance.m_InvItemDragging!=null || InventoryUI.Instance.selectedEntry!=null);                // toujours actif
+		&& (PlayerManager.Instance.m_InvItemDragging!=null || InventoryUI.Instance.selectedEntry!=null);         
 
 	public bool isFree => !GetComponentInChildren<Loot>();      // ne peut contenir qu'un seul objet d'inventaire
 
@@ -29,6 +29,7 @@ public class Target : InteractableObject
 
 
 	public bool isAvailable(Loot item) {
+		if (!isOn) return false;
 		if (!isFree) return false;
 		if (!item.dropable) return false;
 		if (filterMode == FilterMode.allow && !filterItems.Contains(item.lootCategory)) return false;
@@ -43,13 +44,35 @@ public class Target : InteractableObject
 		prefabHolder = transform.Find("PrefabHolder");
 		// masquage de la cible
 		target.gameObject.SetActive(false);
-		// ajout du nevmesh obstacle
+		// ajout du navmesh obstacle
 		if (prefabHolder) {
 			var obj = prefabHolder.GetComponentInChildren<MeshFilter>();
 			if (obj != null)
 				obj.gameObject.AddComponent<UnityEngine.AI.NavMeshObstacle>();
 		}
 	}
+
+	private void Update() {
+		if (Input.GetButtonDown("Fire1")) {
+			if (InventoryUI.Instance.selectedEntry != null) {
+				if (isAvailable(InventoryUI.Instance.selectedEntry.item)) {
+					InventoryUI.Instance.selectedEntry.item.Drop(this);
+					Highlight(false);
+				}
+			}
+		}
+	}
+
+
+	//public override void OnMouseUp() {
+	//	base.OnMouseUp();
+	//	if (InventoryUI.Instance.selectedEntry != null) {
+	//		if (isAvailable(InventoryUI.Instance.selectedEntry.item)) {
+	//			InventoryUI.Instance.selectedEntry.item.Drop(this);
+	//			Highlight(false);
+	//		}
+	//	}
+	//}
 
 }
 

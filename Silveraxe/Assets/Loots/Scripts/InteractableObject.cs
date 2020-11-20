@@ -41,4 +41,16 @@ public abstract class InteractableObject : HighlightableObject
 			mode = Mode.onClick;
 	}
 
+	public virtual void OnTriggerEnter(Collider other) {
+		if (!isOn && IsInteractable())
+			Highlight(true);
+	}
+
+	public virtual void OnTriggerExit(Collider other) {
+		if (isOn)
+			Highlight(false);
+	}
+
+	public virtual void OnMouseUp() {
+	}
 }

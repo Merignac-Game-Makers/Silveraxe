@@ -67,6 +67,7 @@ public class Loot : InteractableObject
 	protected override void Start() {
 		base.Start();
 		inventoryUI = InventoryUI.Instance;
+
 	}
 
 
@@ -79,9 +80,14 @@ public class Loot : InteractableObject
 			currentPos.y = currentPos.y + Mathf.Sin(ratio * Mathf.PI) * 2.0f;
 			transform.position = currentPos;
 		}
+
+		if (Input.GetButtonDown("Fire1")) {
+			Take();
+		}
+
 	}
 
-	public void StartAnimation() {
+		public void StartAnimation() {
 		m_OriginalPosition = transform.position;                    // préparation
 		m_TargetPoint = transform.position;                         // de l'animation
 		m_AnimationTimer = AnimationTime - 0.1f;                    // de mise en place
@@ -94,24 +100,45 @@ public class Loot : InteractableObject
 	/// <param name="target">le lieu (lorsqu'on pose un objet)</param>
 	/// <param name="action">l'action : prendre ou poser</param>
 	public override void InteractWith(CharacterData character, HighlightableObject target = null, Action action = take) {
-		base.InteractWith(character, target, action);
+		//base.InteractWith(character, target, action);
 
-		PlayerManager.Instance.StopAgent();
+		//PlayerManager.Instance.StopAgent();
 
-		if (action == take) {
-			// si on ramasse l'objet
+		//if (action == take) {
+		//	// si on ramasse l'objet
+		//	SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });
+		//	InventoryManager.Instance.AddItem(this);
+		//} else {
+		//	// si on dépose l'objet sur une cible
+		//	if (action == drop && target is Target) {
+		//		if ((target as Target).isAvailable(this)) {                // et que cet emplacement est disponible pour cet objet
+		//			Drop(target as Target);
+		//			//inventoryUI.DropItem(target as Target, entry);         // déposer l'objet d'inventaire
+		//		}
+		//	}
+		//}
+	}
+
+	override public void OnMouseUp() {
+		Take();
+	}
+
+	private void OnMouseEnter() {
+		ToggleOutline(true);
+	}
+
+	private void OnMouseExit() {
+		ToggleOutline(false);
+	}
+
+	void Take() {
+		if (isOn) {
+			// on ramasse l'objet
 			SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });
 			InventoryManager.Instance.AddItem(this);
-		} else {
-			// si on dépose l'objet sur une cible
-			if (action == drop && target is Target) {
-				if ((target as Target).isAvailable(this)) {                // et que cet emplacement est disponible pour cet objet
-					Drop(target as Target);
-					//inventoryUI.DropItem(target as Target, entry);         // déposer l'objet d'inventaire
-				}
-			}
 		}
 	}
+
 
 	/// <summary>
 	/// Déposer un objet d'inventaire
@@ -123,6 +150,9 @@ public class Loot : InteractableObject
 		transform.position = target.targetPos;
 		StartAnimation();
 		InventoryManager.Instance.RemoveItem(entry);       // retirer l'objet déposé de l'inventaire
+		var playerDistance = (PlayerManager.Instance.transform.position - transform.position).magnitude;
+		if (playerDistance < GetComponent<SphereCollider>().radius)
+			Highlight(true);
 	}
 
 
@@ -144,9 +174,10 @@ public class LootEditor : Editor
 	SerializedProperty pIcon;
 	SerializedProperty pDescription;
 	SerializedProperty pPrefab;
+	SerializedProperty pLootCategory;
+	SerializedProperty pInteractionMode;
 	SerializedProperty pAnimate;
 	SerializedProperty pDropable;
-	SerializedProperty pLootCategory;
 	SerializedProperty pUsable;
 	SerializedProperty pUsageEffectList;
 
@@ -163,12 +194,13 @@ public class LootEditor : Editor
 		m_HighlightableEditor.Init(serializedObject);
 
 		pName = serializedObject.FindProperty(nameof(Loot.ItemName));
-		pPrefab = serializedObject.FindProperty(nameof(Loot.prefab));
 		pIcon = serializedObject.FindProperty(nameof(Loot.ItemSprite));
 		pDescription = serializedObject.FindProperty(nameof(Loot.Description));
+		pPrefab = serializedObject.FindProperty(nameof(Loot.prefab));
+		pLootCategory = serializedObject.FindProperty(nameof(Loot.lootCategory));
+		pInteractionMode = serializedObject.FindProperty(nameof(Loot.mode));
 		pAnimate = serializedObject.FindProperty(nameof(Loot.animate));
 		pDropable = serializedObject.FindProperty(nameof(Loot.dropable));
-		pLootCategory = serializedObject.FindProperty(nameof(Loot.lootCategory));
 		pUsable = serializedObject.FindProperty(nameof(Loot.usable));
 		pUsageEffectList = serializedObject.FindProperty(nameof(Loot.UsageEffects));
 
@@ -184,14 +216,16 @@ public class LootEditor : Editor
 	public override void OnInspectorGUI() {
 		//serializedObject.Update();
 
+		EditorGUILayout.PropertyField(pName);
+		EditorGUILayout.PropertyField(pIcon);
+		EditorGUILayout.PropertyField(pDescription, GUILayout.MinHeight(64));
+		EditorGUILayout.PropertyField(pPrefab);
+		EditorGUILayout.PropertyField(pLootCategory);
+		EditorGUILayout.PropertyField(pInteractionMode);
+
 		m_HighlightableEditor.GUI(target as Loot);
 
-		EditorGUILayout.PropertyField(pIcon);
-		EditorGUILayout.PropertyField(pName);
-		EditorGUILayout.PropertyField(pDescription, GUILayout.MinHeight(128));
-
 		var oldPrefab = serializedObject.FindProperty(nameof(Loot.prefab)).objectReferenceValue;
-		EditorGUILayout.PropertyField(pPrefab);
 		var newPrefab = serializedObject.FindProperty(nameof(Loot.prefab)).objectReferenceValue;
 		if (newPrefab != null && (oldPrefab == null || newPrefab.name != oldPrefab.name)) {
 			Debug.Log("change prefab");
@@ -205,7 +239,6 @@ public class LootEditor : Editor
 
 		EditorGUILayout.PropertyField(pAnimate);
 		m_Target.dropable = EditorGUILayout.Toggle("Dropable", pDropable.boolValue);
-		EditorGUILayout.PropertyField(pLootCategory);
 		m_Target.usable = EditorGUILayout.Toggle("Usable", pUsable.boolValue);
 
 		if (m_Target.usable) {

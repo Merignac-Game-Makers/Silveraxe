@@ -113,7 +113,7 @@ public class PlayerManager : MonoBehaviour
 		}
 
 		// Préparation du lancer de rayon de la caméra vers le pointeur de souris
-		Ray screenRay = CameraController.Instance.GameplayCamera.ScreenPointToRay(Input.mousePosition);
+		//Ray screenRay = CameraController.Instance.GameplayCamera.ScreenPointToRay(Input.mousePosition);
 
 		/**
 		Si une intéraction a été demandée, sommes nous arrivés 'AU CONTACT' ?
@@ -121,71 +121,70 @@ public class PlayerManager : MonoBehaviour
 			- par un clic sur un objet intéractible
 			- par la collision avec un intéractible (<see cref="OnTriggerEnter">)
 		*/
-		if (m_TargetInteractable != null) {
-			CheckInteractableRange();
-		}
+		//if (m_TargetInteractable != null) {
+		//	CheckInteractableRange();
+		//}
 
 		// récupération des objets en cours de drag & drop 
 		m_InvItemDragging = inventoryUI.currentlyDragged;         // objet d'inventaire
-																  //m_MagicOrb = magicManager.dragging;                    // orbe magique
 
 		// zoom
-		float mouseWheel = Input.GetAxis("Mouse ScrollWheel");
-		if (!Mathf.Approximately(mouseWheel, 0.0f)) {
-			Vector3 view = mainCamera.ScreenToViewportPoint(Input.mousePosition);
-			if (view.x > 0f && view.x < 1f && view.y > 0f && view.y < 1f)
-				CameraController.Instance.Zoom(-mouseWheel * Time.deltaTime * 40.0f);
-		}
+		//float mouseWheel = Input.GetAxis("Mouse ScrollWheel");
+		//if (!Mathf.Approximately(mouseWheel, 0.0f)) {
+		//	Vector3 view = mainCamera.ScreenToViewportPoint(Input.mousePosition);
+		//	if (view.x > 0f && view.x < 1f && view.y > 0f && view.y < 1f)
+		//		CameraController.Instance.Zoom(-mouseWheel * Time.deltaTime * 40.0f);
+		//}
 
 		// au début d'un clic, on commence par effacer tous les objets en cours d'intéraction
-		if (Input.GetMouseButtonDown(0)) {
-			m_CurrentTargetCharacterData = null;
-			m_TargetInteractable = null;
-			//m_TargetActivable = null;
-			m_DropItem = null;
-			isClicOnUI = EventSystem.current.IsPointerOverGameObject();
-		}
+		//if (Input.GetMouseButtonDown(0)) {
+		//	m_CurrentTargetCharacterData = null;
+		//	m_TargetInteractable = null;
+		//	//m_TargetActivable = null;
+		//	m_DropItem = null;
+		//	isClicOnUI = EventSystem.current.IsPointerOverGameObject();
+		//}
 
 		//// si on est arrivé à destination => on n'est plus en transit
 		//if (inTransit && m_Agent.remainingDistance <= m_Agent.stoppingDistance && (!m_Agent.hasPath || m_Agent.velocity.sqrMagnitude == 0f)) {
 		//	inTransit = false;
 		//}
+		//ObjectsRaycasts(screenRay);                             // Mettre en surbrillance les objets intéractibles lorsqu'ils sont sous le pointeur de souris
 
-			ObjectsRaycasts(screenRay);                             // Mettre en surbrillance les objets intéractibles lorsqu'ils sont sous le pointeur de souris
 		// Gestion de la souris (mouseHover et clic)
-		if (!isClicOnUI) {                                          // éviter de déplacer le personnage si on pointe sur un objet d'interface
+		//if (!isClicOnUI) {                                          // éviter de déplacer le personnage si on pointe sur un objet d'interface
 
 
-			if (m_InvItemDragging == null) {          // éviter de déplacer le personnage si on est en cours de drag & drop		//&& magicManager?.dragging == null
-				if (Input.GetMouseButton(0)) {                                          // si le bouton de la souris est appuyé
-					if (inventoryUI.selectedEntry == null) {                                // si aucun objet d'inventaire n'est sélectionné
-						if (m_TargetInteractable == null && m_CurrentTargetCharacterData == null) {     // s'il n'y a pas d'intéraction en cours		//&& m_TargetActivable == null 
-							InteractableObject obj = m_Highlighted as InteractableObject;
-							if (obj) {                                                                  // si on a cliqué sur un objet intéractible
-								obj.Clicked = true;                                                     //	- l'objet a été cliqué
-								RequestInteraction(obj);                                                //	- demander l'intéraction
-							} else {
-								CharacterData data = m_Highlighted as CharacterData;
-								if (data) {                                                             // si on a cliqué sur le personnage
-									m_CurrentTargetCharacterData = data;                                // pour l'instant on ne fait rien mais l'événement est détecté
-																										// il pourrait être utilisé pour afficher un panneau de statistiques ou tout autre chose
-								} else {                                                                // sinon => navigation
-									if (Physics.Raycast(screenRay, out m_HitInfo, 5000, raycastableLayers) && (!inTransit)) {
-										if (!hasKeybordMovementInput)
-											m_Agent.SetDestination(m_HitInfo.point);                        // aller vers le point sélectionné
-									}
-								}
-							}
-						}
-					} else {                                                                // si un objet d'inventaire est sélectionné
-						if (m_DropItem == null) {
-							m_DropItem = inventoryUI.selectedEntry.entry;
-							inventoryUI.DropOn3D(inventoryUI.selectedEntry.entry);          // DROP
-						}
-					}
-				}
-			}
-		}
+			//	if (m_InvItemDragging == null) {          // éviter de déplacer le personnage si on est en cours de drag & drop		//&& magicManager?.dragging == null
+			//		if (Input.GetMouseButton(0)) {                                          // si le bouton de la souris est appuyé
+			//			if (inventoryUI.selectedEntry == null) {                                // si aucun objet d'inventaire n'est sélectionné
+			//				if (m_TargetInteractable == null && m_CurrentTargetCharacterData == null) {     // s'il n'y a pas d'intéraction en cours		//&& m_TargetActivable == null 
+			//					InteractableObject obj = m_Highlighted as InteractableObject;
+			//					if (obj) {                                                                  // si on a cliqué sur un objet intéractible
+			//						obj.Clicked = true;                                                     //	- l'objet a été cliqué
+			//						RequestInteraction(obj);                                                //	- demander l'intéraction
+			//					} else {
+			//						CharacterData data = m_Highlighted as CharacterData;
+			//						if (data) {                                                             // si on a cliqué sur le personnage
+			//							m_CurrentTargetCharacterData = data;                                // pour l'instant on ne fait rien mais l'événement est détecté
+			//																								// il pourrait être utilisé pour afficher un panneau de statistiques ou tout autre chose
+			//						} else {                                                                // sinon => navigation
+			//							if (Physics.Raycast(screenRay, out m_HitInfo, 5000, raycastableLayers) && (!inTransit)) {
+			//								if (!hasKeybordMovementInput)
+			//									m_Agent.SetDestination(m_HitInfo.point);                        // aller vers le point sélectionné
+			//							}
+			//						}
+			//					}
+			//				}
+			//			} else {                                                                // si un objet d'inventaire est sélectionné
+			//				if (m_DropItem == null) {
+			//					m_DropItem = inventoryUI.selectedEntry.entry;
+			//					inventoryUI.DropOn3D(inventoryUI.selectedEntry.entry);          // DROP
+			//				}
+			//			}
+			//		}
+			//	}
+		//}
 
 		// controler la vitesse sur les NavMesh Links (par défaut elle est trop rapide)
 		if (m_Agent.isOnOffMeshLink && !MoveAcrossNavMeshesStarted) {
@@ -270,11 +269,11 @@ public class PlayerManager : MonoBehaviour
 		bool done = false;
 
 		if (m_Highlighted != null && m_Highlighted != obj) {    // si un autre objet est en surbrillance
-			m_Highlighted.Highlight(false);                 //		=> éteindre l'objet précédent
+			m_Highlighted.Highlight(false);						//		=> éteindre l'objet précédent
 		}
 		m_Highlighted = obj;
 		if (m_Highlighted && !m_Highlighted.isOn) {             // si le paramètre transmis est non null => il faut allumer l'objet
-			done = m_Highlighted.Highlight(true);                  //		=> allumer
+			done = m_Highlighted.Highlight(true);               //		=> allumer
 		}
 
 		return done;

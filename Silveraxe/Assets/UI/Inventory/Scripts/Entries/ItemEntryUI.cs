@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ItemEntryUI : EntryUI
@@ -7,7 +8,6 @@ public class ItemEntryUI : EntryUI
 	public Image plus;
 
 	ItemEntryUI[] all;
-	public Loot item;
 	//ChapterManager chapterManager;
 
 	Texture2D cursor;
@@ -72,7 +72,7 @@ public class ItemEntryUI : EntryUI
 		//	inventoryUI.RemoveEntry(this);                                          //		supprimer l'entrée de l'objet utilisé pour la combinaison
 
 		//} else {                                                                    // sinon
-		all = inventoryUI.GetComponentsInChildren<ItemEntryUI>();
+ 		all = inventoryUI.GetComponentsInChildren<ItemEntryUI>();
 		foreach (ItemEntryUI entry in all) {                                    // désélectionner toutes les autres entrées de l'inventaire
 			if (entry != this && entry.selected)
 				entry.Select(false);
@@ -84,15 +84,23 @@ public class ItemEntryUI : EntryUI
 																				//	inventoryUI.combineUI.Clear();                                      //		masquer le panneau combine
 																				//}
 																				//}
+		EventSystem.current.SetSelectedGameObject(null);
 	}
 
 	public override void Select(bool on) {
 		base.Select(on);
 		if (on) {
-			Vector2 hotSpot = new Vector2(cursor.width / 2, cursor.height / 2);
-			Cursor.SetCursor(cursor, hotSpot, CursorMode.ForceSoftware);
+			UIManager.Instance.SetCursor(cursor);
 		} else {
-			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+			UIManager.Instance.ResetCursor();
 		}
+
+
+		//if (on) {
+		//	Vector2 hotSpot = new Vector2(cursor.width / 2, cursor.height / 2);
+		//	Cursor.SetCursor(cursor, hotSpot, CursorMode.ForceSoftware);
+		//} else {
+		//	Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+		//}
 	}
 }
