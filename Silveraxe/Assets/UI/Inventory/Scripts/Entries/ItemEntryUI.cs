@@ -2,6 +2,7 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+
 public class ItemEntryUI : EntryUI
 {
 	public Image iconeImage;
@@ -11,10 +12,6 @@ public class ItemEntryUI : EntryUI
 	//ChapterManager chapterManager;
 
 	Texture2D cursor;
-
-	private void Start() {
-		inventoryUI = InventoryUI.Instance;
-	}
 
 	public override void Init(Entry entry) {
 		this.entry = entry;
@@ -90,9 +87,9 @@ public class ItemEntryUI : EntryUI
 	public override void Select(bool on) {
 		base.Select(on);
 		if (on) {
-			UIManager.Instance.SetCursor(cursor);
+			uiManager.SetCursor(cursor);
 		} else {
-			UIManager.Instance.ResetCursor();
+			uiManager.ResetCursor();
 		}
 
 

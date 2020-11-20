@@ -10,14 +10,12 @@ using UnityEngine.UI;
 /// <summary>
 /// Handle all the UI code related to the inventory (drag'n'drop of object, using objects, equipping object etc.)
 /// </summary>
-public abstract class UIBase : MonoBehaviour
+public abstract class UIBase : App
 {
 
 	public GameObject panel;
 	public virtual bool isOn => (panel==null && gameObject.activeInHierarchy) || panel.activeInHierarchy;
 
-
-	public abstract void Init(UIManager uiManager);
 
 	public abstract void Toggle();
 

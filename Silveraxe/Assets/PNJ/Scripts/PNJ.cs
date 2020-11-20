@@ -5,6 +5,8 @@ using static InteractableObject.Action;
 using System.Collections;
 using UnityEngine.Animations;
 
+using static App;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -80,11 +82,11 @@ public class PNJ : InteractableObject
 	}
 
 	void OnMouseEnter() {
-		UIManager.Instance.SetCursor( dialogueTrigger.dialogueCursor);
+		uiManager.SetCursor( dialogueTrigger.dialogueCursor);
 	}
 
 	private void OnMouseExit() {
-		UIManager.Instance.ResetCursor();
+		uiManager.ResetCursor();
 	}
 
 	public override bool Highlight(bool on) {
@@ -94,7 +96,7 @@ public class PNJ : InteractableObject
 	// intéraction avec un PNJ
 	public override void InteractWith(CharacterData character, HighlightableObject target = null, Action action = talk) {
 		if (dialogueTrigger.HasDialogue()) {								// si le PNJ a un dialogue
-			PlayerManager.Instance.StopAgent();                             //	stopper la navigation
+			playerManager.StopAgent();										//	stopper la navigation
 			GetComponentInChildren<DialogueTrigger>().Run();                //	démarrer le dialogue	
 
 			if (mode == Mode.onTheFlyOnce) {											// si le PNJ est en mode 'onTheFlyOnce'

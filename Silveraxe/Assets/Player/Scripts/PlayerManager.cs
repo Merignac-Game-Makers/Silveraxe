@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
+
 using static InteractableObject.Action;
 
 
@@ -11,17 +12,11 @@ using static InteractableObject.Action;
 ///		- Déplacements
 ///		- Intéractions
 /// </summary>
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : App
 {
 
 	float sqrInteractionDistance = 2.25f;                           // carré de la distance en deça de laquelle on déclenche les intéractions (1.5² = 2.25)
 																	// (on utilise le carré pour gagner du temps de calcul en évitant une racine carrée pour la distance)
-
-	InventoryUI inventoryUI;                                        // gestionnaire d'inventaire
-	UIManager uiManager;                                            // gestionnaire d'interface utilisateur
-																	//MagicManager magicManager;                                      // gestionnaire de magie
-
-	public static PlayerManager Instance { get; protected set; }    // instance statique de cette classe
 
 	// camera
 	Camera mainCamera;                                              // caméra active
@@ -68,15 +63,12 @@ public class PlayerManager : MonoBehaviour
 
 	#region Initialisation
 	void Awake() {
-		Instance = this;                                            // création de l'instance statique
+		playerManager = this;                                       // création de l'instance statique
 		mainCamera = Camera.main;                                   // initialisation de la caméra
 	}
 
 	// Start is called before the first frame update
 	void Start() {
-		inventoryUI = InventoryUI.Instance;                         // gestionnaire d'inventaire
-		uiManager = UIManager.Instance;                             // gestionnaire d'interface utilisateur
-
 		characterData = GetComponent<CharacterData>();              // caractéristiques du joueur
 		characterData.Init();                                       // ... initialisation
 

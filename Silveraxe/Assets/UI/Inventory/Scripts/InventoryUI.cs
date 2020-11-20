@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static InventoryManager;
 
 /// <summary>
 /// Handle all the UI code related to the inventory (drag'n'drop of object, using objects, equipping object etc.)
@@ -25,8 +24,6 @@ public class InventoryUI : UIBase
 
 	public Canvas dragCanvas;
 
-	public static InventoryUI Instance;
-
 	// Raycast
 	readonly RaycastHit[] m_RaycastHitCache = new RaycastHit[16];
 	int m_TargetLayer;
@@ -42,21 +39,15 @@ public class InventoryUI : UIBase
 	EntryUI hoveredItem;
 	InventoryPanel iPanel;
 	//HighlightableObject item;
-	UIManager uiManager;
 
 	bool? prevStatus = false;
 
 	private void Awake() {
-		Instance = this;
-
+		inventoryUI = this;
 	}
 
-	public override void Init(UIManager uiManager) {
-		this.uiManager = uiManager;
 
-		//combinePanel = combineUI.gameObject;
-		//combinePanel.SetActive(false);
-
+	private void Start() {
 		iPanel = panel.GetComponent<InventoryPanel>();
 		gameObject.SetActive(true);
 
@@ -66,6 +57,7 @@ public class InventoryUI : UIBase
 
 		m_TargetLayer = 1 << LayerMask.NameToLayer("Interactable");
 	}
+
 
 	void OnEnable() {
 		hoveredItem = null;
@@ -128,7 +120,7 @@ public class InventoryUI : UIBase
 	/// </summary>
 	/// <param name="usedItem"></param>
 	public void ObjectDoubleClicked(Entry usedItem) {
-		InventoryManager.Instance.UseItem(usedItem);
+		inventoryManager.UseItem(usedItem);
 		ObjectHoverExited(hoveredItem);
 	}
 
@@ -185,17 +177,17 @@ public class InventoryUI : UIBase
 			foreach (RaycastHit rh in m_RaycastHitCache) {                          // pour chacun d'eux
 				if (rh.collider != null) {                                          // si l'objet a un collider
 					if (entry is InventoryEntry) {                                                      // si on dépose un objet d'inventaire
-						//bool combinable = (entry as InventoryEntry).item.combinable;
+																										//bool combinable = (entry as InventoryEntry).item.combinable;
 
 						Target data = rh.collider.GetComponentInParent<Target>();                       // si l'objet est une 'target' (lieu de dépôt d'objet d'inventaire autorisé)
 						if (data != null && data.isAvailable((entry as InventoryEntry).item)) {         // et que cet emplacement est libre et que l'objet actuel n'est pas combinable
-							PlayerManager.Instance.RequestInteraction(data);                            // aller jusqu'à la cible puis déposer l'objet d'inventaire
+							playerManager.RequestInteraction(data);                            // aller jusqu'à la cible puis déposer l'objet d'inventaire
 							break;
 						} else {
 							uiManager.Forbidden(Input.mousePosition, 1);
 							//uiManager.ShowLabel("Impossible d'utiliser cet objet ici", Input.mousePosition);
 						}
-					} 
+					}
 					//else if (entry is OrbEntry) {                                                     // si on dépose un orbe de magie
 					//	MagicEffectBase data = rh.collider.GetComponentInChildren<MagicEffectBase>();   // si l'objet est une ' magic target' (lieu de dépôt d'orbe autorisé)
 					//	DropItem(data, entry as OrbEntry);                                              // déposer l'objet d'inventaire
@@ -218,10 +210,10 @@ public class InventoryUI : UIBase
 		if (entry is InventoryEntry) {
 			Loot item = (entry as InventoryEntry).item;
 			item.animate = true;
-			CreateWorldRepresentation(item, target);													// créer l'objet 3D
+			CreateWorldRepresentation(item, target);                                                    // créer l'objet 3D
 			if (currentlyDragged != null)                                                               // si on est dans un 'drag & drop'
 				currentlyDragged.draggedEntry.transform.SetParent(currentlyDragged.originalParent);     // rattacher le 'drag & drop' à son parent original
-			InventoryManager.Instance.RemoveItem(item.entry);											// retirer l'objet déposé de l'inventaire
+			inventoryManager.RemoveItem(item.entry);                                           // retirer l'objet déposé de l'inventaire
 		}
 	}
 

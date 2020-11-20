@@ -5,20 +5,20 @@ using UnityEngine.UI;
 //using DanielLochner.Assets.SimpleScrollSnap;
 using TMPro;
 
+
 /// <summary>
 /// Gestionnaire général des interfaces (Dialogues, Inventaire, Magie ou QUêtes)
 /// </summary>
-public class UIManager : MonoBehaviour
+public class UIManager : App
 {
 
 	public enum State { noMagic, openBook, closedBook, dialog, end, quit }  // les états possibles de l'UI
 	public State state { get; private set; }    // l'état actuel de l'UI
 	private State prevState;                    // l'état précédent de l'UI
 
-	public static UIManager Instance;
+	//public static UIManager Instance;
 
 	public DialoguesUI dialoguesUI;             // interface Dialogues
-	public InventoryUI inventoryUI;             // interface Inventaire
 												//public DiaryBookContent diaryBookContent;   // pages du journal
 												//public MagicUI magicUI;                     // interface Magie
 	public QuitUI quitUi;                       // interface Quit
@@ -41,12 +41,10 @@ public class UIManager : MonoBehaviour
 
 
 	void Awake() {
-		Instance = this;
+		uiManager = this;
 	}
 
 	private void Start() {
-		dialoguesUI.Init(this);                 // initialisation du gestionnaire de dialogues
-		inventoryUI.Init(this);                 // initialisation du gestionnaire d'inventaire
 		cursorStack = new Stack<Texture2D>();
 	}
 
@@ -111,7 +109,7 @@ public class UIManager : MonoBehaviour
 		obj.SetActive(true);
 		yield return new WaitForSeconds(s);
 		obj.SetActive(false);
-		PlayerManager.Instance.isClicOnUI = false;
+		playerManager.isClicOnUI = false;
 	}
 
 	/// <summary>
@@ -149,14 +147,14 @@ public class UIManager : MonoBehaviour
 				cursor = cursorStack.Peek();
 				Cursor.SetCursor(cursor, new Vector2(cursor.width / 2, cursor.height / 2), CursorMode.ForceSoftware);
 			} else {
-				SetBaseCursor(PlayerManager.Instance.GetComponent<MovementInput>().shouldMove);
+				SetBaseCursor(playerManager.GetComponent<MovementInput>().shouldMove);
 			}
 		}
 	}
 
 	public void SetBaseCursor(bool shouldMove) {
 		if (shouldMove) {
-			Cursor.SetCursor(Resize(PlayerManager.Instance.GetComponent<MovementInput>().footSteps, defaultCursorSize), new Vector2(defaultCursorSize/2, defaultCursorSize / 2), CursorMode.ForceSoftware);
+			Cursor.SetCursor(Resize(playerManager.GetComponent<MovementInput>().footSteps, defaultCursorSize), new Vector2(defaultCursorSize/2, defaultCursorSize / 2), CursorMode.ForceSoftware);
 		} else {
 			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
 		}

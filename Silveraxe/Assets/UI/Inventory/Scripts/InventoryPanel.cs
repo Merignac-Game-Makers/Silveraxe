@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InventoryPanel : MonoBehaviour
+public class InventoryPanel : App
 {
 	public Image topButton;
 	public Sprite invUp;
@@ -46,7 +46,7 @@ public class InventoryPanel : MonoBehaviour
 			foreach (ItemEntryUI entry in GetComponentsInChildren<ItemEntryUI>()) {
 				entry.Select(false);
 			}
-			PlayerManager.Instance.isClicOnUI = false;
+			playerManager.isClicOnUI = false;
 		}
 	}
 
@@ -54,7 +54,7 @@ public class InventoryPanel : MonoBehaviour
 		if (!isOn) {
 			GetComponentInChildren<Animator>().SetTrigger("Up");
 			topButton.sprite = invDown;
-			PlayerManager.Instance.isClicOnUI = false;
+			playerManager.isClicOnUI = false;
 		}
 	}
 

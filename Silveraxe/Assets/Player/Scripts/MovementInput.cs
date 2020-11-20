@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class MovementInput : MonoBehaviour
+public class MovementInput : App
 {
 	public float rotationSensitivity = 1f;   // How sensitive it with mouse
 	public Texture2D footSteps;
@@ -41,7 +41,7 @@ public class MovementInput : MonoBehaviour
 		path = new NavMeshPath();                                           // le chemin à suivre
 		m_NavLayer = 1 << LayerMask.NameToLayer("Navigation");              // layer de la navigation
 		targetLookRotation = Quaternion.identity;                           // rotation initiale = 'pas de rotation'
-		playerFeet = playerCam.WorldToScreenPoint(PlayerManager.Instance.transform.position).y / Screen.height;
+		playerFeet = playerCam.WorldToScreenPoint(playerManager.transform.position).y / Screen.height;
 		cursor = Resize(footSteps, footstepsSize, footstepsSize);
 
 		hotspot = new Vector2(footstepsSize / 2, footstepsSize / 2); 
@@ -82,7 +82,7 @@ public class MovementInput : MonoBehaviour
 	Vector3 dir;
 	float k;
 	private void FixedUpdate() {
-		if (navAgent.velocity.magnitude > .2f || Input.GetKey(KeyCode.Space)) {
+		if (navAgent.velocity.magnitude > .2f || Input.GetKey(KeyCode.S)) {
 
 			dir = mouseTarget.point - transform.position;
 			dir.y = 0;
@@ -96,7 +96,7 @@ public class MovementInput : MonoBehaviour
 	bool ShouldMove() {
 		if (IsMouseInActiveArea()) {
 			hasMouseTarget = Physics.Raycast(playerCam.ScreenPointToRay(Input.mousePosition), out mouseTarget, 1000f, m_NavLayer);
-			distance = (mouseTarget.point - PlayerManager.Instance.transform.position).magnitude;
+			distance = (mouseTarget.point - playerManager.transform.position).magnitude;
 		} else {
 			hasMouseTarget = false;
 			distance = 0;
@@ -105,10 +105,10 @@ public class MovementInput : MonoBehaviour
 		bool result = distance > navAgent.radius * 5f;
 		if (result != shouldMove) {
 			if (result) {
-				UIManager.Instance.SetBaseCursor(true);
+				uiManager.SetBaseCursor(true);
 			} else {
-				UIManager.Instance.SetBaseCursor(false);
-				UIManager.Instance.ResetCursor();
+				uiManager.SetBaseCursor(false);
+				uiManager.ResetCursor();
 			}
 		}
 		return result;

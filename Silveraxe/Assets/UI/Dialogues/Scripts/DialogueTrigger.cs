@@ -6,17 +6,15 @@ using UnityEngine.EventSystems;
 using VIDE_Data;
 
 [RequireComponent(typeof(VIDE_Assign))]
-public class DialogueTrigger : MonoBehaviour
+public class DialogueTrigger : App
 {
 	public Texture2D dialogueCursor;
 
-	DialoguesUI dialoguesUI;
 	VIDE_Assign dialogue;
 	DialogueDispatcher dispatcher;
 	PNJ pnj;
 
 	void Start() {
-		dialoguesUI = DialoguesUI.Instance;                                     // le gestionnaire d'interface de dialogues
 		dialogue = gameObject.GetComponent<VIDE_Assign>();                      // le dialogue
 		dispatcher = gameObject.GetComponentInChildren<DialogueDispatcher>();   // le script de validation de dialogue (points d'entrée en fonction du statut de la quête [si elle existe])
 		pnj = gameObject.GetComponentInParent<PNJ>();							// le PNJ
@@ -27,8 +25,8 @@ public class DialogueTrigger : MonoBehaviour
 			if (dispatcher != null) {
 				dispatcher.SetStartNode();
 			}
-			pnj.FaceTo(PlayerManager.Instance.gameObject);		// orienter le PNJ vers le joueur
-			dialoguesUI.Begin(dialogue);						// commencer le dialogue
+			pnj.FaceTo(playerManager.gameObject);				// orienter le PNJ vers le joueur
+			dialogueUI.Begin(dialogue);							// commencer le dialogue
 		} 
 	}
 

@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MinimapController : MonoBehaviour
+public class MinimapController : App
 {
 	public Camera minimapCamera;
 
@@ -32,7 +32,7 @@ public class MinimapController : MonoBehaviour
 	// Start is called before the first frame update
 	void Start() {
 		edgeDetect = minimapCamera.GetComponent<EdgeDetect>();
-		player = PlayerManager.Instance.transform;
+		player = playerManager.transform;
 
 		smallContent = smallView.GetComponentInChildren<RawImage>().gameObject;
 		smallView.GetComponentInChildren<RawImage>().texture = LoadTextureFromFile("map-outlines");

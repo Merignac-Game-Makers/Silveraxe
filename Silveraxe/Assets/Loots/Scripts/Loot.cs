@@ -8,6 +8,8 @@ using static InteractableObject.Action;
 using System.Linq;
 using UnityEngine.UI;
 
+using static App;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -35,7 +37,6 @@ public class Loot : InteractableObject
 	public List<UsageEffect> UsageEffects;
 
 
-	public static InventoryUI inventoryUI;
 	public InventoryEntry entry { get; set; } = null;                             // L'entrée d'inventaire lorsque l'objet a été ramassé
 
 	public override bool IsInteractable() {                         // l'objet est intéractif si
@@ -63,13 +64,6 @@ public class Loot : InteractableObject
 		m_TargetPoint = transform.position;                         // de l'animation
 		m_AnimationTimer = AnimationTime - 0.1f;                    // de mise en place
 	}
-
-	protected override void Start() {
-		base.Start();
-		inventoryUI = InventoryUI.Instance;
-
-	}
-
 
 	void Update() {
 		// animation de mise en place
@@ -135,7 +129,7 @@ public class Loot : InteractableObject
 		if (isOn) {
 			// on ramasse l'objet
 			SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });
-			InventoryManager.Instance.AddItem(this);
+			inventoryManager.AddItem(this);
 		}
 	}
 
@@ -149,8 +143,8 @@ public class Loot : InteractableObject
 		animate = true;
 		transform.position = target.targetPos;
 		StartAnimation();
-		InventoryManager.Instance.RemoveItem(entry);       // retirer l'objet déposé de l'inventaire
-		var playerDistance = (PlayerManager.Instance.transform.position - transform.position).magnitude;
+		inventoryManager.RemoveItem(entry);       // retirer l'objet déposé de l'inventaire
+		var playerDistance = (playerManager.transform.position - transform.position).magnitude;
 		if (playerDistance < GetComponent<SphereCollider>().radius)
 			Highlight(true);
 	}

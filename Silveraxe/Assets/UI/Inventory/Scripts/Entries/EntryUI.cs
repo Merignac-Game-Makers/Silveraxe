@@ -2,22 +2,18 @@
 using UnityEngine.EventSystems;
 using TMPro;
 
-public abstract class EntryUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler,
+public abstract class EntryUI : App, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler,
 	IBeginDragHandler, IDragHandler, IEndDragHandler
 {
 	public TMP_Text lowerText;
 	public TMP_Text label;
 	public Entry entry;
 
-	public InventoryUI inventoryUI { get; set; }
 	public int Index { get; set; }
 	public Loot item { get; set; }
 
 	protected bool selected = false;
 
-	private void Start() {
-		inventoryUI = InventoryUI.Instance;
-	}
 
 	public abstract void Init(Entry entry);
 
@@ -28,7 +24,7 @@ public abstract class EntryUI : MonoBehaviour, IPointerClickHandler, IPointerEnt
 	public void OnPointerClick(PointerEventData eventData) {
 		if (eventData.clickCount % 2 == 0) {
 			if (entry != null)
-				InventoryUI.Instance.ObjectDoubleClicked(entry);
+				inventoryUI.ObjectDoubleClicked(entry);
 		}
 	}
 

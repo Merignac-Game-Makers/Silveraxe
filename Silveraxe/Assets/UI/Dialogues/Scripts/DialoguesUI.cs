@@ -30,24 +30,18 @@ public class DialoguesUI : UIBase
 	[HideInInspector]
 	public GameObject currentPNJcam;
 
-	UIManager uiManager;
-
 	private void Awake() {
-				Instance = this;
+		dialogueUI = this;
 	}
 
-	public override void Init(UIManager uiManager) {
-		this.uiManager = uiManager;
-
-		gameObject.SetActive(true);
-		panel.SetActive(false);
-
-	}
 
 	// Start is called before the first frame update
 	void Start() {
 		container_NPC.SetActive(false);
 		container_PLAYER.SetActive(false);
+		gameObject.SetActive(true);
+		panel.SetActive(false);
+
 	}
 
 	// Update is called once per frame
@@ -63,7 +57,7 @@ public class DialoguesUI : UIBase
 	/// </summary>
 	/// <param name="dialog"></param>
 	public void Begin(VIDE_Assign dialog) {
-		PlayerManager.Instance.StopAgent();
+		playerManager.StopAgent();
 		//panel.SetActive(true);
 		currentPNJcam = dialog.GetComponentInParent<PNJ>().PNJcam;
 		if (currentPNJcam!=null)
@@ -180,7 +174,7 @@ public class DialoguesUI : UIBase
 		VD.OnNodeChange -= UpdateUI;
 		VD.OnEnd -= End;
 		VD.EndDialogue();
-		PlayerManager.Instance.isClicOnUI = false;
+		playerManager.isClicOnUI = false;
 	}
 	private void OnDisable() {
 		if (container_NPC != null)

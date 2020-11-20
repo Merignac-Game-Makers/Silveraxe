@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+using static App;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -21,7 +23,7 @@ public class Target : InteractableObject
 	Transform target;                 
 
 	public override bool IsInteractable() => isFree 
-		&& (PlayerManager.Instance.m_InvItemDragging!=null || InventoryUI.Instance.selectedEntry!=null);         
+		&& (playerManager.m_InvItemDragging!=null || inventoryUI.selectedEntry!=null);         
 
 	public bool isFree => !GetComponentInChildren<Loot>();      // ne peut contenir qu'un seul objet d'inventaire
 
@@ -54,9 +56,9 @@ public class Target : InteractableObject
 
 	private void Update() {
 		if (Input.GetButtonDown("Fire1")) {
-			if (InventoryUI.Instance.selectedEntry != null) {
-				if (isAvailable(InventoryUI.Instance.selectedEntry.item)) {
-					InventoryUI.Instance.selectedEntry.item.Drop(this);
+			if (inventoryUI.selectedEntry != null) {
+				if (isAvailable(inventoryUI.selectedEntry.item)) {
+					inventoryUI.selectedEntry.item.Drop(this);
 					Highlight(false);
 				}
 			}
