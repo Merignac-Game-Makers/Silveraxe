@@ -216,12 +216,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6513ca36828d39e48b4b0f9a2946a7f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHighlightable: 0
+  useLight: 0
   mode: 0
   Clicked: 0
   ItemName: Chaise
   prefab: {fileID: 100000, guid: c7acbad2649a15647a7a4dfd8cceb5ac, type: 3}
   ItemSprite: {fileID: 21300000, guid: 34c90978d79fda843b40cc79629cf20b, type: 3}
   Description: une vieille chaise
+  cursor: {fileID: 2800000, guid: a3264b82aff31874a84400d28644eba9, type: 3}
   animate: 1
   dropable: 1
   lootCategory: 2

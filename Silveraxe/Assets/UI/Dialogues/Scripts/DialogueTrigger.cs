@@ -1,12 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEngine;
 using VIDE_Data;
 
+using static App;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 [RequireComponent(typeof(VIDE_Assign))]
-public class DialogueTrigger : App
+public class DialogueTrigger : MonoBehaviour
 {
 	public Texture2D dialogueCursor;
 
@@ -15,9 +17,11 @@ public class DialogueTrigger : App
 	PNJ pnj;
 
 	void Start() {
+		VD.isActive = false;
+
 		dialogue = gameObject.GetComponent<VIDE_Assign>();                      // le dialogue
 		dispatcher = gameObject.GetComponentInChildren<DialogueDispatcher>();   // le script de validation de dialogue (points d'entrée en fonction du statut de la quête [si elle existe])
-		pnj = gameObject.GetComponentInParent<PNJ>();							// le PNJ
+		pnj = gameObject.GetComponentInParent<PNJ>();                           // le PNJ
 	}
 
 	public void Run() {
@@ -25,9 +29,9 @@ public class DialogueTrigger : App
 			if (dispatcher != null) {
 				dispatcher.SetStartNode();
 			}
-			pnj.FaceTo(playerManager.gameObject);				// orienter le PNJ vers le joueur
-			dialogueUI.Begin(dialogue);							// commencer le dialogue
-		} 
+			pnj.FaceTo(playerManager.gameObject);               // orienter le PNJ vers le joueur
+			dialogueUI.Begin(dialogue);                         // commencer le dialogue
+		}
 	}
 
 	public bool HasDialogue() {

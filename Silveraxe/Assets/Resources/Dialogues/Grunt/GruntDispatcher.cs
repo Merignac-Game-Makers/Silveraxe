@@ -4,18 +4,9 @@ using UnityEngine;
 
 public class GruntDispatcher : DialogueDispatcher
 {
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
 
 	public override bool HasDialogue() {
-		return base.HasDialogue();
+		return false;
 	}
 
 	public override void SetStartNode() {

@@ -127,7 +127,7 @@ public class EquipmentItemEditor : Editor
 		//m_MinimumAgilityProperty = serializedObject.FindProperty(nameof(EquipmentItem.MinimumAgility));
 		//m_MinimumDefenseProperty = serializedObject.FindProperty(nameof(EquipmentItem.MinimumDefense));
 
-		m_ItemEditor = new ItemBaseEditor();
+		m_ItemEditor = CreateInstance<ItemBaseEditor>(); 
 		m_ItemEditor.Init(serializedObject);
 
 		var lookup = typeof(EquipmentItem.EquippedEffect);
@@ -166,7 +166,7 @@ public class EquipmentItemEditor : Editor
 			var item = m_EquippedEffectListProperty.GetArrayElementAtIndex(i);
 			SerializedObject obj = new SerializedObject(item.objectReferenceValue);
 
-			Editor.CreateCachedEditor(item.objectReferenceValue, null, ref ed);
+			CreateCachedEditor(item.objectReferenceValue, null, ref ed);
 
 			ed.OnInspectorGUI();
 			EditorGUILayout.EndVertical();

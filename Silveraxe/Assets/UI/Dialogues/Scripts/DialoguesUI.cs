@@ -1,16 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using VIDE_Data;
 using TMPro;
+
+using static App;
+
 using static UIManager.State;
-using UnityEngine.Animations;
+
 
 public class DialoguesUI : UIBase
 {
-
-	public static DialoguesUI Instance;
 
 	//public GameObject questButton;
 	//public GameObject diaryButton;
@@ -58,6 +57,9 @@ public class DialoguesUI : UIBase
 	/// <param name="dialog"></param>
 	public void Begin(VIDE_Assign dialog) {
 		playerManager.StopAgent();
+		cameraController.SetDialogueCamera();
+		animatorController.anim.SetBool("Dialogue", true);
+		interactableObjectsManager.showActionSprites(false);
 		//panel.SetActive(true);
 		currentPNJcam = dialog.GetComponentInParent<PNJ>().PNJcam;
 		if (currentPNJcam!=null)
@@ -141,8 +143,8 @@ public class DialoguesUI : UIBase
 			container_NPC.SetActive(true);
 
 			// set sprite
-			if (data.creferences[data.commentIndex].sprites != null)				
-				NPC_Sprite.sprite = data.creferences[data.commentIndex].sprites;	// specific for comment i exists
+			if (data.creferences.Length>0 && data.creferences[data.commentIndex].sprites != null)				
+				NPC_Sprite.sprite = data.creferences[data.commentIndex].sprites;	// specific for comment if exists
 			else if (data.sprite != null)		
 				NPC_Sprite.sprite = data.sprite;									// specific for node if exists
 			else if (VD.assigned.defaultNPCSprite != null)
@@ -174,7 +176,10 @@ public class DialoguesUI : UIBase
 		VD.OnNodeChange -= UpdateUI;
 		VD.OnEnd -= End;
 		VD.EndDialogue();
-		playerManager.isClicOnUI = false;
+		//uiManager.isClicOnUI = false;
+		cameraController.SetFollowCamera();
+		animatorController.anim.SetBool("Dialogue", false);
+		interactableObjectsManager.showActionSprites(true);
 	}
 	private void OnDisable() {
 		if (container_NPC != null)

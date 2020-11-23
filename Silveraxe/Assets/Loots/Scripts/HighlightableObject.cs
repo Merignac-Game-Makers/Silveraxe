@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+using static App;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -18,8 +17,11 @@ public class HighlightableObject : MonoBehaviour
 
 	public bool isHighlightable = true;
 	public bool useLight = true;
+	public bool useOutline = true;
 
 	public bool isOn { get; set; } = false;               // flag allumé ?
+	protected bool isMouseOver = false;
+	public bool isInPlayerCollider { get; set; } = false;
 
 	// pour les projecteurs
 	ProjectorDriver projector;
@@ -52,6 +54,23 @@ public class HighlightableObject : MonoBehaviour
 		outline.enabled = false;
 	}
 
+	public virtual bool IsHighlightable() {
+		return isHighlightable;
+	}
+
+	public virtual void OnMouseEnter() {
+		isMouseOver = true;
+		if (IsHighlightable()) {
+			Highlight(true);
+		}
+	}
+
+	public virtual void OnMouseExit() {
+		isMouseOver = false;
+		if (!isInPlayerCollider)
+			Highlight(false);
+	}
+
 	/// <summary>
 	/// true  : allumer le projecteur
 	/// false : éteindre le projecteur
@@ -59,19 +78,24 @@ public class HighlightableObject : MonoBehaviour
 	public virtual bool Highlight(bool on) {
 		bool found = false;
 
-		if (isHighlightable) {
+		if (IsHighlightable() || on==false) {
 			// pour les projecteurs
 			if (projector)
-				found = projector.Highlight(on, useLight);
+				found |= projector.Highlight(on, useLight);
 			// pour les systèmes de particules
 			if (particles)
-				found = particles.Highlight(on, useLight);
+				found |= particles.Highlight(on, useLight);
 			// pour les tores
 			if (ring)
-				found = ring.Highlight(on, useLight);
+				found |= ring.Highlight(on, useLight);
 			// pour les highlighters
 			if (highlighter)
-				found = highlighter.Highlight(on, useLight);
+				found |= highlighter.Highlight(on, useLight);
+
+			if (useOutline && outline) {
+				outline.enabled = on;
+				found |= true;
+			}
 
 			isOn = on;
 		}
@@ -97,6 +121,7 @@ public class HighlightableObject : MonoBehaviour
 		if (highlighter)
 			highlighter.SetColor(color);
 
+		outline.OutlineColor = color;
 	}
 
 }
@@ -108,16 +133,19 @@ public class HighlightableEditor : Editor
 {
 	SerializedProperty pHighlightable;
 	SerializedProperty pUseLight;
+	SerializedProperty pUseOutline;
 
 	public void Init(SerializedObject target) {
 		pHighlightable = target.FindProperty(nameof(HighlightableObject.isHighlightable));
 		pUseLight = target.FindProperty(nameof(HighlightableObject.useLight));
+		pUseOutline = target.FindProperty(nameof(HighlightableObject.useOutline));
 	}
 
 	public void GUI(HighlightableObject item) {
 		item.isHighlightable = pHighlightable.boolValue = EditorGUILayout.Toggle("Is Highlightable", pHighlightable.boolValue);
 		if (item.isHighlightable) {
 			item.useLight = pUseLight.boolValue = EditorGUILayout.Toggle("Use Light", pUseLight.boolValue);
+			item.useOutline = pUseOutline.boolValue = EditorGUILayout.Toggle("Use Outline", pUseOutline.boolValue);
 		}
 	}
 }

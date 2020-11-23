@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 
+using static App;
 
-public class QuitUI : App
+
+public class QuitUI : MonoBehaviour
 {
 
 	public void Show(bool on) {

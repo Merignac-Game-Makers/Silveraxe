@@ -61,7 +61,7 @@ public class UsableItemEditor : Editor
 		m_Target = target as UsableItem;
 		m_UsageEffectListProperty = serializedObject.FindProperty(nameof(UsableItem.UsageEffects));
 
-		m_ItemEditor = new ItemBaseEditor();
+		m_ItemEditor = CreateInstance<ItemBaseEditor>(); //new ItemBaseEditor();
 		m_ItemEditor.Init(serializedObject);
 
 		var lookup = typeof(UsageEffect);
@@ -95,7 +95,7 @@ public class UsableItemEditor : Editor
 
 			//SerializedObject obj = new SerializedObject(item.objectReferenceValue);
 
-			Editor.CreateCachedEditor(item.objectReferenceValue, null, ref ed);
+			CreateCachedEditor(item.objectReferenceValue, null, ref ed);
 
 			ed.OnInspectorGUI();
 			EditorGUILayout.EndVertical();

@@ -1,10 +1,10 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using static App;
 
-public class CombineUI : App
+public class CombineUI : MonoBehaviour
 {
     public Transform objectHolder;
     [Range(100f, 350f)] public float size = 250;
