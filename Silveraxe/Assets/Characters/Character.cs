@@ -34,6 +34,10 @@ public abstract class Character : InteractableObject
 	protected override void Start() {
 		base.Start();
 
+		// pour les déplacements
+		navAgent = GetComponentInChildren<NavMeshAgent>();                     // préparation de la navigation
+
+
 		// pour les dialogues
 		portraitCamera = GetComponentInChildren<Camera>(true);
 		GetPortraitTarget();
@@ -85,7 +89,5 @@ public abstract class Character : InteractableObject
 		playerManager.SetPlayerMode(PlayerMode.fight, on, this);
 	}
 
-	public void Fight(int attack) {
-		animatorController.anim.SetInteger("Fight", attack);
-	}
+
 }

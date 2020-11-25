@@ -7587,7 +7587,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 877895948}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 1
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -16825,10 +16825,35 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 3413440680727103309, guid: 9a241f8156176cb4881213b835c11588,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 3926315880751553711, guid: 9a241f8156176cb4881213b835c11588,
         type: 3}
       propertyPath: m_CullingMode
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5447536950172193483, guid: 9a241f8156176cb4881213b835c11588,
+        type: 3}
+      propertyPath: Stats.baseStats.health
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5447536950172193483, guid: 9a241f8156176cb4881213b835c11588,
+        type: 3}
+      propertyPath: Stats.baseStats.strength
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5447536950172193483, guid: 9a241f8156176cb4881213b835c11588,
+        type: 3}
+      propertyPath: Stats.baseStats.defense
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5447536950172193483, guid: 9a241f8156176cb4881213b835c11588,
+        type: 3}
+      propertyPath: Stats.baseStats.agility
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6332155931055358765, guid: 9a241f8156176cb4881213b835c11588,
         type: 3}
@@ -17106,22 +17131,22 @@ PrefabInstance:
     - target: {fileID: 514938414803815881, guid: b1890e087ac4de14293f96278ef5c05f,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.0013619305
+      value: 0.0033350037
       objectReference: {fileID: 0}
     - target: {fileID: 514938414803815881, guid: b1890e087ac4de14293f96278ef5c05f,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.99836016
+      value: -0.97442406
       objectReference: {fileID: 0}
     - target: {fileID: 514938414803815881, guid: b1890e087ac4de14293f96278ef5c05f,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.026929632
+      value: -0.026757032
       objectReference: {fileID: 0}
     - target: {fileID: 514938414803815881, guid: b1890e087ac4de14293f96278ef5c05f,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.05049769
+      value: 0.22309382
       objectReference: {fileID: 0}
     - target: {fileID: 514938414803815881, guid: b1890e087ac4de14293f96278ef5c05f,
         type: 3}
@@ -17173,6 +17198,16 @@ PrefabInstance:
       propertyPath: m_Sources.Array.data[0].sourceTransform
       value: 
       objectReference: {fileID: 1220921082}
+    - target: {fileID: 2475872609760825855, guid: b1890e087ac4de14293f96278ef5c05f,
+        type: 3}
+      propertyPath: m_RotationOffset.y
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2475872609760825855, guid: b1890e087ac4de14293f96278ef5c05f,
+        type: 3}
+      propertyPath: m_IsContraintActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5440340406658770004, guid: b1890e087ac4de14293f96278ef5c05f,
         type: 3}
       propertyPath: m_Enabled

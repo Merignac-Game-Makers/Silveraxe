@@ -32,7 +32,6 @@ public class PlayerManager : Character
 		characterData = GetComponent<CharacterData>();              // caractéristiques du joueur
 		characterData.Init();                                       // ... initialisation
 
-		navAgent = GetComponent<NavMeshAgent>();                     // préparation de la navigation
 		movementInput = GetComponentInChildren<MovementInput>();
 
 		detectionCollider.enabled = true;
@@ -82,6 +81,7 @@ public class PlayerManager : Character
 					playerMode = mode;
 					animatorController?.anim?.SetInteger("Fight", 0);                   // animation 'fight idle'
 					fightController.other = other;
+					navAgent.SetDestination(fightController.FightPosition(other));
 				} else {
 					SetPlayerMode(PlayerMode.normal, true, other);
 				}

@@ -54,7 +54,7 @@ public class MovementInput : MonoBehaviour
 	private void FixedUpdate() {
 		// rotation en fonction de la direction de la souris
 		if (navAgent.velocity.magnitude > .2f || Input.GetKey(KeyCode.S)) {
-			if (navAgent.updateRotation)
+			//if (navAgent.updateRotation)
 				transform.Rotate(Vector3.up, screenDirection.x * rotationSensitivity);
 		}
 	}

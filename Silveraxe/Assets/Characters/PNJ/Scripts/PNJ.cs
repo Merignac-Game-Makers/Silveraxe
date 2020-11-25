@@ -77,7 +77,7 @@ public class PNJ : Character
 					if (!isInFightMode)
 						SetFightMode(true);
 					else {
-						playerManager.Fight(1);
+						playerManager.fightController.Fight_Attack();
 					}
 					break;
 			}
