@@ -9,7 +9,6 @@ using UnityEngine.EventSystems;
 public static class App {
 
 	public static CameraController cameraController;
-	public static AnimatorController animatorController;
 
 	public static UIManager uiManager;
 	public static InventoryManager inventoryManager;

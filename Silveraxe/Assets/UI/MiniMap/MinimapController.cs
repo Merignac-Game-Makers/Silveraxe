@@ -81,10 +81,9 @@ public class MinimapController : MonoBehaviour
 
 		// capture des cartes
 		//  => génère les textures pour minimap et largemap
-		if (Input.GetKeyDown(KeyCode.W)) {
+		if (Input.GetKeyDown(KeyCode.Exclaim)) {
 			StartCoroutine(IMap());
 		}
-
 
 	}
 

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7765184801065541324}
   - component: {fileID: 6055851364214976544}
   - component: {fileID: 1707833862556222470}
+  - component: {fileID: 2475872609760825855}
   m_Layer: 9
   m_Name: Grunt
   m_TagString: Untagged
@@ -53,14 +54,12 @@ MonoBehaviour:
   useLight: 1
   useOutline: 1
   mode: 0
-  cursor: {fileID: 0}
   Clicked: 0
-  mutedActionSprite: 0
-  portraitCameraTarget: {fileID: 0}
+  characterData: {fileID: 0}
+  navAgent: {fileID: 0}
   PNJName: Grunt
   onTheFlyRadius: 1
   alignment: 2
-  PNJcam: {fileID: 0}
 --- !u!208 &6055851364214976544
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -91,6 +90,25 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!1183024399 &2475872609760825855
+LookAtConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514938414803815925}
+  m_Enabled: 1
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_Roll: 0
+  m_WorldUpObject: {fileID: 0}
+  m_UseUpObject: 0
+  m_IsContraintActive: 1
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
 --- !u!1 &905261784111084364
 GameObject:
   m_ObjectHideFlags: 0

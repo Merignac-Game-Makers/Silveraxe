@@ -40,7 +40,6 @@ public class LootEditor : Editor
 		pPrefab = serializedObject.FindProperty(nameof(Loot.prefab));
 		pLootCategory = serializedObject.FindProperty(nameof(Loot.lootCategory));
 		pInteractionMode = serializedObject.FindProperty(nameof(Loot.mode));
-		pCursor = serializedObject.FindProperty(nameof(Loot.cursor));
 		pAnimate = serializedObject.FindProperty(nameof(Loot.animate));
 		pDropable = serializedObject.FindProperty(nameof(Loot.dropable));
 		pUsable = serializedObject.FindProperty(nameof(Loot.usable));
@@ -76,9 +75,6 @@ public class LootEditor : Editor
 		EditorGUILayout.PropertyField(pDescription, GUILayout.MinHeight(64));
 		EditorGUILayout.PropertyField(pLootCategory);
 		EditorGUILayout.PropertyField(pInteractionMode);
-		EditorGUILayout.PropertyField(pCursor);
-
-		m_HighlightableEditor.GUI(target as Loot);
 
 		EditorGUILayout.PropertyField(pAnimate);
 		m_Target.dropable = EditorGUILayout.Toggle("Dropable", pDropable.boolValue);
@@ -127,6 +123,8 @@ public class LootEditor : Editor
 			}
 
 		}
+
+		m_HighlightableEditor.GUI(target as Loot);
 
 
 		serializedObject.ApplyModifiedProperties();

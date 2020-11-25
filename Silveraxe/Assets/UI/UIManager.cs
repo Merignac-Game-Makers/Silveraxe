@@ -34,6 +34,11 @@ public class UIManager : MonoBehaviour
 
 	private void Update() {
 		DefineCursor();
+
+		// quitter le jeu par la touche escape
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+			ShowQuitUi();
+		}
 	}
 
 	public void ShowQuitUi() {

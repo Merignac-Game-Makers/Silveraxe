@@ -29,7 +29,6 @@ public class DialogueTrigger : MonoBehaviour
 			if (dispatcher != null) {
 				dispatcher.SetStartNode();
 			}
-			pnj.FaceTo(playerManager.gameObject);               // orienter le PNJ vers le joueur
 			dialogueUI.Begin(dialogue);                         // commencer le dialogue
 		}
 	}

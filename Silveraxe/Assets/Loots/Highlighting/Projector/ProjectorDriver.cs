@@ -9,7 +9,7 @@ public class ProjectorDriver : MonoBehaviour
 
 	Projector projector;
 	Animator animator;
-	Light light;
+	new Light light;
 
 	void Start()
     {

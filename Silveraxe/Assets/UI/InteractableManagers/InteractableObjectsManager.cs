@@ -27,7 +27,7 @@ public class InteractableObjectsManager : MonoBehaviour
 	public bool MultipleSelection() {
 		bool found = false;
 		foreach (InteractableObject obj in objects) {
-			if (obj.IsSelected()) {
+			if (obj.isOn) { //.IsSelected()
 				if (found)
 					return true;
 				found = true;
@@ -36,12 +36,19 @@ public class InteractableObjectsManager : MonoBehaviour
 		return false;
 	}
 
-	public void showActionSprites(bool on) {
+	//public void showActionSprites(bool on) {
+	//	foreach (InteractableObject obj in objects) {
+	//		if (obj.isOn && obj.actionSprite != null) {
+	//			obj.actionSprite.enabled = on;
+	//			//obj.mutedActionSprite = !on;
+	//		}
+	//	}
+	//}
+
+	public void SelectAll(bool on) {
 		foreach (InteractableObject obj in objects) {
-			if (obj.isOn && obj.actionSprite!=null) {
-				obj.actionSprite.enabled = on;
-				obj.mutedActionSprite = !on;
-			}
+			obj.selectionMuted = !on;
+			obj.Highlight(on && obj.isInPlayerCollider);
 		}
 	}
 }

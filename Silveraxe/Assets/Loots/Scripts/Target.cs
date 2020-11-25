@@ -29,32 +29,9 @@ public class Target : InteractableObject
 		return true;
 	}
 
-	public override bool IsInteractable() {
-		return IsHighlightable() && isInPlayerCollider;
-		//if (!isFree) return false;
-		//if (inventoryUI.selectedEntry == null) return false;
-		//var item = inventoryUI.selectedEntry.item;
-		//if (!item.dropable) return false;
-		//if (filterMode == FilterMode.allow && !filterItems.Contains(item.lootCategory)) return false;
-		//if (filterMode == FilterMode.refuse && filterItems.Contains(item.lootCategory)) return false;
-		//return true;
-	}
-
-	//=> isFree && inventoryUI.selectedEntry!=null;         
-
 	public bool isFree => !GetComponentInChildren<Loot>();      // ne peut contenir qu'un seul objet d'inventaire
 
 	public Vector3 targetPos => target.position;
-
-
-	public bool isAvailable(Loot item) {
-		if (!isOn) return false;
-		if (!isFree) return false;
-		if (!item.dropable) return false;
-		if (filterMode == FilterMode.allow && !filterItems.Contains(item.lootCategory)) return false;
-		if (filterMode == FilterMode.refuse && filterItems.Contains(item.lootCategory)) return false;
-		return true;
-	}
 
 	protected override void Start() {
 		base.Start();

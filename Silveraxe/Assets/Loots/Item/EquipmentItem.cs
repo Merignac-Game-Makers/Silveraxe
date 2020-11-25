@@ -113,9 +113,9 @@ public class EquipmentItemEditor : Editor
 
 	SerializedProperty m_SlotProperty;
 
-	SerializedProperty m_MinimumStrengthProperty;
-	SerializedProperty m_MinimumAgilityProperty;
-	SerializedProperty m_MinimumDefenseProperty;
+	//SerializedProperty m_MinimumStrengthProperty;
+	//SerializedProperty m_MinimumAgilityProperty;
+	//SerializedProperty m_MinimumDefenseProperty;
 
 	void OnEnable() {
 		m_Target = target as EquipmentItem;
@@ -143,9 +143,9 @@ public class EquipmentItemEditor : Editor
 
 		EditorGUILayout.PropertyField(m_SlotProperty);
 
-		EditorGUILayout.PropertyField(m_MinimumStrengthProperty);
-		EditorGUILayout.PropertyField(m_MinimumAgilityProperty);
-		EditorGUILayout.PropertyField(m_MinimumDefenseProperty);
+		//EditorGUILayout.PropertyField(m_MinimumStrengthProperty);
+		//EditorGUILayout.PropertyField(m_MinimumAgilityProperty);
+		//EditorGUILayout.PropertyField(m_MinimumDefenseProperty);
 
 		int choice = EditorGUILayout.Popup("Add new Effect", -1, m_AvailableEquipEffectType.ToArray());
 

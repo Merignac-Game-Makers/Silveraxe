@@ -21,15 +21,16 @@ public abstract class InteractableObject : HighlightableObject
 	public enum Mode { onClick, onTheFly, onTheFlyOnce }	// modes d'intéraction possibles
 
 	public Mode mode;                                       // le mode d'intéraction de cet objet
-	public Texture2D cursor;
 
-	public abstract bool IsInteractable();					// m'objet est-il actif pour l'intéraction ?
+	public virtual bool IsInteractable() {                  // l'objet est-il actif pour l'intéraction ?
+		return IsHighlightable() && isInPlayerCollider;
+	}
 
 	[HideInInspector]
 	public bool Clicked;                                    // flag clic sur l'objet ?
 
 	public Image actionSprite { get; protected set; }
-	public bool mutedActionSprite = false;
+	public bool selectionMuted { get; set; }  = false;
 	float timer;
 
 
@@ -57,24 +58,13 @@ public abstract class InteractableObject : HighlightableObject
 
 	}
 
-	public override void OnMouseEnter() {
-		base.OnMouseEnter();
-	}
-
-	public override void OnMouseExit() {
-		base.OnMouseExit();
-	}
-
-	public virtual void InteractWith(CharacterData character, Action action, HighlightableObject target = null) {
-		//Clicked = false;
-		//if (mode == Mode.onTheFlyOnce)
-		//	mode = Mode.onClick;
-	}
+	//public virtual void OnTriggerEnter(Collider other) { }
+	//public virtual void OnTriggerExit(Collider other) { }
 
 
 	public override bool Highlight(bool on) {
-		if (actionSprite && isInPlayerCollider )
-			actionSprite.enabled = on && !mutedActionSprite;
+		if (actionSprite && isInPlayerCollider)
+			actionSprite.enabled = on && playerManager.playerMode==PlayerMode.normal;
 		return base.Highlight(on);
 	}
 
@@ -89,24 +79,5 @@ public abstract class InteractableObject : HighlightableObject
 	}
 
 
-	Coroutine coroutine;
-	public void FaceTo(GameObject other) {
 
-		var delta = other.transform.position - transform.position;
-		delta.y = 0;
-		var rotation = Quaternion.LookRotation(delta);
-
-		if (coroutine != null)
-			StopCoroutine(coroutine);
-		coroutine = StartCoroutine(IFaceTo(rotation, 1));
-	}
-
-	IEnumerator IFaceTo(Quaternion rot, float s) {
-		timer = 0;
-		while (timer <= s) {
-			timer += Time.deltaTime;
-			transform.rotation = Quaternion.Slerp(transform.rotation, rot, timer);
-			yield return new WaitForEndOfFrame();
-		}
-	}
 }

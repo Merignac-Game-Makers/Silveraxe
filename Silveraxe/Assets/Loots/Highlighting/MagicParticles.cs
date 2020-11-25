@@ -9,7 +9,7 @@ public class MagicParticles : MonoBehaviour
 	public Texture cookie;							// motif
 
 	ParticleSystem particles;
-	Light light;
+	new Light light;
 
 	void Start() {
 		particles = GetComponentInChildren<ParticleSystem>();

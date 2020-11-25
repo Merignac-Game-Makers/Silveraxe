@@ -36,7 +36,7 @@ public class CameraController : MonoBehaviour
 
 	void Start() {
 		cinemachineBrain = GetComponent<CinemachineBrain>();
-		SetFollowCamera();
+		SetCamera(vCamFollow);
 		Zoom(0);
 	}
 
@@ -50,17 +50,9 @@ public class CameraController : MonoBehaviour
 			activeCamera.m_Lens.FieldOfView = MinAngle + (MaxAngle - MinAngle) * m_CurrentDistance;
 	}
 
-	public void SetFollowCamera() {
-		if (vCamFollow && vCamDialogue) {
-			vCamFollow.gameObject.SetActive(true);
-			vCamDialogue.gameObject.SetActive(false);
-		}
-	}
-	public void SetDialogueCamera() {
-		if (vCamFollow && vCamDialogue) {
-			vCamFollow.gameObject.SetActive(false);
-			vCamDialogue.gameObject.SetActive(true);
-		}
+	public void SetCamera(CinemachineVirtualCamera vCam) {
+		vCamFollow?.gameObject.SetActive(vCam == vCamFollow);
+		vCamDialogue?.gameObject.SetActive(vCam == vCamDialogue);
 	}
 }
 

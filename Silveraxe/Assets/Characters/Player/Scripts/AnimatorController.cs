@@ -53,14 +53,11 @@ public class AnimatorController : MonoBehaviour
 
 	#region Initialization
 
-	private void Awake() {
-		animatorController = this;
-	}
 	// Initialization of variables
 	void Start() {
 		//timeScale = 1f;
 
-		anim = GetComponent<Animator>();
+		anim = GetComponentInChildren<Animator>();
 		agent = GetComponent<NavMeshAgent>();
 		movementInput = GetComponent<MovementInput>();
 
@@ -88,8 +85,10 @@ public class AnimatorController : MonoBehaviour
 		anim.SetFloat("velocity", agent.velocity.sqrMagnitude, animSmoothTime, Time.deltaTime);
 		//bool shouldMove = agent.velocity.magnitude > .1f && agent.remainingDistance > agent.radius;
 
-		anim.SetBool("moveStraight", movementInput.shouldMoveStraight);       // trigger => déplacement
-		anim.SetBool("moveSide", movementInput.shouldMoveSide);			// trigger => déplacement
+		if (movementInput) {
+			anim.SetBool("moveStraight", movementInput.shouldMoveStraight);       // trigger => déplacement
+			anim.SetBool("moveSide", movementInput.shouldMoveSide);         // trigger => déplacement
+		}
 
 	}
 

@@ -26,8 +26,7 @@ public class DialoguesUI : UIBase
 	public GameObject Buttons;
 	public TMP_Text[] choices;
 
-	[HideInInspector]
-	public GameObject currentPNJcam;
+	private PNJ pnj;
 
 	private void Awake() {
 		dialogueUI = this;
@@ -56,19 +55,16 @@ public class DialoguesUI : UIBase
 	/// </summary>
 	/// <param name="dialog"></param>
 	public void Begin(VIDE_Assign dialog) {
-		playerManager.StopAgent();
-		cameraController.SetDialogueCamera();
-		animatorController.anim.SetBool("Dialogue", true);
-		interactableObjectsManager.showActionSprites(false);
-		//panel.SetActive(true);
-		currentPNJcam = dialog.GetComponentInParent<PNJ>().PNJcam;
-		if (currentPNJcam!=null)
-			currentPNJcam.SetActive(true);
+		// personnages
+		pnj = dialog.GetComponentInParent<PNJ>();                               // retrouver le PNJ																				
+		// interface dialogues
+		pnj.PNJcam?.SetActive(true);                                            // activer la caméra 'portait' du PNJ
 		if (string.IsNullOrEmpty(dialog.alias))
-			dialog.alias = dialog.GetComponentInParent<PNJ>().PNJName;
-		Show();
-		VD.OnNodeChange += UpdateUI;
-		VD.OnEnd += End;
+			dialog.alias = pnj.PNJName;											// indiquer le nom du PNJ
+		Show();																	// afficher l'interface 'dialogues'
+		VD.OnNodeChange += UpdateUI;											// callback changement de 'noeud'
+		VD.OnEnd += End;														// callback 'fin de dialogue'
+		// activer le dialogue
 		if (VD.isActive)
 			VD.Next(); 
 		else {
@@ -78,31 +74,15 @@ public class DialoguesUI : UIBase
 
 	public override void Toggle() {
 		panel.SetActive(!isOn);
-		//if (App.isMagicEquiped) {
-		//	questButton.SetActive(!isOn);
-		//	diaryButton.SetActive(!isOn);
-		//}
 		inventory.SetActive(!isOn);
 	}
 	public void Show() {
 		panel.SetActive(true);
 		uiManager.ManageButtons(dialog);
-		//InventoryUI.Instance.SaveAndHide();
-		//if (App.isMagicEquiped) {
-		//	questButton.SetActive(false);
-		//	diaryButton.SetActive(!isOn);
-		//}
-		//inventory.SetActive(false);
 	}
 	public void Hide() {
 		panel.SetActive(false);
 		uiManager.RestoreButtonsPreviousState();
-		//InventoryUI.Instance.Restore();
-		//if (App.isMagicEquiped) {
-		//	questButton.SetActive(true);
-		//	diaryButton.SetActive(!isOn);
-		//}
-		//inventory.SetActive(true);
 	}
 
 
@@ -113,15 +93,6 @@ public class DialoguesUI : UIBase
 
 		if (data.isPlayer) {
 			container_PLAYER.SetActive(true);
-			// set sprite
-			// TODO: revoir la mise en place de sprite spécifique
-
-			//if (data.creferences[data.commentIndex].sprites != null)
-			//	PLAYER_Sprite.sprite = data.creferences[data.commentIndex].sprites;    // specific for comment i exists
-			//else if (data.sprite != null)
-			//	PLAYER_Sprite.sprite = data.sprite;
-			//else if (VD.assigned.defaultPlayerSprite != null)
-			//	PLAYER_Sprite.sprite = VD.assigned.defaultPlayerSprite;
 
 			// set name
 			//If it has a tag, show it, otherwise let's use the alias we set in the VIDE Assign
@@ -168,23 +139,21 @@ public class DialoguesUI : UIBase
 	/// </summary>
 	/// <param name="data"></param>
 	public void End(VD.NodeData data) {
-		Hide();
-		if (currentPNJcam!=null)
-			currentPNJcam.SetActive(false);
-		container_NPC.SetActive(false);
-		container_PLAYER.SetActive(false);
-		VD.OnNodeChange -= UpdateUI;
-		VD.OnEnd -= End;
+		// interface
+		Hide();												// masquer l'interface dialogue
+		if (pnj) {
+			pnj.PNJcam?.SetActive(false);						// désactiver la caméra 'portrait' du PNJ
+			playerManager.SetPlayerMode(PlayerMode.dialogue, false, pnj);		//container_NPC.SetActive(false);
+		}
+
+		VD.OnNodeChange -= UpdateUI;						// supprimer callback 'changement de noeud'
+		VD.OnEnd -= End;									// supprimer callback 'fin de dialogue'
 		VD.EndDialogue();
-		//uiManager.isClicOnUI = false;
-		cameraController.SetFollowCamera();
-		animatorController.anim.SetBool("Dialogue", false);
-		interactableObjectsManager.showActionSprites(true);
 	}
-	private void OnDisable() {
-		if (container_NPC != null)
-			End(null);
-	}
+	//private void OnDisable() {
+	//	if (container_NPC != null)
+	//		End(null);
+	//}
 
 	public void GetChoice(int choice) {
 		VD.nodeData.commentIndex = choice;
