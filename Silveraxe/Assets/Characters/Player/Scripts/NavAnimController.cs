@@ -7,9 +7,9 @@ using static App;
 //This script requires you to have setup your animator with 3 parameters, "InputMagnitude", "InputX", "InputZ"
 //With a blend tree to control the inputmagnitude and allow blending between animations.
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(Animator))]
+//[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(NavMeshAgent))]
-public class AnimatorController : MonoBehaviour
+public class NavAnimController : MonoBehaviour
 {
 	#region Variables
 	public float inputX { get; set; }       //Left and Right Inputs
@@ -77,18 +77,15 @@ public class AnimatorController : MonoBehaviour
 		//Calculate Input Vectors
 		inputX = tmp.x;         // latéral
 		inputZ = tmp.z;         // avant/arrière
-
-		anim.SetFloat("InputX", inputX, animSmoothTime, Time.deltaTime);    //* 2f
+		anim.SetFloat("InputX",inputX, animSmoothTime, Time.deltaTime);    //* 2f
 		anim.SetFloat("InputZ", inputZ, animSmoothTime, Time.deltaTime);   //* 2f
 
-		//Physically move player
-		anim.SetFloat("velocity", agent.velocity.sqrMagnitude, animSmoothTime, Time.deltaTime);
-		//bool shouldMove = agent.velocity.magnitude > .1f && agent.remainingDistance > agent.radius;
 
-		if (movementInput) {
-			anim.SetBool("moveStraight", movementInput.shouldMoveStraight);       // trigger => déplacement
-			anim.SetBool("moveSide", movementInput.shouldMoveSide);         // trigger => déplacement
-		}
+		//anim.SetFloat("InputX", movementInput.sTranslation, animSmoothTime, Time.deltaTime);    //* 2f
+		//anim.SetFloat("InputZ", movementInput.fTranslation, animSmoothTime, Time.deltaTime);   //* 2f
+																							   //anim.SetFloat("velocity", agent.velocity.sqrMagnitude, animSmoothTime, Time.deltaTime);
+		var v = Mathf.Abs(anim.GetFloat("InputX") + anim.GetFloat("InputZ"));
+		anim.SetFloat("velocity", v, animSmoothTime, Time.deltaTime);
 
 	}
 
@@ -99,7 +96,8 @@ public class AnimatorController : MonoBehaviour
 
 	// Update is called once per frame
 	void Update() {
-		InputMagnitude();
+		if (movementInput)
+			InputMagnitude();
 		//Time.timeScale = timeScale;
 
 

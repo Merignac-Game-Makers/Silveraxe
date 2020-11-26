@@ -1,4 +1,4 @@
-﻿public enum PlayerMode {
+﻿public enum SceneMode {
 	normal,
 	dialogue,
 	fight

@@ -11,14 +11,11 @@ public class MovementInput : MonoBehaviour
 	public float rotationSensitivity = 2f;   // How sensitive it with mouse
 
 	// déplacements
-	public bool shouldMove { get; private set; }
-	public bool shouldMoveStraight { get; set; }
-	public bool shouldMoveSide { get; set; }
-
-
 	public Texture2D cursor;
-
 	Vector2 screenDirection;
+	public float fTranslation { get; set; }
+	public float sTranslation { get; set; }
+
 
 	private void Awake() {
 		navAgent = GetComponent<NavMeshAgent>();
@@ -28,65 +25,34 @@ public class MovementInput : MonoBehaviour
 		cursor = uiManager.Resize(cursor, uiManager.defaultCursorSize / 2);
 	}
 
-	float distance;
-	void Update() {
+
+	Vector3 move;
+	Vector3 dest;
+	void LateUpdate() {
 		//------------------------
 		// déplacements au clavier
 		//------------------------
-		if (GetMove()) {
-			if (Input.GetAxis("Vertical") > 0) {
-				MoveForward();
-			} else if (Input.GetAxis("Vertical") < 0) {
-				MoveBackward();
-			} else if (Input.GetAxis("Horizontal") < 0) {
-				MoveLeft();
-			} else if (Input.GetAxis("Horizontal") > 0) {
-				MoveRight();
-			} else {
-				shouldMoveStraight &= navAgent.velocity.magnitude > 10f;
-				shouldMoveSide &= navAgent.velocity.magnitude > 1f; ;
-			}
+		screenDirection = ((Vector2)Input.mousePosition - (Vector2)Camera.main.WorldToScreenPoint(playerManager.transform.position)).normalized;
+
+		if (screenDirection.y > 0.1 && (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)) {
+			fTranslation = Input.GetAxis("Vertical") * navAgent.speed * 30;
+			sTranslation = Input.GetAxis("Horizontal") * navAgent.speed * 10;
+			fTranslation *= Time.deltaTime;
+			sTranslation *= Time.deltaTime;
+			move = new Vector3(sTranslation / 2, 0, fTranslation);
+			dest = transform.TransformPoint(move);
+			navAgent.updateRotation = fTranslation > .1;
+			navAgent.SetDestination(dest);
+		} else {
+			fTranslation = 0;
+			sTranslation = 0;
 		}
 	}
 
-	Vector3 dir;
-	float k;
 	private void FixedUpdate() {
 		// rotation en fonction de la direction de la souris
-		if (navAgent.velocity.magnitude > .2f || Input.GetKey(KeyCode.S)) {
-			//if (navAgent.updateRotation)
-				transform.Rotate(Vector3.up, screenDirection.x * rotationSensitivity);
+		if (fTranslation > .1 || Input.GetKey(KeyCode.S)) {
+			transform.Rotate(Vector3.up, screenDirection.x * rotationSensitivity);
 		}
-	}
-
-	bool GetMove() {
-		screenDirection = ((Vector2)Input.mousePosition - (Vector2)Camera.main.WorldToScreenPoint(playerManager.transform.position)).normalized;
-		shouldMove = screenDirection.y > 0.1;// &&  screenDirection.magnitude > .2;
-		return shouldMove;
-	}
-
-	private void MoveForward() {
-		shouldMoveStraight = true;
-		shouldMoveSide = false;
-		navAgent.updateRotation = true;
-		navAgent.SetDestination(transform.position + transform.forward * 1f);
-	}
-	private void MoveBackward() {
-		shouldMoveStraight = true;
-		shouldMoveSide = false;
-		navAgent.updateRotation = false;
-		navAgent.SetDestination(transform.position + transform.forward * -.5f);
-	}
-	private void MoveLeft() {
-		shouldMoveStraight = false;
-		shouldMoveSide = true;
-		navAgent.updateRotation = false;
-		navAgent.SetDestination(transform.position + transform.right * -.5f);
-	}
-	private void MoveRight() {
-		shouldMoveStraight = false;
-		shouldMoveSide = true;
-		navAgent.updateRotation = false;
-		navAgent.SetDestination(transform.position + transform.right * .5f);
 	}
 }

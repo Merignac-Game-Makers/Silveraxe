@@ -29,8 +29,8 @@ public class PNJ : Character
 
 	public override bool IsInteractable() {
 		if (!isInPlayerCollider) return false;
-		if (playerManager.playerMode == PlayerMode.normal) return true;
-		if (playerManager.playerMode == PlayerMode.fight && alignment == Alignment.ennemy) return true;
+		if (SceneModeManager.sceneMode == SceneMode.normal) return true;
+		if (SceneModeManager.sceneMode == SceneMode.fight && alignment == Alignment.ennemy) return true;
 		return false; 
 	} 
 
@@ -64,7 +64,7 @@ public class PNJ : Character
 		Act();
 	}
 
-	private void Act() {
+	public override void Act() {
 		if (isOn && IsInteractable() && !uiManager.isClicOnUI) {
 			switch (alignment) {
 				case Alignment.friend:
@@ -75,7 +75,7 @@ public class PNJ : Character
 					break;
 				case Alignment.ennemy:
 					if (!isInFightMode)
-						SetFightMode(true);
+						SceneModeManager.SetSceneMode(SceneMode.fight, true, this);
 					else {
 						playerManager.fightController.Fight_Attack();
 					}
@@ -121,9 +121,8 @@ public class PNJ : Character
 
 
 	private void Talk() {
-		if (dialogueTrigger.HasDialogue()) {                                // si le PNJ a un dialogue
-			playerManager.SetPlayerMode(PlayerMode.dialogue, true, this);	// joueur en mode 'dialogue'
-			GetComponentInChildren<DialogueTrigger>().Run();                //	démarrer le dialogue	
+		if (dialogueTrigger.HasDialogue()) {														// si le PNJ a un dialogue
+			SceneModeManager.SetSceneMode(SceneMode.dialogue, true, this);							// joueur en mode 'dialogue'
 		}
 	}
 

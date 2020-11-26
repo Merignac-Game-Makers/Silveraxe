@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
 /// <summary>
@@ -21,15 +24,13 @@ public static class App {
 	public static DialoguesUI dialogueUI;
 	public static InventoryUI inventoryUI;
 
-
-
-
-	//SAVE TEXTURE
+	//--------------------
+	// Texture <=> fichier
+	/// SAVE TEXTURE
 	public static void SaveTextureToFile(Texture2D texture, string path, string filename) {
 		File.WriteAllBytes(Application.dataPath + "/" + path + "/" + filename + ".png", texture.EncodeToPNG());
 	}
-
-	//LOAD TEXTURE
+	/// LOAD TEXTURE
 	public static Texture2D LoadTextureFromFile(string path, string filename) {
 		byte[] bytes;
 		bytes = File.ReadAllBytes(Application.dataPath + "/" + path + "/" + filename + ".png");
@@ -38,7 +39,13 @@ public static class App {
 		return texture;
 	}
 
-	// trouver un 'child' dans toute la hiérarchie
+	//--------------------
+	/// <summary>
+	/// trouver un 'transform' par son nom parmi les descendants dans toute la hiérarchie
+	/// </summary>
+	/// <param name="aParent"></param>
+	/// <param name="aName"></param>
+	/// <returns></returns>
 	public static Transform FindDeepChild(this Transform aParent, string aName) {
 		Queue<Transform> queue = new Queue<Transform>();
 		queue.Enqueue(aParent);
@@ -53,6 +60,9 @@ public static class App {
 	}
 
 
+	//-----------------------------------------------------------
+	// Vérifier si le dernier clic a eu lieu sur un objet de l'UI
+	/// 
 	///Returns 'true' if we touched or hovering on Unity UI element.
 	public static bool IsPointerOverUIElement() {
 		return IsPointerOverUIElement(GetEventSystemRaycastResults());
@@ -74,4 +84,21 @@ public static class App {
 		EventSystem.current.RaycastAll(eventData, raysastResults);
 		return raysastResults;
 	}
+
+	//----------------------------------------------------------------------------------------------
+	// Extension de NavMesh Agent 'set destination' pour ajouter un callback à la fin du déplacement
+	public static NavMeshAgent SetDestination(this NavMeshAgent navAgent, Vector3 pos, Action callback = null) {
+		playerManager.StartCoroutine(Igoto(navAgent, pos, callback));
+		return navAgent;
+	}
+	static IEnumerator Igoto(NavMeshAgent navAgent, Vector3 pos, Action callback) {
+		navAgent.updateRotation = true;
+		navAgent.SetDestination(pos);
+		if (callback != null) {
+			while (navAgent.remainingDistance > navAgent.radius)
+				yield return new WaitForEndOfFrame();
+			callback();
+		}
+	}
+
 }

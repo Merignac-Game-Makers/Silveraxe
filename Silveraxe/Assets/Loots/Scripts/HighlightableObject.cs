@@ -9,7 +9,7 @@ using static App;
 /// of setting the material parameters for it when it gets highlighted.
 /// If the object use another material, it will just ignore all the changes.
 /// </summary>
-public class HighlightableObject : MonoBehaviour
+public abstract class HighlightableObject : MonoBehaviour
 {
 
 	public bool isHighlightable = true;

@@ -19,7 +19,7 @@ public abstract class Character : InteractableObject
 	protected bool MoveAcrossNavMeshesStarted = false;              // flag : est-on sur un nav mesh link ? (pour gérer la vitesse)
 
 	// animation
-	public AnimatorController animatorController { get; set; }
+	public NavAnimController animatorController { get; set; }
 	LookAtConstraint lookAt;
 
 	// pour les dialogues
@@ -28,7 +28,7 @@ public abstract class Character : InteractableObject
 	string[] targetNames = new string[] { "head" };
 
 	// pour les combats
-	public bool isInFightMode { get; set; } = false;
+	public bool isInFightMode => animatorController?.anim?.GetInteger(SceneModeManager.Fight) != -1;
 	public FightController fightController { get; set; }
 
 	protected override void Start() {
@@ -36,7 +36,6 @@ public abstract class Character : InteractableObject
 
 		// pour les déplacements
 		navAgent = GetComponentInChildren<NavMeshAgent>();                     // préparation de la navigation
-
 
 		// pour les dialogues
 		portraitCamera = GetComponentInChildren<Camera>(true);
@@ -52,7 +51,7 @@ public abstract class Character : InteractableObject
 		}
 
 		// pour les animations
-		animatorController = GetComponentInChildren<AnimatorController>();
+		animatorController = GetComponentInChildren<NavAnimController>();
 		lookAt = GetComponent<LookAtConstraint>();
 		if (!lookAt)
 			lookAt = gameObject.AddComponent<LookAtConstraint>();
@@ -61,7 +60,7 @@ public abstract class Character : InteractableObject
 		}
 
 		// pour les combats
-		fightController = GetComponent<FightController>();
+		fightController = GetComponentInChildren<FightController>();
 
 	}
 
@@ -73,21 +72,19 @@ public abstract class Character : InteractableObject
 		}
 	}
 
-	public void FaceTo( bool on, GameObject other = null) {
+	public abstract void Act();
+
+	public void FaceTo(bool on, GameObject other = null) {
 		lookAt.constraintActive = on;
-		if (on && other!=null) {
+		if (on && other != null) {
 			lookAt.SetSource(0, new ConstraintSource() { sourceTransform = other.transform, weight = 1 });
 		}
 	}
 
-
-	/// <summary>
-	/// en mode combat, tous les colliders sont désactivés sauf le fightCollider... et vice-versa
-	/// </summary>
-	/// <param name="on"></param>
-	protected void SetFightMode(bool on) {
-		playerManager.SetPlayerMode(PlayerMode.fight, on, this);
+	public Vector3 ActPosition(Character other) {
+		var dir = other.transform.position - transform.position;
+		var dist = (navAgent.radius + other.navAgent.radius) * 1.5f;
+		Vector3 pos = other.transform.position - dir * (dist / dir.magnitude);
+		return pos;
 	}
-
-
 }

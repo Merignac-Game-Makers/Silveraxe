@@ -9,13 +9,7 @@ using static App;
 /// </summary>
 public class PlayerManager : Character
 {
-	public PlayerMode playerMode { get; set; } = PlayerMode.normal;
-
-	public Collider detectionCollider;
-
-
 	public MovementInput movementInput { get; private set; }
-	public bool shouldMove => movementInput.shouldMove;
 
 	// Interactions
 	InteractableObject interactable = null;                         // objet avec lequel le joueur intéragit
@@ -33,8 +27,6 @@ public class PlayerManager : Character
 		characterData.Init();                                       // ... initialisation
 
 		movementInput = GetComponentInChildren<MovementInput>();
-
-		detectionCollider.enabled = true;
 	}
 	#endregion
 
@@ -47,60 +39,6 @@ public class PlayerManager : Character
 			MoveAcrossNavMeshesStarted = true;
 			StartCoroutine(MoveAcrossNavMeshLink(navAgent.destination));
 		}
-	}
-
-	public void SetPlayerMode(PlayerMode mode, bool on, Character other = null) {
-		switch (mode) {
-			case PlayerMode.normal:
-				playerMode = mode;
-				cameraController.SetCamera(cameraController.vCamFollow);                // activer la caméra 'follow'
-				playerManager.FaceTo(false);                                            // cesser d'orienter le PNJ vers le joueur
-				other?.FaceTo(false);                                                   // cesser d'orienter le PNJ vers le joueur
-				interactableObjectsManager.SelectAll(true);                             // resélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
-				animatorController?.anim?.SetInteger("Fight", -1);                      // animation 'idle'
-				fightController.other = null;
-				break;
-
-			case PlayerMode.dialogue:
-				// scène
-				if (on) {
-					playerMode = mode;
-					cameraController.SetCamera(cameraController.vCamDialogue);              // activer la caméra 'dialogue'
-					interactableObjectsManager.SelectAll(false);								// désélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
-				} else {
-					SetPlayerMode(PlayerMode.normal, true, other);
-				}
-				// personnages
-				StopAgent();                                                            // arrêter le déplacement du joueur
-				animatorController?.anim.SetBool("Dialogue", on);                     // activer/désactiver l'animation 'dialogue' du joueur
-				other?.animatorController?.anim?.SetBool("Dialogue", on);             // activer/désactiver l'animation 'dialogue' du pnj
-				break;
-
-			case PlayerMode.fight:
-				if (on) {
-					playerMode = mode;
-					animatorController?.anim?.SetInteger("Fight", 0);                   // animation 'fight idle'
-					fightController.other = other;
-					navAgent.SetDestination(fightController.FightPosition(other));
-				} else {
-					SetPlayerMode(PlayerMode.normal, true, other);
-				}
-
-				// le PNJ 
-				other.isInFightMode = on;
-				other.FaceTo(on, gameObject);
-				// le joueur
-				isInFightMode = on;
-				FaceTo(on, other.gameObject);
-				// bascule d'affichage des ActionSprites
-				interactableObjectsManager.SelectAll(!on);                          // masquer tous les actionsSprites pendant le combat
-				other.Highlight(true);
-				break;
-		}
-	}
-
-	public void TestAnimationEvent(int param) {
-		Debug.Log(param);
 	}
 
 	#region Intéractions
@@ -132,7 +70,7 @@ public class PlayerManager : Character
 			}
 			var character = other.GetComponent<Character>();
 			if (character && character.isInFightMode) {
-				SetPlayerMode(PlayerMode.fight, false, character);
+				SceneModeManager.SetSceneMode(SceneMode.fight, false, character);
 			}
 		}
 	}
@@ -177,6 +115,8 @@ public class PlayerManager : Character
 		MoveAcrossNavMeshesStarted = false;
 		navAgent.SetDestination(destination);                                // continuer vers la destination initiale
 	}
+
+	public override void Act() { }
 
 	#endregion
 
