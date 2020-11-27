@@ -61,6 +61,8 @@ public abstract class Character : InteractableObject
 
 		// pour les combats
 		fightController = GetComponentInChildren<FightController>();
+		characterData = GetComponent<CharacterData>();              // caractéristiques du joueur
+		characterData.Init();                                       // ... initialisation
 
 	}
 

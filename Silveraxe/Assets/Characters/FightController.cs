@@ -9,14 +9,17 @@ public abstract class FightController : MonoBehaviour
 	public static int FightAttack = 1;
 	public static int FightHit = 50;
 	public static int FightBlock = 60;
+	public static int FightDead = 90;
 
 	protected NavAnimController animatorController;
 	protected StatSystem stats;
+	protected StatSystem otherStats;
 	protected Character _this;
-	public Character other { get; set; }
+	public Character other { get; private set; }
 
 	protected float rand;
 	protected string Fight => SceneModeManager.Fight;
+	public bool canFight => stats.CurrentHealth > 0;
 
 
 	protected virtual void Start() {
@@ -26,9 +29,19 @@ public abstract class FightController : MonoBehaviour
 
 	}
 
+	public void SetOther(Character o) {
+		other = o;
+		otherStats = other?.GetComponent<CharacterData>()?.Stats;
+	}
+
 	public virtual void Fight_hit() {
 		if (other && other.animatorController?.anim?.GetInteger(Fight)!=FightBlock) {
-			other.animatorController?.anim?.SetInteger(Fight, FightHit);
+			otherStats.ChangeHealth(-1);
+			if (otherStats.CurrentHealth <= 0) {
+				other.animatorController?.anim?.SetInteger(Fight, FightDead);
+			} else {
+				other.animatorController?.anim?.SetInteger(Fight, FightHit);
+			}
 		}
 	}
 
@@ -39,6 +52,20 @@ public abstract class FightController : MonoBehaviour
 		} else {
 			animatorController.anim.SetInteger(Fight, FightAttack);
 			other.animatorController.anim.SetInteger(Fight, FightBlock);
+		}
+	}
+
+	public void Fight_End() {
+		SceneModeManager.SetSceneMode(SceneMode.fight, false);
+	}
+
+	public void RestetFight() {
+		animatorController.anim.SetInteger(Fight, FightIdle);
+	}
+
+	public void CheckLife() {
+		if (stats.CurrentHealth <= 0) {
+			animatorController?.anim?.SetInteger(Fight, FightDead);
 		}
 	}
 }

@@ -23,6 +23,7 @@ public static class App {
 
 	public static DialoguesUI dialogueUI;
 	public static InventoryUI inventoryUI;
+	public static StatsUI statsUI;
 
 	//--------------------
 	// Texture <=> fichier

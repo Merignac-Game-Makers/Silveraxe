@@ -63,7 +63,7 @@ public abstract class InteractableObject : HighlightableObject
 
 
 	public override bool Highlight(bool on) {
-		if (actionSprite && isInPlayerCollider)
+		if (actionSprite && IsInteractable())
 			actionSprite.enabled = on && SceneModeManager.sceneMode == SceneMode.normal;
 		return base.Highlight(on);
 	}

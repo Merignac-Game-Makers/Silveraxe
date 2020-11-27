@@ -26,11 +26,17 @@ public class PNJ : Character
 
 	DialogueTrigger dialogueTrigger;
 
+	public bool canFight => characterData.Stats.CurrentHealth > 0;
+
 
 	public override bool IsInteractable() {
 		if (!isInPlayerCollider) return false;
-		if (SceneModeManager.sceneMode == SceneMode.normal) return true;
-		if (SceneModeManager.sceneMode == SceneMode.fight && alignment == Alignment.ennemy) return true;
+		if (SceneModeManager.sceneMode == SceneMode.normal) {
+			if (alignment == Alignment.ennemy)
+				return canFight;
+			return true;
+		} 
+		if (SceneModeManager.sceneMode == SceneMode.fight && alignment == Alignment.ennemy && canFight) return true;
 		return false; 
 	} 
 

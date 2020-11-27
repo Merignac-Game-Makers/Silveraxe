@@ -23,9 +23,6 @@ public class PlayerManager : Character
 	protected override void Start() {
 		base.Start();
 
-		characterData = GetComponent<CharacterData>();              // caractéristiques du joueur
-		characterData.Init();                                       // ... initialisation
-
 		movementInput = GetComponentInChildren<MovementInput>();
 	}
 	#endregion

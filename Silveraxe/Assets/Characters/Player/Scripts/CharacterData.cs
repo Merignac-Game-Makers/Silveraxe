@@ -37,7 +37,7 @@ public class CharacterData : MonoBehaviour // HighlightableObject
 
 
 	public void Init() {
-		//Stats.Init(this);
+		Stats.Init(this);
 		Inventory.Init(this);
 		//Equipment.Init(this);
 	}

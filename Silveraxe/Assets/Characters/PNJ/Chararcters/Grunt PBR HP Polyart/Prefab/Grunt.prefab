@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 877895956}
   - component: {fileID: 877895954}
   - component: {fileID: 877895955}
+  - component: {fileID: 1819424803309443985}
   m_Layer: 9
   m_Name: Grunt
   m_TagString: Untagged
@@ -86,7 +87,7 @@ LookAtConstraint:
   m_Enabled: 1
   m_Weight: 1
   m_RotationAtRest: {x: 0, y: 0, z: 0}
-  m_RotationOffset: {x: 0, y: 20, z: 0}
+  m_RotationOffset: {x: 0, y: 25, z: 0}
   m_Roll: 0
   m_WorldUpObject: {fileID: 0}
   m_UseUpObject: 0
@@ -158,6 +159,28 @@ MonoBehaviour:
   feetToIkPositionSpeed: 0.5
   showSolverDebug: 1
   animSmoothTime: 0.2
+--- !u!114 &1819424803309443985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514938414803815925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aca64b3b95148e343a152e0e191c41ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CharacterName: 
+  Stats:
+    baseStats:
+      health: 10
+      strength: 10
+      defense: 10
+      agility: 10
+      elementalProtection: 00000000000000000000000000000000
+      elementalBoosts: 00000000000000000000000000000000
+  HitClip: []
 --- !u!1 &905261784111084364
 GameObject:
   m_ObjectHideFlags: 0
@@ -262,6 +285,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3483252396404061269}
   - component: {fileID: 4449965502475657291}
+  - component: {fileID: 402945176}
   m_Layer: 9
   m_Name: Animation
   m_TagString: Untagged
@@ -303,6 +327,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &402945176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 907323710474605043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fa7b75ed9b69a94cb62a6b2ab6f4427, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackRate: 1
 --- !u!1 &1933699733881899480
 GameObject:
   m_ObjectHideFlags: 0
@@ -729,7 +766,8 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 388476415, guid: 7df524699deb44341b3693c8538df185, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 7df524699deb44341b3693c8538df185, type: 3}
 --- !u!4 &5440340406658770859 stripped
 Transform:

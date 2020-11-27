@@ -16,9 +16,6 @@ public class UIManager : MonoBehaviour
 	public State state { get; private set; }    // l'état actuel de l'UI
 	private State prevState;                    // l'état précédent de l'UI
 
-	public DialoguesUI dialoguesUI;             // interface Dialogues
-												//public DiaryBookContent diaryBookContent;   // pages du journal
-												//public MagicUI magicUI;                     // interface Magie
 	public QuitUI quitUi;                       // interface Quit	
 
 	public int defaultCursorSize = 64;

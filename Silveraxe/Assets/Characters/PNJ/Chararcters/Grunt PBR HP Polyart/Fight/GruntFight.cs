@@ -15,7 +15,7 @@ public class GruntFight : FightController
 	}
 
 	private void FixedUpdate() {
-		if (SceneModeManager.sceneMode == SceneMode.fight) {
+		if (SceneModeManager.sceneMode == SceneMode.fight && canFight) {
 			timer -= Time.fixedDeltaTime;
 			if (timer < 0) {
 				timer = attackRate;

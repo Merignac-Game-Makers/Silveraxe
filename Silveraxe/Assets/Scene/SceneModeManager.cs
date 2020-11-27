@@ -50,25 +50,29 @@ public static class SceneModeManager
 						interactableObjectsManager.SelectAll(false);                        // masquer tous les actionsSprites pendant le combat
 
 						// player
-						playerManager.fightController.other = other;
+						playerManager.fightController.SetOther(other);
 						playerManager.animatorController?.anim?.SetInteger(Fight, 0);		// animation 'fight idle'
 						playerManager.FaceTo(on, other.gameObject);                         // orienter le joueur vers le PNJ
 
 						// PNJ
-						other.fightController.other = playerManager;
+						other.fightController.SetOther(playerManager);
 						other.animatorController?.anim?.SetInteger(Fight, 0);				// animation 'fight idle'
 						other.FaceTo(on, playerManager.gameObject);                         // orienter le PNJ vers le joueur 						
 						other.Highlight(true);                                              // PNJ outlined
+
+						statsUI.Show();														// afficher les statistiques
 					});
 				} else {
+					statsUI.Hide();															// masquer les statistiques
+
+					// PNJ
+					other?.animatorController?.anim?.SetInteger(Fight, -1);					// animation 'idle'
+					other?.FaceTo(false);                                                   // cesser d'orienter le PNJ vers le joueur
+
 					// player
 					playerManager.animatorController?.anim?.SetInteger(Fight, -1);			// animation 'idle'
 					playerManager.FaceTo(false);                                            // cesser d'orienter le joueur vers le PNJ
-					playerManager.fightController.other = null;
-
-					// PNJ
-					other.animatorController?.anim?.SetInteger(Fight, -1);					// animation 'idle'
-					other?.FaceTo(false);                                                   // cesser d'orienter le PNJ vers le joueur
+					playerManager.fightController.SetOther(null);
 
 					SetSceneMode(SceneMode.normal, true, other);
 				}
