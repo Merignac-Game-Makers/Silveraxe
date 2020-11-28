@@ -10,6 +10,7 @@ public abstract class FightController : MonoBehaviour
 	public static int FightHit = 50;
 	public static int FightBlock = 60;
 	public static int FightDead = 90;
+	public static int FightVictory = 99;
 
 	protected NavAnimController animatorController;
 	protected StatSystem stats;
@@ -38,7 +39,7 @@ public abstract class FightController : MonoBehaviour
 		if (other && other.animatorController?.anim?.GetInteger(Fight)!=FightBlock) {
 			otherStats.ChangeHealth(-1);
 			if (otherStats.CurrentHealth <= 0) {
-				other.animatorController?.anim?.SetInteger(Fight, FightDead);
+				Die();
 			} else {
 				other.animatorController?.anim?.SetInteger(Fight, FightHit);
 			}
@@ -56,16 +57,28 @@ public abstract class FightController : MonoBehaviour
 	}
 
 	public void Fight_End() {
-		SceneModeManager.SetSceneMode(SceneMode.fight, false);
+		SceneModeManager.SetSceneMode(SceneMode.fight, false, other);
 	}
 
-	public void RestetFight() {
+	public void ResetFight() {
 		animatorController.anim.SetInteger(Fight, FightIdle);
 	}
 
 	public void CheckLife() {
 		if (stats.CurrentHealth <= 0) {
-			animatorController?.anim?.SetInteger(Fight, FightDead);
+			Die();
+		}
+	}
+
+	void Die() {
+		other.animatorController?.anim?.SetInteger(Fight, FightDead);
+	}
+
+	public void Victory(int who) {	// who = -1 => I loose...         who = 1 => I win
+		if (who == -1) {
+			other.animatorController?.anim?.SetInteger(Fight, FightVictory);
+		} else {
+			animatorController?.anim?.SetInteger(Fight, FightVictory);
 		}
 	}
 }
