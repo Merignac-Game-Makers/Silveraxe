@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GruntFight : FightController
 {
-
+	[Header("Other")]
 	public float attackRate;
 
 	float timer;

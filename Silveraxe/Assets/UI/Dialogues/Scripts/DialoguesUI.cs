@@ -6,7 +6,8 @@ using TMPro;
 using static App;
 
 using static UIManager.State;
-
+using Cinemachine;
+using System.Collections;
 
 public class DialoguesUI : UIBase
 {
@@ -16,12 +17,11 @@ public class DialoguesUI : UIBase
 	public GameObject inventory;
 
 	public GameObject container_NPC;
-	public Image NPC_Sprite;
-	public Text NPC_label;
+	public TMP_Text NPC_label;
 	public TMP_Text text_NPC;
 
 	public GameObject container_PLAYER;
-	public Text PLAYER_Label;
+	public TMP_Text PLAYER_Label;
 	public TMP_Text text_PLAYER;
 	public GameObject Buttons;
 	public TMP_Text[] choices;
@@ -33,7 +33,6 @@ public class DialoguesUI : UIBase
 	}
 
 
-	// Start is called before the first frame update
 	void Start() {
 		container_NPC.SetActive(false);
 		container_PLAYER.SetActive(false);
@@ -42,7 +41,6 @@ public class DialoguesUI : UIBase
 
 	}
 
-	// Update is called once per frame
 	void Update() {
 		if (Input.GetKeyDown(KeyCode.Return)) {
 			if (VD.isActive)
@@ -56,29 +54,36 @@ public class DialoguesUI : UIBase
 	/// <param name="dialog"></param>
 	public void Begin(VIDE_Assign dialog) {
 		// personnages
-		pnj = dialog.GetComponentInParent<PNJ>();                               // retrouver le PNJ																				
-		// interface dialogues
-		pnj.PNJcam?.SetActive(true);                                            // activer la caméra 'portait' du PNJ
+		pnj = dialog.GetComponentInParent<PNJ>();                               // retrouver le PNJ						
+
 		if (string.IsNullOrEmpty(dialog.alias))
-			dialog.alias = pnj.PNJName;											// indiquer le nom du PNJ
-		Show();																	// afficher l'interface 'dialogues'
-		VD.OnNodeChange += UpdateUI;											// callback changement de 'noeud'
-		VD.OnEnd += End;														// callback 'fin de dialogue'
+			dialog.alias = pnj.PNJName;                                         // indiquer le nom du PNJ
+
+		VD.OnNodeChange += UpdateUI;                                            // callback changement de 'noeud'
+		VD.OnEnd += End;                                                        // callback 'fin de dialogue'
+
 		// activer le dialogue
 		if (VD.isActive)
-			VD.Next(); 
+			VD.Next();
 		else {
 			VD.BeginDialogue(dialog);
 		}
 	}
 
-	public override void Toggle() {
-		panel.SetActive(!isOn);
-		inventory.SetActive(!isOn);
-	}
+	public override void Toggle() {}
+
 	public void Show() {
+		StartCoroutine(IShow());
+		container_NPC.transform.position = Camera.main.WorldToScreenPoint(pnj.transform.position);
+		container_PLAYER.transform.position = Camera.main.WorldToScreenPoint(playerManager.transform.position);
+	}
+	IEnumerator IShow() {
+		var cm = Camera.main.GetComponent<CinemachineBrain>();
+		while (cm.ActiveBlend != null)
+			yield return new WaitForEndOfFrame();
 		panel.SetActive(true);
 		uiManager.ManageButtons(dialog);
+
 	}
 	public void Hide() {
 		panel.SetActive(false);
@@ -99,28 +104,27 @@ public class DialoguesUI : UIBase
 			if (data.tag.Length > 0)
 				PLAYER_Label.text = data.tag;
 			else
-				PLAYER_Label.text = "Player";
+				PLAYER_Label.text = playerManager.characterData.CharacterName;
 
-			// set choices
-			for (int i = 0; i < choices.Length; i++) {
-				if (i < data.comments.Length) {
-					choices[i].transform.parent.gameObject.SetActive(true);
-					choices[i].text = data.comments[i];
-				} else {
-					choices[i].transform.parent.gameObject.SetActive(false);
+			if (data.comments.Length == 1) {
+				text_PLAYER.text = data.comments[data.commentIndex];
+				text_PLAYER.gameObject.SetActive(true);
+				Buttons.gameObject.SetActive(false);
+			} else {
+				// set choices
+				for (int i = 0; i < choices.Length; i++) {
+					if (i < data.comments.Length) {
+						choices[i].transform.parent.gameObject.SetActive(true);
+						choices[i].text = data.comments[i];
+					} else {
+						choices[i].transform.parent.gameObject.SetActive(false);
+					}
 				}
+				text_PLAYER.gameObject.SetActive(false);
+				Buttons.gameObject.SetActive(true);
 			}
 		} else {
 			container_NPC.SetActive(true);
-
-			// set sprite
-			if (data.creferences.Length>0 && data.creferences[data.commentIndex].sprites != null)				
-				NPC_Sprite.sprite = data.creferences[data.commentIndex].sprites;	// specific for comment if exists
-			else if (data.sprite != null)		
-				NPC_Sprite.sprite = data.sprite;									// specific for node if exists
-			else if (VD.assigned.defaultNPCSprite != null)
-				NPC_Sprite.sprite = VD.assigned.defaultNPCSprite;					// for dialog
-
 			// set name
 			// If it has a tag, show it, otherwise let's use the alias we set in the VIDE Assign
 			if (data.tag.Length > 0)
@@ -133,21 +137,21 @@ public class DialoguesUI : UIBase
 		}
 	}
 
-	
+
 	/// <summary>
 	/// Terminer le dialogue
 	/// </summary>
 	/// <param name="data"></param>
 	public void End(VD.NodeData data) {
 		// interface
-		Hide();												// masquer l'interface dialogue
+		Hide();                                             // masquer l'interface dialogue
 		if (pnj) {
 			pnj.PNJcam?.SetActive(false);                       // désactiver la caméra 'portrait' du PNJ
-			SceneModeManager.SetSceneMode(SceneMode.dialogue, false, pnj);		//container_NPC.SetActive(false);
+			SceneModeManager.SetSceneMode(SceneMode.dialogue, false, pnj);      //container_NPC.SetActive(false);
 		}
 
-		VD.OnNodeChange -= UpdateUI;						// supprimer callback 'changement de noeud'
-		VD.OnEnd -= End;									// supprimer callback 'fin de dialogue'
+		VD.OnNodeChange -= UpdateUI;                        // supprimer callback 'changement de noeud'
+		VD.OnEnd -= End;                                    // supprimer callback 'fin de dialogue'
 		VD.EndDialogue();
 	}
 	//private void OnDisable() {
@@ -167,10 +171,11 @@ public class DialoguesUI : UIBase
 	}
 
 	public void Next() {
-		VD.Next();
+		if (VD.nodeData.comments.Length == 1)
+			VD.Next();
 	}
 
-	public enum QuestStatus { None, Accepted, Refused, Done}
+	public enum QuestStatus { None, Accepted, Refused, Done }
 	[HideInInspector]
 	public QuestStatus questStatus = QuestStatus.None;
 	public void RefuseQuest() {
