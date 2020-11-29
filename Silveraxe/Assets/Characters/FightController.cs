@@ -4,13 +4,11 @@ using UnityEngine;
 
 public abstract class FightController : MonoBehaviour
 {
-	public static int FightExit = -1;
-	public static int FightIdle = 0;
-	public static int FightAttack = 1;
-	public static int FightHit = 50;
-	public static int FightBlock = 60;
-	public static int FightDead = 90;
-	public static int FightVictory = 99;
+	const string Hit = "Hit";
+	const string Attack = "Attack";
+	const string Block = "Block";
+	const string Dead = "Dead";
+	const string Victory = "Victory";
 
 	protected NavAnimController animatorController;
 	protected StatSystem stats;
@@ -18,10 +16,10 @@ public abstract class FightController : MonoBehaviour
 	protected Character _this;
 	public Character other { get; private set; }
 
-	protected float rand;
 	protected string Fight => SceneModeManager.Fight;
 	public bool canFight => stats.CurrentHealth > 0;
 
+	bool blocked = false;
 
 	protected virtual void Start() {
 		_this = GetComponentInParent<Character>();
@@ -36,24 +34,24 @@ public abstract class FightController : MonoBehaviour
 	}
 
 	public virtual void Fight_hit() {
-		if (other && other.animatorController?.anim?.GetInteger(Fight)!=FightBlock) {
+		if (!blocked) {
 			otherStats.ChangeHealth(-1);
 			if (otherStats.CurrentHealth <= 0) {
 				Die();
 			} else {
-				other.animatorController?.anim?.SetInteger(Fight, FightHit);
+				other.animatorController?.anim?.SetTrigger(Hit);
 			}
 		}
 	}
 
 	public virtual void Fight_Attack() {
-		rand = Random.value;
-		if (rand < .6) {													// 60% de chances de toucher
-			animatorController.anim.SetInteger(Fight, FightAttack);
-		} else {
-			animatorController.anim.SetInteger(Fight, FightAttack);
-			other.animatorController.anim.SetInteger(Fight, FightBlock);
-		}
+		blocked = Random.value > .6;					// 60% de chances de toucher
+			animatorController.anim.SetTrigger(Attack);
+	}
+
+	public virtual void Fight_Block() {
+		if (blocked)
+			other.animatorController.anim.SetTrigger(Block);
 	}
 
 	public void Fight_End() {
@@ -61,7 +59,7 @@ public abstract class FightController : MonoBehaviour
 	}
 
 	public void ResetFight() {
-		animatorController.anim.SetInteger(Fight, FightIdle);
+		animatorController.anim.SetBool(Fight, false);
 	}
 
 	public void CheckLife() {
@@ -71,14 +69,10 @@ public abstract class FightController : MonoBehaviour
 	}
 
 	void Die() {
-		other.animatorController?.anim?.SetInteger(Fight, FightDead);
+		other.animatorController?.anim?.SetTrigger(Dead);
 	}
 
-	public void Victory(int who) {	// who = -1 => I loose...         who = 1 => I win
-		if (who == -1) {
-			other.animatorController?.anim?.SetInteger(Fight, FightVictory);
-		} else {
-			animatorController?.anim?.SetInteger(Fight, FightVictory);
-		}
+	public void OtherWin() {
+		other.animatorController?.anim?.SetTrigger(Victory);
 	}
 }

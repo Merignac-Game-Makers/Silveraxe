@@ -51,12 +51,12 @@ public static class SceneModeManager
 
 						// player
 						playerManager.fightController.SetOther(other);
-						playerManager.animatorController?.anim?.SetInteger(Fight, 0);		// animation 'fight idle'
+						playerManager.animatorController?.anim?.SetBool(Fight, true);		// animation 'fight idle'
 						playerManager.FaceTo(on, other.gameObject);                         // orienter le joueur vers le PNJ
 
 						// PNJ
 						other.fightController.SetOther(playerManager);
-						other.animatorController?.anim?.SetInteger(Fight, 0);				// animation 'fight idle'
+						other.animatorController?.anim?.SetBool(Fight, true);				// animation 'fight idle'
 						other.FaceTo(on, playerManager.gameObject);                         // orienter le PNJ vers le joueur 						
 						other.Highlight(true);                                              // PNJ outlined
 
@@ -66,11 +66,11 @@ public static class SceneModeManager
 					statsUI.Hide();															// masquer les statistiques
 
 					// PNJ
-					other?.animatorController?.anim?.SetInteger(Fight, -1);					// animation 'idle'
+					other?.animatorController?.anim?.SetBool(Fight, false);					// animation 'idle'
 					other?.FaceTo(false);                                                   // cesser d'orienter le PNJ vers le joueur
 
 					// player
-					playerManager.animatorController?.anim?.SetInteger(Fight, -1);			// animation 'idle'
+					playerManager.animatorController?.anim?.SetBool(Fight, false);			// animation 'idle'
 					playerManager.FaceTo(false);                                            // cesser d'orienter le joueur vers le PNJ
 					playerManager.fightController.SetOther(null);
 
@@ -85,7 +85,7 @@ public static class SceneModeManager
 		if (playerManager.animatorController.anim.GetBool(Dialogue))
 			return SceneMode.dialogue;
 
-		if (playerManager.animatorController.anim.GetInteger(Fight) != -1)
+		if (playerManager.animatorController.anim.GetBool(Fight))
 			return SceneMode.fight;
 
 		return SceneMode.normal;

@@ -60,15 +60,12 @@ public class PNJ : Character
 	void Update() {
 		// bouton d'action
 		if (Input.GetButtonDown("Fire1")) {
-			if (!interactableObjectsManager.MultipleSelection()) {
+			if (!interactableObjectsManager.MultipleSelection() || isMouseOver) {
 				Act();
 			}
 		}
 	}
 
-	private void OnMouseUp() {
-		Act();
-	}
 
 	public override void Act() {
 		if (isOn && IsInteractable() && !uiManager.isClicOnUI) {
