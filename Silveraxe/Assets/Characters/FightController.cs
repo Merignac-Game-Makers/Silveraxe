@@ -4,10 +4,19 @@ using UnityEngine;
 
 public abstract class FightController : MonoBehaviour
 {
-	const string Hit = "Hit";
+	[Header("Audio")]
+	public AudioClip[] attack;
+	public AudioClip[] block;
+	public AudioClip[] hit;
+	public AudioClip[] die;
+	public AudioClip[] victory;
+
+
+
 	const string Attack = "Attack";
 	const string Block = "Block";
-	const string Dead = "Dead";
+	const string Hit = "Hit";
+	const string Dead = "Die";
 	const string Victory = "Victory";
 
 	protected NavAnimController animatorController;
@@ -20,6 +29,7 @@ public abstract class FightController : MonoBehaviour
 	public bool canFight => stats.CurrentHealth > 0;
 
 	bool blocked = false;
+	public bool isInFightMode => animatorController?.anim?.GetBool(SceneModeManager.Fight) ?? false;
 
 	protected virtual void Start() {
 		_this = GetComponentInParent<Character>();
@@ -45,8 +55,10 @@ public abstract class FightController : MonoBehaviour
 	}
 
 	public virtual void Fight_Attack() {
-		blocked = Random.value > .6;					// 60% de chances de toucher
+		if (other.fightController.canFight) {
+			blocked = Random.value > .6;					// 60% de chances de toucher
 			animatorController.anim.SetTrigger(Attack);
+		}
 	}
 
 	public virtual void Fight_Block() {
@@ -58,9 +70,6 @@ public abstract class FightController : MonoBehaviour
 		SceneModeManager.SetSceneMode(SceneMode.fight, false, other);
 	}
 
-	public void ResetFight() {
-		animatorController.anim.SetBool(Fight, false);
-	}
 
 	public void CheckLife() {
 		if (stats.CurrentHealth <= 0) {

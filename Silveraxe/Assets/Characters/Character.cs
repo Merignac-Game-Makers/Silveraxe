@@ -28,7 +28,7 @@ public abstract class Character : InteractableObject
 	string[] targetNames = new string[] { "head" };
 
 	// pour les combats
-	public bool isInFightMode => animatorController?.anim?.GetBool(SceneModeManager.Fight) ?? false;
+	public bool isInFightMode => fightController?.isInFightMode ?? false;
 	public FightController fightController { get; set; }
 
 	protected override void Start() {
