@@ -39,6 +39,8 @@ public class Loot : InteractableObject
 	Vector3 m_TargetPoint;
 	float m_AnimationTimer = 0.0f;
 
+	Target target;
+
 	public Loot(Loot item) {
 		ItemName = item.ItemName;
 		prefab = item.prefab;
@@ -71,20 +73,20 @@ public class Loot : InteractableObject
 		}
 
 		// bouton d'action
-		if (Input.GetButtonDown("Fire1")) {
-			if (!interactableObjectsManager.MultipleSelection())
+		if (!IsPointerOverUIElement() && Input.GetButtonDown("Fire1")) {
+			if (!interactableObjectsManager.MultipleSelection() || isMouseOver)
 				Act();
+
 		}
 	}
 
-	private void OnMouseUp() {
-		if (isMouseOver)
-			Act();
+	void Act() {
+		if (IsInteractable())
+			Take();
 	}
 
-	void Act() {
-			if (IsInteractable())
-				Take();
+	public bool Equals(Loot other) {
+		return prefab == other.prefab;
 	}
 
 	public void StartAnimation() {
@@ -161,9 +163,15 @@ public class Loot : InteractableObject
 	void Take() {
 		// on ramasse l'objet
 		playerManager.StopAgent();
-		SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });
-		inventoryManager.AddItem(this);
-		targetsManager.OnTake();
+		if (!playerManager.characterData.inventory.isFull) {
+			playerManager.characterData.inventory.AddItem(this);
+			SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });
+			targetsManager.OnTake();
+			if (target) {
+				target.item = null;
+				target = null;
+			}
+		}
 	}
 
 
@@ -173,10 +181,10 @@ public class Loot : InteractableObject
 	/// <param name="target">le lieu</param>
 	/// <param name="entry">l'entrée d'inventaire </param>
 	public void Drop(Target target) {
+		this.target = target;
 		animate = true;
 		transform.position = target.targetPos;
 		StartAnimation();
-		inventoryManager.RemoveItem(entry);       // retirer l'objet déposé de l'inventaire
-		target.Highlight(false);
+		playerManager.characterData.inventory.RemoveItem(entry);       // retirer l'objet déposé de l'inventaire
 	}
 }

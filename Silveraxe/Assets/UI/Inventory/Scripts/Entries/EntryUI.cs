@@ -6,7 +6,6 @@ using static App;
 
 public abstract class EntryUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-	public TMP_Text lowerText;
 	public TMP_Text label;
 	public Entry entry;
 
@@ -54,18 +53,5 @@ public abstract class EntryUI : MonoBehaviour, IPointerClickHandler, IPointerEnt
 		Select(!selected);
 	}
 
-	public virtual void Select(bool on) {
-		if (on) {
-			transform.localPosition = new Vector2(0, 20);
-			transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
-			inventoryUI.selectedEntry = this;
-			targetsManager.OnItemSelect();
-		} else {
-			transform.localPosition = new Vector2(0, 0);
-			transform.localScale = new Vector3(.9f, .9f, .9f);
-			inventoryUI.selectedEntry = null;
-		}
-		label.enabled = on;
-		selected = on;
-	}
+	public abstract void Select(bool on);
 }

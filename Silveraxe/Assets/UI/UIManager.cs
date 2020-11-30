@@ -52,15 +52,15 @@ public class UIManager : MonoBehaviour
 		this.state = state;                     // mémoriser le nouvel état de l'UI
 		switch (state) {
 			case State.dialog:
-				inventoryUI.SaveAndHide();
+				//inventoryUI.SaveAndHide();
 				//exitButton.SaveAndHide();
 				break;
 			case State.quit:
-				inventoryUI.SaveAndHide();
+				//inventoryUI.SaveAndHide();
 				//exitButton.SaveAndHide();
 				break;
 			default:
-				inventoryUI.Restore();
+				//inventoryUI.Restore();
 				//exitButton.Restore();
 				break;
 		}

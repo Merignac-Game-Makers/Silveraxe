@@ -40,8 +40,8 @@ public class StatsUI : UIBase
 	public void Show() {
 		panel.SetActive(true);
 
-		pnj = playerManager.fightController.other.characterData.Stats;
-		player = playerManager.characterData.Stats;
+		pnj = playerManager.fightController.other.characterData.stats;
+		player = playerManager.characterData.stats;
 
 		//PNJ_Stats.transform.position = Camera.main.WorldToScreenPoint(playerManager.fightController.other.transform.position);
 		player_Stats.transform.position = Camera.main.WorldToScreenPoint(playerManager.transform.position);

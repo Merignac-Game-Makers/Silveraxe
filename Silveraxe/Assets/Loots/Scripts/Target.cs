@@ -18,9 +18,10 @@ public class Target : InteractableObject
 
 	Transform prefabHolder;
 	Transform target;
+	public Loot item { get; set; }
 
 	public override bool IsHighlightable() {
-		if (!isFree) return false;
+		if (this.item != null) return false;     // ne peut contenir qu'un seul objet d'inventaire
 		if (inventoryUI.selectedEntry == null) return false;
 		var item = inventoryUI.selectedEntry.item;
 		if (!item.dropable) return false;
@@ -28,8 +29,6 @@ public class Target : InteractableObject
 		if (filterMode == FilterMode.refuse && filterItems.Contains(item.lootCategory)) return false;
 		return true;
 	}
-
-	public bool isFree => !GetComponentInChildren<Loot>();      // ne peut contenir qu'un seul objet d'inventaire
 
 	public Vector3 targetPos => target.position;
 
@@ -49,20 +48,19 @@ public class Target : InteractableObject
 	}
 
 	private void Update() {
-		if (Input.GetButtonDown("Fire1") && !interactableObjectsManager.MultipleSelection()) {
-			Act();
+		if (!IsPointerOverUIElement() && Input.GetButtonDown("Fire1")) {
+			if (!interactableObjectsManager.MultipleSelection() || isMouseOver) {
+				Act();
+			}
 		}
-	}
-
-	private void OnMouseUp() {
-		if (isMouseOver)
-			Act();
 	}
 
 	void Act() {
 		if (IsInteractable()) {
-			inventoryUI.selectedEntry.item.Drop(this);
 			Highlight(false);
+			item = inventoryUI.selectedEntry.item;
+			inventoryUI.selectedEntry?.Select(false);
+			item.Drop(this);
 		}
 	}
 }

@@ -38,13 +38,13 @@ public abstract class FightController : MonoBehaviour
 	protected virtual void Start() {
 		_this = GetComponentInParent<Character>();
 		animatorController = _this.GetComponentInChildren<NavAnimController>();
-		stats = GetComponentInParent<CharacterData>()?.Stats;
+		stats = GetComponentInParent<CharacterData>()?.stats;
 
 	}
 
 	public void SetOther(Character o) {
 		other = o;
-		otherStats = other?.GetComponent<CharacterData>()?.Stats;
+		otherStats = other?.GetComponent<CharacterData>()?.stats;
 	}
 
 

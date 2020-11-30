@@ -14,7 +14,7 @@ public static class App {
 	public static CameraController cameraController;
 
 	public static UIManager uiManager;
-	public static InventoryManager inventoryManager;
+	//public static InventoryManager inventoryManager;
 	public static SFXManager sfxManager;
 	public static PlayerManager playerManager;
 	public static MessageManager messageManager;

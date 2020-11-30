@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using static App;
 /// <summary>
 /// Entrée d'inventaire
 /// contient :
@@ -17,8 +18,11 @@ public class InventoryEntry : Entry
 
 	public InventoryEntry(Loot item) {
 		this.item = item;
-		//this.item = GameObject.Instantiate(item);
-		//this.item = new Loot(item);
+	}
+
+	public void ChangeQuantity(int amount) {
+		count += amount;
+		ui.UpdateEntry();
 	}
 }
 
