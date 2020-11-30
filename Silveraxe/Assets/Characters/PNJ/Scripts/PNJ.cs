@@ -19,31 +19,30 @@ public class PNJ : Character
 	public int onTheFlyRadius = 1;                  // rayon d'action du mode onTheFlyOnce
 	public Alignment alignment = Alignment.neutral; // comportement
 
-	public GameObject PNJcam { get; private set; }
-
 	float initialRadius = 1.5f;
 	CapsuleCollider cCollider;
 
 	DialogueTrigger dialogueTrigger;
 
-	public bool canFight => characterData.Stats.CurrentHealth > 0;
-
 
 	public override bool IsInteractable() {
-		if (!isInPlayerCollider) return false;
-		if (SceneModeManager.sceneMode == SceneMode.normal) {
-			if (alignment == Alignment.ennemy)
-				return canFight;
-			return true;
-		} 
-		if (SceneModeManager.sceneMode == SceneMode.fight && alignment == Alignment.ennemy && canFight) return true;
-		return false; 
-	} 
+		if (!isInPlayerCollider || !playerManager.isAlive) return false;
+		switch (SceneModeManager.sceneMode) {
+			case SceneMode.normal:
+				if (alignment == Alignment.ennemy)
+					return isAlive;
+				return true;
+			case SceneMode.dialogue:
+				return false;
+			case SceneMode.fight:
+				return alignment == Alignment.ennemy && isAlive;
+		}
+		return false;
+	}
 
 	protected override void Start() {
 		base.Start();
 
-		PNJcam = GetComponentInChildren<Camera>(true).gameObject;       // récupérer la caméra pour les dialogues
 		dialogueTrigger = GetComponentInChildren<DialogueTrigger>();     // si le PNJ a-t-il un dialogue trigger
 
 		SetAlignmentActionSprite();
@@ -77,7 +76,7 @@ public class PNJ : Character
 					Talk();
 					break;
 				case Alignment.ennemy:
-					if (!isInFightMode)
+					if (!isInFightMode && playerManager.isAlive)
 						SceneModeManager.SetSceneMode(SceneMode.fight, true, this);
 					else {
 						playerManager.fightController.Fight_Attack();
@@ -124,8 +123,8 @@ public class PNJ : Character
 
 
 	private void Talk() {
-		if (dialogueTrigger.HasDialogue()) {														// si le PNJ a un dialogue
-			SceneModeManager.SetSceneMode(SceneMode.dialogue, true, this);							// joueur en mode 'dialogue'
+		if (dialogueTrigger.HasDialogue()) {                                                        // si le PNJ a un dialogue
+			SceneModeManager.SetSceneMode(SceneMode.dialogue, true, this);                          // joueur en mode 'dialogue'
 		}
 	}
 

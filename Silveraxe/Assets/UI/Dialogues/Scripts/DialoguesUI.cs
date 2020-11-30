@@ -145,10 +145,7 @@ public class DialoguesUI : UIBase
 	public void End(VD.NodeData data) {
 		// interface
 		Hide();                                             // masquer l'interface dialogue
-		if (pnj) {
-			pnj.PNJcam?.SetActive(false);                       // désactiver la caméra 'portrait' du PNJ
-			SceneModeManager.SetSceneMode(SceneMode.dialogue, false, pnj);      //container_NPC.SetActive(false);
-		}
+		SceneModeManager.SetSceneMode(SceneMode.dialogue, false, pnj);      //container_NPC.SetActive(false);
 
 		VD.OnNodeChange -= UpdateUI;                        // supprimer callback 'changement de noeud'
 		VD.OnEnd -= End;                                    // supprimer callback 'fin de dialogue'

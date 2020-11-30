@@ -34,6 +34,8 @@ public class MovementInput : MonoBehaviour
 		//------------------------
 		screenDirection = ((Vector2)Input.mousePosition - (Vector2)Camera.main.WorldToScreenPoint(playerManager.transform.position)).normalized;
 
+		if (!playerManager.isAlive) return;
+
 		if (SceneModeManager.sceneMode != SceneMode.dialogue) {
 			if (screenDirection.y > 0.1 && (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)) {
 				fTranslation = Input.GetAxis("Vertical") * navAgent.speed * 30;

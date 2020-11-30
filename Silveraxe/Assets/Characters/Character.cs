@@ -30,6 +30,7 @@ public abstract class Character : InteractableObject
 	// pour les combats
 	public bool isInFightMode => fightController?.isInFightMode ?? false;
 	public FightController fightController { get; set; }
+	public bool isAlive => fightController.isAlive;
 
 	protected override void Start() {
 		base.Start();
@@ -38,17 +39,17 @@ public abstract class Character : InteractableObject
 		navAgent = GetComponentInChildren<NavMeshAgent>();                     // préparation de la navigation
 
 		// pour les dialogues
-		portraitCamera = GetComponentInChildren<Camera>(true);
-		GetPortraitTarget();
-		if (portraitCameraTarget) {
-			var pLookAt = portraitCamera.GetComponent<LookAtConstraint>();
-			var aim = new ConstraintSource() { sourceTransform = portraitCameraTarget, weight = 1 };
-			if (pLookAt.sourceCount == 0) {
-				pLookAt.AddSource(aim);
-			} else {
-				pLookAt.SetSource(0, aim);
-			}
-		}
+		//portraitCamera = GetComponentInChildren<Camera>(true);
+		//GetPortraitTarget();
+		//if (portraitCameraTarget) {
+		//	var pLookAt = portraitCamera.GetComponent<LookAtConstraint>();
+		//	var aim = new ConstraintSource() { sourceTransform = portraitCameraTarget, weight = 1 };
+		//	if (pLookAt.sourceCount == 0) {
+		//		pLookAt.AddSource(aim);
+		//	} else {
+		//		pLookAt.SetSource(0, aim);
+		//	}
+		//}
 
 		// pour les animations
 		animatorController = GetComponentInChildren<NavAnimController>();

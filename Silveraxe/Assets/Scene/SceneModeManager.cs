@@ -51,7 +51,7 @@ public static class SceneModeManager
 
 						// player
 						playerManager.fightController.SetOther(other);
-						playerManager.animatorController?.anim?.SetBool(Fight, true);		// animation 'fight idle'
+						playerManager.animatorController?.anim?.SetBool(Fight, true);       // animation 'Attack'
 						playerManager.FaceTo(on, other.gameObject);                         // orienter le joueur vers le PNJ
 
 						// PNJ
