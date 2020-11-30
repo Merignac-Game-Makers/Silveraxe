@@ -21,6 +21,7 @@ public class StatsUI : UIBase
 	}
 
 	void Start() {
+		panel.GetComponent<RectTransform>().sizeDelta = new Vector2(-Screen.width / 2, 0);
 		Hide();
 	}
 

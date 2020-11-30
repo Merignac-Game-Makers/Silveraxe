@@ -13007,10 +13007,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 708975bf5dcf8514cb9652145d09c076, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attack: []
-  block: []
-  hit: []
-  die: []
+  attack:
+  - {fileID: 8300000, guid: 476f3a27ec3934842a09df387a348da3, type: 3}
+  block:
+  - {fileID: 8300000, guid: c697914d27c52b348bc07fd9d7a26b96, type: 3}
+  hit:
+  - {fileID: 8300000, guid: d9e50d6e2301211468d43ba53432bb64, type: 3}
+  die:
+  - {fileID: 8300000, guid: 7a9357e335843be498c67b333d5c2894, type: 3}
   victory: []
 --- !u!1001 &1619387526
 PrefabInstance:
@@ -17307,9 +17311,49 @@ PrefabInstance:
     m_TransformParent: {fileID: 97814156}
     m_Modifications:
     - target: {fileID: 402945176, guid: b1890e087ac4de14293f96278ef5c05f, type: 3}
+      propertyPath: attack.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 402945176, guid: b1890e087ac4de14293f96278ef5c05f, type: 3}
+      propertyPath: block.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 402945176, guid: b1890e087ac4de14293f96278ef5c05f, type: 3}
+      propertyPath: hit.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 402945176, guid: b1890e087ac4de14293f96278ef5c05f, type: 3}
+      propertyPath: die.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 402945176, guid: b1890e087ac4de14293f96278ef5c05f, type: 3}
+      propertyPath: victory.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 402945176, guid: b1890e087ac4de14293f96278ef5c05f, type: 3}
       propertyPath: attackRate
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 402945176, guid: b1890e087ac4de14293f96278ef5c05f, type: 3}
+      propertyPath: attack.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 89e66bfeef9357548b6f8729e3392936, type: 3}
+    - target: {fileID: 402945176, guid: b1890e087ac4de14293f96278ef5c05f, type: 3}
+      propertyPath: block.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: c697914d27c52b348bc07fd9d7a26b96, type: 3}
+    - target: {fileID: 402945176, guid: b1890e087ac4de14293f96278ef5c05f, type: 3}
+      propertyPath: hit.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: de29d8d8b9484bd46a295d3031f3eeae, type: 3}
+    - target: {fileID: 402945176, guid: b1890e087ac4de14293f96278ef5c05f, type: 3}
+      propertyPath: die.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 47ca2815659c93e4cb158ce8082fdc9d, type: 3}
+    - target: {fileID: 402945176, guid: b1890e087ac4de14293f96278ef5c05f, type: 3}
+      propertyPath: victory.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 1182750778ad5ae4f8d9072f7fd30fd3, type: 3}
     - target: {fileID: 514938414803815881, guid: b1890e087ac4de14293f96278ef5c05f,
         type: 3}
       propertyPath: m_LocalPosition.x
