@@ -5195,7 +5195,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 522811750}
-  m_LocalRotation: {x: 0.093108036, y: 0.3290275, z: -0.032619946, w: 0.9391527}
+  m_LocalRotation: {x: 0.09310801, y: 0.32902747, z: -0.032619935, w: 0.9391527}
   m_LocalPosition: {x: -1.2513642, y: 2.366, z: -2.4881554}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -7615,7 +7615,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 855623247}
-  m_LocalRotation: {x: 0.093108036, y: 0.3290275, z: -0.032619946, w: 0.9391527}
+  m_LocalRotation: {x: 0.09310801, y: 0.32902747, z: -0.032619935, w: 0.9391527}
   m_LocalPosition: {x: -1.2513642, y: 2.366, z: -2.4881554}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -17786,5 +17786,140 @@ PrefabInstance:
       propertyPath: m_Sources.Array.data[0].sourceTransform
       value: 
       objectReference: {fileID: 1220921082}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: diags.Array.size
+      value: 19
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: S_playerDiags.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: S_playerDiags.Array.data[0].s_comment.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: S_playerDiags.Array.data[1].s_comment.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: assignedIndex
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: assignedID
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: assignedDialogue
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: diags.Array.data[7]
+      value: Item_LookUp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: diags.Array.data[8]
+      value: Laura
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: diags.Array.data[9]
+      value: MrCube
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: diags.Array.data[10]
+      value: MyDialogue
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: diags.Array.data[11]
+      value: NPCOnly
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: diags.Array.data[12]
+      value: MyDialogue
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: diags.Array.data[13]
+      value: NPCOnly
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: diags.Array.data[14]
+      value: PNJDefault
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: diags.Array.data[15]
+      value: QuestChartDemo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: preload
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: S_playerDiags.Array.data[0].commentCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: S_playerDiags.Array.data[1].commentCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: S_playerDiags.Array.data[1].ID
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: S_playerDiags.Array.data[1].isPlayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: diags.Array.data[16]
+      value: TriggeredDude
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: diags.Array.data[17]
+      value: Witch
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: alias
+      value: Lic
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: defaultNPCSprite
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164365554090615730, guid: 4d8f709362d298d4b985d69e5774d1e9,
+        type: 3}
+      propertyPath: defaultPlayerSprite
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4d8f709362d298d4b985d69e5774d1e9, type: 3}

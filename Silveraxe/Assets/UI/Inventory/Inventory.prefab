@@ -152,7 +152,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -6.500025}
+  m_AnchoredPosition: {x: 0, y: -6.5000305}
   m_SizeDelta: {x: -20, y: -13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4000085467733148065
@@ -256,7 +256,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4f484980199ed784ba418dc51f6355b1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a46bde4d12b837441a5deba1d5fdb9b4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -331,7 +331,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f4b143735b694554d98d4d060d1cab06, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 59b136d1ba82bac48a582e8d2b5a35b5, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -422,7 +422,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4000085468158445412}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -494,14 +494,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panel: {fileID: 4000085468421924237}
-  combineUI: {fileID: 0}
-  bookPanel: {fileID: 0}
   content: {fileID: 4000085468311374723}
-  itemEntryPrefab: {fileID: 4110667040415902116, guid: eb9ca857e2ec6864aab4218e6db59d6c,
+  itemEntryPrefab: {fileID: 4110667040415902116, guid: a80e9c1215684ef4d95566b39a486d8e,
     type: 3}
-  slotPrefab: {fileID: 4024636409454239658, guid: e294e6f2cdc9b7e4a98c1da23090fc11,
+  slotPrefab: {fileID: 4024636409454239658, guid: 96ace6c915940f343ab55de36adf15c6,
     type: 3}
-  dragCanvas: {fileID: 0}
 --- !u!1 &4000085468167169870
 GameObject:
   m_ObjectHideFlags: 0
@@ -707,7 +704,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4000085468421924237}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -765,7 +762,7 @@ Animator:
   m_GameObject: {fileID: 4000085468421924237}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 6acea17faa5794e409534466635a3d30, type: 2}
+  m_Controller: {fileID: 9100000, guid: 1ac1e5952ee30c34ba3ed4448a43cca2, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -787,8 +784,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topButton: {fileID: 4000085468006497335}
-  invUp: {fileID: 21300000, guid: f4b143735b694554d98d4d060d1cab06, type: 3}
-  invDown: {fileID: 21300000, guid: f4f8d574e42c03641a508d87b1e5640b, type: 3}
+  invUp: {fileID: 21300000, guid: 59b136d1ba82bac48a582e8d2b5a35b5, type: 3}
+  invDown: {fileID: 21300000, guid: 0ea1e87095a00884fb2e3a8f2d39a2f7, type: 3}
 --- !u!1 &4000085469099690570
 GameObject:
   m_ObjectHideFlags: 0

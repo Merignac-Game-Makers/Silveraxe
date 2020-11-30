@@ -258,10 +258,10 @@ MonoBehaviour:
     connectors_color: {r: 1, g: 1, b: 1, a: 1}
     playerText: {r: 0, g: 0, b: 0, a: 1}
     npcText: {r: 0, g: 0, b: 0, a: 1}
-    actionText: {r: 0.078431375, g: 0.078431375, b: 0.078431375, a: 1}
+    actionText: {r: 0, g: 0, b: 0, a: 1}
     playerText2: {r: 0, g: 0, b: 0, a: 1}
     npcText2: {r: 0, g: 0, b: 0, a: 1}
-    actionText2: {r: 0.101960786, g: 0.101960786, b: 0.101960786, a: 1}
+    actionText2: {r: 0, g: 0, b: 0, a: 1}
     def_player_NodeColor: {r: 0.5254902, g: 0.54509807, b: 0.6392157, a: 1}
     def_player_NodeColorSecondary: {r: 0.9333334, g: 0.93725497, b: 0.97647065, a: 1}
     def_npc_NodeColor: {r: 0.5568628, g: 0.5921569, b: 0.5764706, a: 1}
@@ -273,10 +273,10 @@ MonoBehaviour:
     def_connectors_color: {r: 1, g: 1, b: 1, a: 1}
     def_playerText: {r: 0, g: 0, b: 0, a: 1}
     def_npcText: {r: 0, g: 0, b: 0, a: 1}
-    def_actionText: {r: 0.08088237, g: 0.08088237, b: 0.08088237, a: 1}
+    def_actionText: {r: 0, g: 0, b: 0, a: 1}
     def_playerText2: {r: 0, g: 0, b: 0, a: 1}
     def_npcText2: {r: 0, g: 0, b: 0, a: 1}
-    def_actionText2: {r: 0.102941155, g: 0.102941155, b: 0.102941155, a: 1}
+    def_actionText2: {r: 0, g: 0, b: 0, a: 1}
   - name: Forest Night
     player_NodeColor: {r: 0.27058825, g: 0.40392157, b: 0.4627451, a: 1}
     player_NodeColorSecondary: {r: 0.5921569, g: 0.7019608, b: 0.7529412, a: 1}
