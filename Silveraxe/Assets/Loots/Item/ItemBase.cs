@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using static InventoryManager;
+
 
 #if UNITY_EDITOR
 using UnityEditor;

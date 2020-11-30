@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+using static App;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -37,8 +39,6 @@ public class SFXManager : MonoBehaviour
 		public float Volume = 1.0f;
 	}
 
-	static SFXManager Instance { get; set; }
-
 	public AudioListener Listener;
 	public Transform ListenerTarget;
 
@@ -49,9 +49,9 @@ public class SFXManager : MonoBehaviour
 	public AudioClip DefaultItemEquipedSound;
 	public AudioClip DefaultPickupSound;
 
-	public static AudioClip ItemUsedSound => Instance.DefaultItemUsedSound;
-	public static AudioClip ItemEquippedSound => Instance.DefaultItemEquipedSound;
-	public static AudioClip PickupSound => Instance.DefaultPickupSound;
+	public static AudioClip ItemUsedSound => sfxManager.DefaultItemUsedSound;
+	public static AudioClip ItemEquippedSound => sfxManager.DefaultItemEquipedSound;
+	public static AudioClip PickupSound => sfxManager.DefaultPickupSound;
 
 	[SerializeField]
 	AudioSource[] m_Prefabs;
@@ -61,7 +61,7 @@ public class SFXManager : MonoBehaviour
 	Queue<AudioSource>[] m_Instances;
 
 	void Awake() {
-		Instance = this;
+		sfxManager = this;
 		m_Instances = new Queue<AudioSource>[m_Prefabs.Length];
 		for (int i = 0; i < m_Prefabs.Length; ++i) {
 			m_Instances[i] = new Queue<AudioSource>();
@@ -79,18 +79,14 @@ public class SFXManager : MonoBehaviour
 		m_PoolAmount = new int[m_Prefabs.Length];
 	}
 
-	void Update() {
-		//Listener.transform.position = ListenerTarget.transform.position;
-	}
-
 	/// <summary>
 	/// Get a source of the given type. You will rarely call this directly and instead use PlaySound.
 	/// </summary>
 	/// <param name="useType">The type of sound (map to a specific mixer)</param>
 	/// <returns>The AudioSource at the front of the current pool queue for the given type</returns>
 	public static AudioSource GetSource(Use useType) {
-		var s = Instance.m_Instances[(int)useType].Dequeue();
-		Instance.m_Instances[(int)useType].Enqueue(s);
+		var s = sfxManager.m_Instances[(int)useType].Dequeue();
+		sfxManager.m_Instances[(int)useType].Enqueue(s);
 
 		return s;
 	}
@@ -113,13 +109,13 @@ public class SFXManager : MonoBehaviour
 	}
 
 	public static AudioClip GetDefaultSwingSound() {
-		var clipArray = Instance.DefaultSwingSound;
+		var clipArray = sfxManager.DefaultSwingSound;
 
 		return clipArray[Random.Range(0, clipArray.Length)];
 	}
 
 	public static AudioClip GetDefaultHit() {
-		var clipArray = Instance.DefaultHitSound;
+		var clipArray = sfxManager.DefaultHitSound;
 
 		return clipArray[Random.Range(0, clipArray.Length)];
 	}

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+using static App;
+
 /// <summary>
 /// This handles the inventory of our character. Each slot can hold one
 /// TYPE of object, but those can be stacked without limit (e.g. 1 slot used by health potions, but contains 20
@@ -9,19 +11,16 @@ using UnityEngine;
 public class InventoryManager
 {
 
-	public static InventoryManager Instance;
-	private InventoryUI inventoryUI;
-
 	// Pas de limite au nombre d'objets en inventaire
 	private const int numSlots = 0;
 	public List<InventoryEntry> entries = new List<InventoryEntry>();
+
 
 	CharacterData owner;
 
 	public void Init(CharacterData owner) {
 		this.owner = owner;
-		Instance = this;
-		inventoryUI = InventoryUI.Instance;
+		inventoryManager = this;
 	}
 
 	/// <summary>

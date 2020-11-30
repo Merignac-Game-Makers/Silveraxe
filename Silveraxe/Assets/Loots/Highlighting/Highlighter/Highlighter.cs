@@ -6,7 +6,7 @@ public class Highlighter : MonoBehaviour
 {
 	public Color color = new Color(.2f, .2f, .1f);
     MeshRenderer m_renderer;
-	Light light;
+	new Light light;
 
     void Start()
     {

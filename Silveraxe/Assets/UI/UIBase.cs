@@ -1,10 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.Analytics;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 
 /// <summary>
@@ -16,8 +10,6 @@ public abstract class UIBase : MonoBehaviour
 	public GameObject panel;
 	public virtual bool isOn => (panel==null && gameObject.activeInHierarchy) || panel.activeInHierarchy;
 
-
-	public abstract void Init(UIManager uiManager);
 
 	public abstract void Toggle();
 

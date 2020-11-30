@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
 
+using static App;
+
+
 public class QuitUI : MonoBehaviour
 {
 
 	public void Show(bool on) {
 		gameObject.SetActive(on);
 		if (on)
-			UIManager.Instance.ManageButtons(UIManager.State.quit);
+			uiManager.ManageButtons(UIManager.State.quit);
 		else
-			UIManager.Instance.RestoreButtonsPreviousState();
+			uiManager.RestoreButtonsPreviousState();
 	}
 
 	public void YesButton() {

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class SelectionRing : MonoBehaviour
 {
-    Renderer renderer;
-    Light light;
+    new Renderer renderer;
+    new Light light;
 
     // Start is called before the first frame update
     void Start()

@@ -1,43 +1,40 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEngine;
 using VIDE_Data;
 
+using static App;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+[RequireComponent(typeof(VIDE_Assign))]
 public class DialogueTrigger : MonoBehaviour
 {
+	public Texture2D dialogueCursor;
 
-	DialoguesUI dialoguesUI;
 	VIDE_Assign dialogue;
 	DialogueDispatcher dispatcher;
 	PNJ pnj;
 
 	void Start() {
-		dialoguesUI = DialoguesUI.Instance;                                     // le gestionnaire d'interface de dialogues
-		dialogue = gameObject.GetComponent<VIDE_Assign>();                      // le dialogue
-		dispatcher = gameObject.GetComponent<DialogueDispatcher>();             // le script de validation de dialogue (points d'entrée en fonction du statut de la quête [si elle existe])
-		pnj = gameObject.GetComponentInParent<PNJ>();							// le PNJ
-	}
+		VD.isActive = false;
 
-	//// Update is called once per frame
-	//void Update() {
-	//	if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()) {
-	//		dialoguesUI.End(null);
-	//	}
-	//}
+		dialogue = gameObject.GetComponent<VIDE_Assign>();                      // le dialogue
+		dispatcher = gameObject.GetComponentInChildren<DialogueDispatcher>();   // le script de validation de dialogue (points d'entrée en fonction du statut de la quête [si elle existe])
+		pnj = gameObject.GetComponentInParent<PNJ>();                           // le PNJ
+	}
 
 	public void Run() {
 		if (!VD.isActive) {
 			if (dispatcher != null) {
 				dispatcher.SetStartNode();
 			}
-			//// activer la caméra du PNJ
-			//pnj.PNJcam.SetActive(true);
+			dialogueUI.Begin(dialogue);                         // commencer le dialogue
+		}
+	}
 
-			pnj.FaceTo(PlayerManager.Instance.gameObject);
-			dialoguesUI.Begin(dialogue);
-		} 
+	public bool HasDialogue() {
+		return dispatcher ? dispatcher.HasDialogue() : false;
 	}
 }
 
@@ -47,7 +44,7 @@ public class DialogTriggerEditor : Editor
 {
 
 	public override void OnInspectorGUI() {
-
+		base.OnInspectorGUI();
 		GUILayout.Label(
 @"Attention !
 Pour personnaliser le dialogue : 

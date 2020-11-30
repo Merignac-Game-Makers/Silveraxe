@@ -1,56 +1,46 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using VIDE_Data;
 using TMPro;
+
+using static App;
+
 using static UIManager.State;
-using UnityEngine.Animations;
+using Cinemachine;
+using System.Collections;
 
 public class DialoguesUI : UIBase
 {
-
-	public static DialoguesUI Instance;
 
 	//public GameObject questButton;
 	//public GameObject diaryButton;
 	public GameObject inventory;
 
 	public GameObject container_NPC;
-	public Image NPC_Sprite;
-	public Text NPC_label;
+	public TMP_Text NPC_label;
 	public TMP_Text text_NPC;
 
 	public GameObject container_PLAYER;
-	public Text PLAYER_Label;
+	public TMP_Text PLAYER_Label;
 	public TMP_Text text_PLAYER;
 	public GameObject Buttons;
 	public TMP_Text[] choices;
 
-	[HideInInspector]
-	public GameObject currentPNJcam;
-
-	UIManager uiManager;
+	private PNJ pnj;
 
 	private void Awake() {
-				Instance = this;
+		dialogueUI = this;
 	}
 
-	public override void Init(UIManager uiManager) {
-		this.uiManager = uiManager;
 
+	void Start() {
+		container_NPC.SetActive(false);
+		container_PLAYER.SetActive(false);
 		gameObject.SetActive(true);
 		panel.SetActive(false);
 
 	}
 
-	// Start is called before the first frame update
-	void Start() {
-		container_NPC.SetActive(false);
-		container_PLAYER.SetActive(false);
-	}
-
-	// Update is called once per frame
 	void Update() {
 		if (Input.GetKeyDown(KeyCode.Return)) {
 			if (VD.isActive)
@@ -63,50 +53,41 @@ public class DialoguesUI : UIBase
 	/// </summary>
 	/// <param name="dialog"></param>
 	public void Begin(VIDE_Assign dialog) {
-		PlayerManager.Instance.StopAgent();
-		//panel.SetActive(true);
-		currentPNJcam = dialog.GetComponentInParent<PNJ>().PNJcam;
-		if (currentPNJcam!=null)
-			currentPNJcam.SetActive(true);
+		// personnages
+		pnj = dialog.GetComponentInParent<PNJ>();                               // retrouver le PNJ						
+
 		if (string.IsNullOrEmpty(dialog.alias))
-			dialog.alias = dialog.GetComponentInParent<PNJ>().PNJName;
-		Show();
-		VD.OnNodeChange += UpdateUI;
-		VD.OnEnd += End;
+			dialog.alias = pnj.PNJName;                                         // indiquer le nom du PNJ
+
+		VD.OnNodeChange += UpdateUI;                                            // callback changement de 'noeud'
+		VD.OnEnd += End;                                                        // callback 'fin de dialogue'
+
+		// activer le dialogue
 		if (VD.isActive)
-			VD.Next(); 
+			VD.Next();
 		else {
 			VD.BeginDialogue(dialog);
 		}
 	}
 
-	public override void Toggle() {
-		panel.SetActive(!isOn);
-		//if (App.isMagicEquiped) {
-		//	questButton.SetActive(!isOn);
-		//	diaryButton.SetActive(!isOn);
-		//}
-		inventory.SetActive(!isOn);
-	}
+	public override void Toggle() {}
+
 	public void Show() {
+		StartCoroutine(IShow());
+		container_NPC.transform.position = Camera.main.WorldToScreenPoint(pnj.transform.position);
+		container_PLAYER.transform.position = Camera.main.WorldToScreenPoint(playerManager.transform.position);
+	}
+	IEnumerator IShow() {
+		var cm = Camera.main.GetComponent<CinemachineBrain>();
+		while (cm.ActiveBlend != null)
+			yield return new WaitForEndOfFrame();
 		panel.SetActive(true);
 		uiManager.ManageButtons(dialog);
-		//InventoryUI.Instance.SaveAndHide();
-		//if (App.isMagicEquiped) {
-		//	questButton.SetActive(false);
-		//	diaryButton.SetActive(!isOn);
-		//}
-		//inventory.SetActive(false);
+
 	}
 	public void Hide() {
 		panel.SetActive(false);
 		uiManager.RestoreButtonsPreviousState();
-		//InventoryUI.Instance.Restore();
-		//if (App.isMagicEquiped) {
-		//	questButton.SetActive(true);
-		//	diaryButton.SetActive(!isOn);
-		//}
-		//inventory.SetActive(true);
 	}
 
 
@@ -117,43 +98,33 @@ public class DialoguesUI : UIBase
 
 		if (data.isPlayer) {
 			container_PLAYER.SetActive(true);
-			// set sprite
-			// TODO: revoir la mise en place de sprite spécifique
-
-			//if (data.creferences[data.commentIndex].sprites != null)
-			//	PLAYER_Sprite.sprite = data.creferences[data.commentIndex].sprites;    // specific for comment i exists
-			//else if (data.sprite != null)
-			//	PLAYER_Sprite.sprite = data.sprite;
-			//else if (VD.assigned.defaultPlayerSprite != null)
-			//	PLAYER_Sprite.sprite = VD.assigned.defaultPlayerSprite;
 
 			// set name
 			//If it has a tag, show it, otherwise let's use the alias we set in the VIDE Assign
 			if (data.tag.Length > 0)
 				PLAYER_Label.text = data.tag;
 			else
-				PLAYER_Label.text = "Player";
+				PLAYER_Label.text = playerManager.characterData.CharacterName;
 
-			// set choices
-			for (int i = 0; i < choices.Length; i++) {
-				if (i < data.comments.Length) {
-					choices[i].transform.parent.gameObject.SetActive(true);
-					choices[i].text = data.comments[i];
-				} else {
-					choices[i].transform.parent.gameObject.SetActive(false);
+			if (data.comments.Length == 1) {
+				text_PLAYER.text = data.comments[data.commentIndex];
+				text_PLAYER.gameObject.SetActive(true);
+				Buttons.gameObject.SetActive(false);
+			} else {
+				// set choices
+				for (int i = 0; i < choices.Length; i++) {
+					if (i < data.comments.Length) {
+						choices[i].transform.parent.gameObject.SetActive(true);
+						choices[i].text = data.comments[i];
+					} else {
+						choices[i].transform.parent.gameObject.SetActive(false);
+					}
 				}
+				text_PLAYER.gameObject.SetActive(false);
+				Buttons.gameObject.SetActive(true);
 			}
 		} else {
 			container_NPC.SetActive(true);
-
-			// set sprite
-			if (data.creferences[data.commentIndex].sprites != null)				
-				NPC_Sprite.sprite = data.creferences[data.commentIndex].sprites;	// specific for comment i exists
-			else if (data.sprite != null)		
-				NPC_Sprite.sprite = data.sprite;									// specific for node if exists
-			else if (VD.assigned.defaultNPCSprite != null)
-				NPC_Sprite.sprite = VD.assigned.defaultNPCSprite;					// for dialog
-
 			// set name
 			// If it has a tag, show it, otherwise let's use the alias we set in the VIDE Assign
 			if (data.tag.Length > 0)
@@ -166,26 +137,24 @@ public class DialoguesUI : UIBase
 		}
 	}
 
-	
+
 	/// <summary>
 	/// Terminer le dialogue
 	/// </summary>
 	/// <param name="data"></param>
 	public void End(VD.NodeData data) {
-		Hide();
-		if (currentPNJcam!=null)
-			currentPNJcam.SetActive(false);
-		container_NPC.SetActive(false);
-		container_PLAYER.SetActive(false);
-		VD.OnNodeChange -= UpdateUI;
-		VD.OnEnd -= End;
+		// interface
+		Hide();                                             // masquer l'interface dialogue
+		SceneModeManager.SetSceneMode(SceneMode.dialogue, false, pnj);      //container_NPC.SetActive(false);
+
+		VD.OnNodeChange -= UpdateUI;                        // supprimer callback 'changement de noeud'
+		VD.OnEnd -= End;                                    // supprimer callback 'fin de dialogue'
 		VD.EndDialogue();
-		PlayerManager.Instance.isClicOnUI = false;
 	}
-	private void OnDisable() {
-		if (container_NPC != null)
-			End(null);
-	}
+	//private void OnDisable() {
+	//	if (container_NPC != null)
+	//		End(null);
+	//}
 
 	public void GetChoice(int choice) {
 		VD.nodeData.commentIndex = choice;
@@ -199,10 +168,11 @@ public class DialoguesUI : UIBase
 	}
 
 	public void Next() {
-		VD.Next();
+		if (VD.nodeData.comments.Length == 1)
+			VD.Next();
 	}
 
-	public enum QuestStatus { None, Accepted, Refused, Done}
+	public enum QuestStatus { None, Accepted, Refused, Done }
 	[HideInInspector]
 	public QuestStatus questStatus = QuestStatus.None;
 	public void RefuseQuest() {

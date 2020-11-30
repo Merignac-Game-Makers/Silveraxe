@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-//using DanielLochner.Assets.SimpleScrollSnap;
 using TMPro;
+
+using static App;
+using System;
 
 /// <summary>
 /// Gestionnaire général des interfaces (Dialogues, Inventaire, Magie ou QUêtes)
@@ -15,36 +16,26 @@ public class UIManager : MonoBehaviour
 	public State state { get; private set; }    // l'état actuel de l'UI
 	private State prevState;                    // l'état précédent de l'UI
 
-	public static UIManager Instance;
+	public QuitUI quitUi;                       // interface Quit	
 
-	public DialoguesUI dialoguesUI;             // interface Dialogues
-	public InventoryUI inventoryUI;             // interface Inventaire
-	//public DiaryBookContent diaryBookContent;   // pages du journal
-	//public MagicUI magicUI;                     // interface Magie
-	public QuitUI quitUi;                       // interface Quit
+	public int defaultCursorSize = 64;
 
-	//public GameObject magicButton;              // bouton du grimoire		
-	//public Button artifactButton;               // bouton des artefacts		
-	//public Exit exitButton;                     // bouton exit
-	//public Button questButton;                  // bouton des quêtes		
-	//public Button diaryButton;                  // bouton du journal		
+	public bool isClicOnUI => IsPointerOverUIElement();//{ get; set; }                            // le clic en cours a-t-il débuté sur un élément d'interface ?
 
-	public GameObject messageLabel;
-	public GameObject forbidden;
 
-	Coroutine coroutine;
+	Texture2D cursor;
 
 	void Awake() {
-		Instance = this;
+		uiManager = this;
 	}
 
-	private void Start() {
-		dialoguesUI.Init(this);                 // initialisation du gestionnaire de dialogues
-		inventoryUI.Init(this);                 // initialisation du gestionnaire d'inventaire
-		//diaryBookContent.Init();                // initialisation des pages du journal
-		//magicUI.Init(this);                     // intialisation du gestionnaire de magie
-		//questButton.gameObject.SetActive(false);            // masquer le bouton des quêtes
-		//diaryButton.gameObject.SetActive(false);            // masquer le bouton du journal
+	private void Update() {
+		DefineCursor();
+
+		// quitter le jeu par la touche escape
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+			ShowQuitUi();
+		}
 	}
 
 	public void ShowQuitUi() {
@@ -59,24 +50,20 @@ public class UIManager : MonoBehaviour
 	public void ManageButtons(State state) {
 		prevState = this.state;                 // mémoriser l'état précédent de l'UI
 		this.state = state;                     // mémoriser le nouvel état de l'UI
-			//magicButton.SetActive(false);
-			//questButton.gameObject.SetActive(false);
-			//diaryButton.gameObject.SetActive(false);
-			//artifactButton.gameObject.SetActive(false);
-			switch (state) {
-				case State.dialog:
-					inventoryUI.SaveAndHide();
-					//exitButton.SaveAndHide();
-					break;
-				case State.quit:
-					inventoryUI.SaveAndHide();
-					//exitButton.SaveAndHide();
-					break;
-				default:
-					inventoryUI.Restore();
-					//exitButton.Restore();
-					break;
-			}
+		switch (state) {
+			case State.dialog:
+				inventoryUI.SaveAndHide();
+				//exitButton.SaveAndHide();
+				break;
+			case State.quit:
+				inventoryUI.SaveAndHide();
+				//exitButton.SaveAndHide();
+				break;
+			default:
+				inventoryUI.Restore();
+				//exitButton.Restore();
+				break;
+		}
 	}
 
 	public void RestoreButtonsPreviousState() {
@@ -84,35 +71,43 @@ public class UIManager : MonoBehaviour
 	}
 
 	/// <summary>
-	/// afficher un message
+	/// Redimensionner une texture
 	/// </summary>
-	/// <param name="text">le message</param>
-	/// <param name="position">la position d'affichage</param>
-	public void ShowLabel(string text, Vector2 position) {
-		messageLabel.GetComponentInChildren<TMP_Text>().text = text;
-		messageLabel.transform.position = position;
-		if (coroutine != null)
-			StopCoroutine(coroutine);
-		coroutine = StartCoroutine(IShow(messageLabel, 2));
+	RenderTexture rt;
+	Texture2D tempTexture;
+	public Texture2D Resize(Texture2D tex, int size) {
+		rt = new RenderTexture(size, size, 32);
+		RenderTexture.active = rt;
+		Graphics.Blit(tex, rt);
+		tempTexture = new Texture2D(size, size, TextureFormat.RGBA32, false);
+		tempTexture.ReadPixels(new Rect(0, 0, size, size), 0, 0);
+		tempTexture.alphaIsTransparency = true;
+		tempTexture.Apply();
+		return tempTexture;
 	}
 
-	/// <summary>
-	/// afficher un message
-	/// </summary>
-	/// <param name="text">le message</param>
-	/// <param name="position">la position d'affichage</param>
-	public void Forbidden(Vector2 position, int delay) {
-		forbidden.transform.position = position;
-		if (coroutine != null)
-			StopCoroutine(coroutine);
-		coroutine = StartCoroutine(IShow(forbidden, delay));
+
+
+	public void DefineCursor() {
+		//if (inventoryUI.selectedEntry) {
+		//	cursor = Resize(inventoryUI.selectedEntry.item.ItemSprite.texture, defaultCursorSize);
+		//	Cursor.SetCursor(cursor, new Vector2(defaultCursorSize / 3, defaultCursorSize / 3), CursorMode.ForceSoftware);
+		//} else 
+		if (IsMouseInActiveArea()) {
+			cursor = playerManager.movementInput.cursor;
+			Cursor.SetCursor(cursor, new Vector2(defaultCursorSize / 3, defaultCursorSize / 3), CursorMode.ForceSoftware);
+		} else {
+			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+		}
 	}
 
-	IEnumerator IShow(GameObject obj, float s) {
-		obj.SetActive(true);
-		yield return new WaitForSeconds(s);
-		obj.SetActive(false);
-		PlayerManager.Instance.isClicOnUI = false;
+	Vector3 playerFeet => Camera.main.WorldToScreenPoint(playerManager.transform.position);
+	bool IsMouseInActiveArea() {
+		return Input.mousePosition.x > 0 &&
+			Input.mousePosition.x < Screen.width &&
+			Input.mousePosition.y > Screen.height * playerFeet.y / Screen.height &&
+			Input.mousePosition.y < Screen.height &&
+			(Input.mousePosition - playerFeet).magnitude > 50;
 	}
 
 }

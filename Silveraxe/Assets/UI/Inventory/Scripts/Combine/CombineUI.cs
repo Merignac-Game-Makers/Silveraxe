@@ -1,7 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
+using static App;
 
 public class CombineUI : MonoBehaviour
 {
@@ -45,7 +46,7 @@ public class CombineUI : MonoBehaviour
 
     IEnumerator IScale(GameObject obj) {
         yield return new WaitForEndOfFrame();
-        Vector2 referenceResolution = UIManager.Instance.GetComponent<CanvasScaler>().referenceResolution;
+        Vector2 referenceResolution = uiManager.GetComponent<CanvasScaler>().referenceResolution;
         Vector2 currentResolution = new Vector2(Screen.width, Screen.height);
         float heightRatio = currentResolution.y / referenceResolution.y;
         var colliders = obj.GetComponentsInChildren<Collider>();
@@ -60,6 +61,6 @@ public class CombineUI : MonoBehaviour
 
     public void Hide() {
         //gameObject.SetActive(false);
-        InventoryUI.Instance.selectedEntry.Toggle();//.Select(false);
+        inventoryUI.selectedEntry.Toggle();
     }
 }

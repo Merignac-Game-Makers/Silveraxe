@@ -53,14 +53,14 @@ public class VIDE_Editor : EditorWindow
     string assignMenuFilter = "";
     float focusTimer;
 
-    string newsHeadline;
-    string newsHeadlineLink;
+    string newsHeadline = null;
+    string newsHeadlineLink = null;
 
     bool searchingForDialogue = false;
     string searchWord;
     Vector2 searchScrollView;
 
-    WWW news;
+    //WWW news;
     List<string> saveNames = new List<string>() { };
     List<string> saveNamesFull = new List<string>() { };
 
@@ -149,7 +149,7 @@ public class VIDE_Editor : EditorWindow
         txtComst = skinscr.mm_box_default;
         text1st = skinscr.mm_labels;
         spyView = false;
-        CheckNews();
+        //CheckNews();
 
         TextAsset[] files = Resources.LoadAll<TextAsset>("Dialogues");
         saveNames = new List<string>();
@@ -209,7 +209,7 @@ public class VIDE_Editor : EditorWindow
         db = dbObj.GetComponent<VIDE_EditorDB>();
         startDiag = new Rect(20f, 50f, 300f, 50f);
 
-        CheckNews();
+        //CheckNews();
 
         VIDE_Editor editor = EditorWindow.GetWindow<VIDE_Editor>();
         editor.position = new Rect(50f, 50f, 1027f, 768);
@@ -258,11 +258,11 @@ public class VIDE_Editor : EditorWindow
         CenterAll(false, db.startID, true);
     }
 
-    void CheckNews()
-    {
-        newsHeadline = "Checking...";
-        news = new WWW("https://chrishendersonb.com/vide/videnews.txt");
-    }
+    //void CheckNews()
+    //{
+    //    newsHeadline = "Checking...";
+    //    news = new WWW("https://chrishendersonb.com/vide/videnews.txt");
+    //}
 
     double lastTime;
     double deltatime;
@@ -271,25 +271,25 @@ public class VIDE_Editor : EditorWindow
         double currenttime = EditorApplication.timeSinceStartup;
         deltatime = currenttime - lastTime;
 
-        if (news != null)
-            if (news.isDone)
-            {
-                if (news.text.Length > 10)
-                {
-                    string[] st = news.text.Split(","[0]);
-                    newsHeadline = st[0];
-                    if (st.Length > 1)
-                        newsHeadlineLink = st[1];
-                    news = null;
+        //if (news != null)
+        //    if (news.isDone)
+        //    {
+        //        if (news.text.Length > 10)
+        //        {
+        //            string[] st = news.text.Split(","[0]);
+        //            newsHeadline = st[0];
+        //            if (st.Length > 1)
+        //                newsHeadlineLink = st[1];
+        //            news = null;
 
-                }
-                else
-                {
-                    newsHeadlineLink = string.Empty;
-                    newsHeadline = "Could not connect";
-                    news = null;
-                }
-            }
+        //        }
+        //        else
+        //        {
+        //            newsHeadlineLink = string.Empty;
+        //            newsHeadline = "Could not connect";
+        //            news = null;
+        //        }
+        //    }
 
         if (lerpFocusTime)
         {

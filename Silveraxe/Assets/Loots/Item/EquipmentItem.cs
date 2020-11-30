@@ -113,9 +113,9 @@ public class EquipmentItemEditor : Editor
 
 	SerializedProperty m_SlotProperty;
 
-	SerializedProperty m_MinimumStrengthProperty;
-	SerializedProperty m_MinimumAgilityProperty;
-	SerializedProperty m_MinimumDefenseProperty;
+	//SerializedProperty m_MinimumStrengthProperty;
+	//SerializedProperty m_MinimumAgilityProperty;
+	//SerializedProperty m_MinimumDefenseProperty;
 
 	void OnEnable() {
 		m_Target = target as EquipmentItem;
@@ -127,7 +127,7 @@ public class EquipmentItemEditor : Editor
 		//m_MinimumAgilityProperty = serializedObject.FindProperty(nameof(EquipmentItem.MinimumAgility));
 		//m_MinimumDefenseProperty = serializedObject.FindProperty(nameof(EquipmentItem.MinimumDefense));
 
-		m_ItemEditor = new ItemBaseEditor();
+		m_ItemEditor = CreateInstance<ItemBaseEditor>(); 
 		m_ItemEditor.Init(serializedObject);
 
 		var lookup = typeof(EquipmentItem.EquippedEffect);
@@ -143,9 +143,9 @@ public class EquipmentItemEditor : Editor
 
 		EditorGUILayout.PropertyField(m_SlotProperty);
 
-		EditorGUILayout.PropertyField(m_MinimumStrengthProperty);
-		EditorGUILayout.PropertyField(m_MinimumAgilityProperty);
-		EditorGUILayout.PropertyField(m_MinimumDefenseProperty);
+		//EditorGUILayout.PropertyField(m_MinimumStrengthProperty);
+		//EditorGUILayout.PropertyField(m_MinimumAgilityProperty);
+		//EditorGUILayout.PropertyField(m_MinimumDefenseProperty);
 
 		int choice = EditorGUILayout.Popup("Add new Effect", -1, m_AvailableEquipEffectType.ToArray());
 
@@ -166,7 +166,7 @@ public class EquipmentItemEditor : Editor
 			var item = m_EquippedEffectListProperty.GetArrayElementAtIndex(i);
 			SerializedObject obj = new SerializedObject(item.objectReferenceValue);
 
-			Editor.CreateCachedEditor(item.objectReferenceValue, null, ref ed);
+			CreateCachedEditor(item.objectReferenceValue, null, ref ed);
 
 			ed.OnInspectorGUI();
 			EditorGUILayout.EndVertical();
