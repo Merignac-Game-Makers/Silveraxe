@@ -36,13 +36,13 @@ public class MovementInput : MonoBehaviour
 
 		if (!playerManager.isAlive) return;								// quand on est mort, on ne bouge plus !
 
-		if (SceneModeManager.sceneMode != SceneMode.dialogue) {			// en mode dialogue on ne bouge pas non plus
-			if (screenDirection.magnitude > 50 && (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)) {
+		if (SceneModeManager.sceneMode != SceneMode.dialogue) {         // en mode dialogue on ne bouge pas non plus
+			if ((Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)) {
 				fTranslation = Input.GetAxis("Vertical") * navAgent.speed * 30;
-				sTranslation = Input.GetAxis("Horizontal") * navAgent.speed * 10;
+				sTranslation = Input.GetAxis("Horizontal") * navAgent.speed * 5;
 				fTranslation *= Time.deltaTime;
 				sTranslation *= Time.deltaTime;
-				move = new Vector3(sTranslation / 2, 0, fTranslation);
+				move = new Vector3(sTranslation, 0, fTranslation);
 				dest = transform.TransformPoint(move);
 				navAgent.updateRotation = fTranslation > .1;
 				navAgent.SetDestination(dest);
@@ -55,7 +55,7 @@ public class MovementInput : MonoBehaviour
 
 	private void FixedUpdate() {
 		if (SceneModeManager.sceneMode != SceneMode.dialogue) {     // rotation en fonction de la direction de la souris
-			if (fTranslation > .1 || Input.GetKey(KeyCode.S)) {
+			if (fTranslation > .1 || Input.GetAxis("Fire3")>0) {
 				transform.Rotate(Vector3.up, screenDirection.normalized.x * rotationSensitivity);
 			}
 		}

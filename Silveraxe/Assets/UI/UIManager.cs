@@ -103,8 +103,7 @@ public class UIManager : MonoBehaviour
 	}
 
 	bool IsMouseInActiveArea() {
-		if (App.IsPointerOverUIElement()) return false;
-		return InScreen() && playerManager.movementInput.screenDirection.magnitude > 50;
+		return InScreen() && !App.IsPointerOverUIElement();
 	}
 
 	bool InScreen() {

@@ -29,7 +29,7 @@ public class Target : InteractableObject
 	public override bool IsInteractable() {
 		if (!isHighlightable) return false;
 		if (inventoryUI.selectedEntry == null) return false;                                                        // un objet d'inventaire doit être sélectionné	
-		if (!CompatibleWith(inventoryUI.selectedEntry.item)) return false;                                          // l'objet sélectionné doit être compatible
+		if (!CompatibleWith(inventoryUI.selectedEntry.loot)) return false;                                          // l'objet sélectionné doit être compatible
 
 		//var selectedItem = inventoryUI.selectedEntry.item;
 		//if (!selectedItem.dropable) return false;																	// l'objet sélectionné doit être déposable
@@ -73,7 +73,7 @@ public class Target : InteractableObject
 	void Act() {
 		if (IsInteractable()) {
 			Highlight(false);
-			item = inventoryUI.selectedEntry.item;
+			item = inventoryUI.selectedEntry.loot;
 			inventoryUI.selectedEntry?.Select(false);
 			item.Drop(this);
 		}

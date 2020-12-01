@@ -13,6 +13,8 @@ public class ItemEntryUI : EntryUI
 	public Image plus;
 	public TMP_Text count;
 
+	public Loot loot { get; set; }
+
 	public bool isFree => entry == null || (entry as InventoryEntry).count <= 0;
 
 	Texture2D cursor;
@@ -25,28 +27,28 @@ public class ItemEntryUI : EntryUI
 		InventoryEntry iEntry = entry as InventoryEntry;
 		iEntry.ui = this;
 		this.entry = iEntry;
-		item = iEntry.item;
-		item.entry = iEntry;
-		iconeImage.sprite = item.ItemSprite;
+		loot = iEntry.item;
+		loot.entry = iEntry;
+		iconeImage.sprite = loot.ItemSprite;
 
-		GetCursor(iconeImage.sprite.texture);
+		//GetCursor(iconeImage.sprite.texture);
 
 		count.text = "";
-		label.text = item.ItemName;
+		label.text = loot.ItemName;
 		//plus.enabled = item.combinable;
 		Show(true);
 	}
 
-	void GetCursor(Texture2D source) {
-		int targetX = (int)iconeImage.rectTransform.rect.width;
-		int targetY = (int)iconeImage.rectTransform.rect.height;
-		RenderTexture rt = new RenderTexture(targetX, targetY, 24);
-		RenderTexture.active = rt;
-		Graphics.Blit(source, rt);
-		cursor = new Texture2D(targetX, targetY, TextureFormat.RGBA32, false);
-		cursor.ReadPixels(new Rect(0, 0, targetX, targetY), 0, 0);
-		cursor.Apply();
-	}
+	//void GetCursor(Texture2D source) {
+	//	int targetX = (int)iconeImage.rectTransform.rect.width;
+	//	int targetY = (int)iconeImage.rectTransform.rect.height;
+	//	RenderTexture rt = new RenderTexture(targetX, targetY, 24);
+	//	RenderTexture.active = rt;
+	//	Graphics.Blit(source, rt);
+	//	cursor = new Texture2D(targetX, targetY, TextureFormat.RGBA32, false);
+	//	cursor.ReadPixels(new Rect(0, 0, targetX, targetY), 0, 0);
+	//	cursor.Apply();
+	//}
 
 	/// <summary>
 	/// mise à jour

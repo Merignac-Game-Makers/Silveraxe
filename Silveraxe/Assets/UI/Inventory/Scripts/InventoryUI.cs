@@ -5,7 +5,7 @@ using UnityEngine;
 using static App;
 public class InventoryUI : UIBase
 {
-	public EntryUI selectedEntry { get; private set; }
+	public ItemEntryUI selectedEntry { get; private set; }
 	public ItemEntryUI[] entries { get; private set; }
 	public int capacity { get; private set; }
 
@@ -14,6 +14,7 @@ public class InventoryUI : UIBase
 	private void Awake() {
 		inventoryUI = this;
 	}
+
 	void Start() {
 		entries = GetComponentsInChildren<ItemEntryUI>();
 		capacity = entries.Length;
@@ -25,7 +26,7 @@ public class InventoryUI : UIBase
 		}
 	}
 
-	public void Select(EntryUI entry) {
+	public void Select(ItemEntryUI entry) {
 		selectedEntry = entry;
 	}
 

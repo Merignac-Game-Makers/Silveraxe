@@ -15,7 +15,7 @@ public class CharacterData : MonoBehaviour // HighlightableObject
 	/// </summary>
 	//public Weapon StartingWeapon;
 	public InventoryManager inventory = new InventoryManager();
-	//public EquipmentSystem Equipment = new EquipmentSystem();
+	public EquipmentManager equipment = new EquipmentManager();
 
 	public AudioClip[] HitClip;
 
@@ -39,7 +39,7 @@ public class CharacterData : MonoBehaviour // HighlightableObject
 	public void Init() {
 		stats.Init(this);
 		inventory.Init(this, 6);
-		//Equipment.Init(this);
+		equipment.Init(this);
 	}
 
 
