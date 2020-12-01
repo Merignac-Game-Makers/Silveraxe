@@ -165,6 +165,7 @@ public class Loot : InteractableObject
 		playerManager.StopAgent();
 		if (!playerManager.characterData.inventory.isFull) {
 			playerManager.characterData.inventory.AddItem(this);
+			isInPlayerCollider = false;
 			SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });
 			targetsManager.OnTake();
 			if (target) {

@@ -89,25 +89,28 @@ public class UIManager : MonoBehaviour
 
 
 	public void DefineCursor() {
-		//if (inventoryUI.selectedEntry) {
-		//	cursor = Resize(inventoryUI.selectedEntry.item.ItemSprite.texture, defaultCursorSize);
-		//	Cursor.SetCursor(cursor, new Vector2(defaultCursorSize / 3, defaultCursorSize / 3), CursorMode.ForceSoftware);
-		//} else 
 		if (IsMouseInActiveArea()) {
-			cursor = playerManager.movementInput.cursor;
-			Cursor.SetCursor(cursor, new Vector2(defaultCursorSize / 3, defaultCursorSize / 3), CursorMode.ForceSoftware);
+			if (cursor != playerManager.movementInput.cursor) {
+				cursor = playerManager.movementInput.cursor;
+				Cursor.SetCursor(cursor, new Vector2(defaultCursorSize / 3, defaultCursorSize / 3), CursorMode.ForceSoftware);
+			}
 		} else {
-			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+			if (cursor) {
+				cursor = null;
+				Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+			}
 		}
 	}
 
-	Vector3 playerFeet => Camera.main.WorldToScreenPoint(playerManager.transform.position);
 	bool IsMouseInActiveArea() {
-		return Input.mousePosition.x > 0 &&
-			Input.mousePosition.x < Screen.width &&
-			Input.mousePosition.y > Screen.height * playerFeet.y / Screen.height &&
-			Input.mousePosition.y < Screen.height &&
-			(Input.mousePosition - playerFeet).magnitude > 50;
+		if (App.IsPointerOverUIElement()) return false;
+		return InScreen() && playerManager.movementInput.screenDirection.magnitude > 50;
 	}
 
+	bool InScreen() {
+		return Input.mousePosition.x > 0 &&
+			Input.mousePosition.x < Screen.width &&
+			Input.mousePosition.y > 0 &&
+			Input.mousePosition.y < Screen.height;
+	}
 }

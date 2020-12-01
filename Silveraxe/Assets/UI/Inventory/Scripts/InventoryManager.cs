@@ -85,4 +85,11 @@ public class InventoryManager
 	public void RemoveItem(InventoryEntry entry) {
 		entry.ChangeQuantity(-1);               // retirer 1 à la quantité
 	}
+
+	public bool HasCompatibleItem(Target target) {
+		foreach (InventoryEntry entry in entries) {
+			if (target.CompatibleWith(entry.item)) return true;
+		}
+		return false;
+	}
 }
