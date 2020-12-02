@@ -72,7 +72,8 @@ public abstract class FightController : MonoBehaviour
 
 	/// Notre attaque touche l'ennemi
 	public virtual void Fight_hit() {
-		if (!blocked) other.fightController.Fight_GetHit();
+		if (enabled && !blocked) 
+			other.fightController.Fight_GetHit();
 	}
 	/// Encaisser un coup
 	public virtual void Fight_GetHit() {

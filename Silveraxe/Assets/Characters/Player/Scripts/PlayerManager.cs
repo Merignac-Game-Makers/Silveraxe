@@ -39,6 +39,10 @@ public class PlayerManager : Character
 		ShowPrefab(mediumPrefab, false);
 		ShowPrefab(highPrefab, false);
 
+		SetFightControllers(basicPrefab, true);
+		SetFightControllers(mediumPrefab, false);
+		SetFightControllers(highPrefab, false);
+
 	}
 	#endregion
 
@@ -148,6 +152,11 @@ public class PlayerManager : Character
 		ShowPrefab(mediumPrefab, level == Equipment.EquipmentLevel.medium);
 		ShowPrefab(highPrefab, level == Equipment.EquipmentLevel.high);
 
+		SetFightControllers(basicPrefab, level == Equipment.EquipmentLevel.basic);
+		SetFightControllers(mediumPrefab, level == Equipment.EquipmentLevel.medium);
+		SetFightControllers(highPrefab, level == Equipment.EquipmentLevel.high);
+
+
 		//for (int i = 0; i < prefabHolder.childCount; i++) {
 		//	Destroy(prefabHolder.GetChild(0).gameObject);
 		//}
@@ -171,6 +180,14 @@ public class PlayerManager : Character
 		foreach (Renderer r in renderers) {
 			r.enabled = on;
 		}
+	}
+
+	void SetFightControllers(GameObject prefab, bool on) {
+		var controllers = prefab.GetComponentsInChildren<FightController>();
+		foreach (FightController c in controllers) {
+			c.enabled = on;
+		}
+
 	}
 	#endregion
 

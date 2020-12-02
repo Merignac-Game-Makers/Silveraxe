@@ -26,19 +26,23 @@ public static class SceneModeManager
 						interactableObjectsManager.SelectAll(false);                        // désélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
 
 						// player
+						playerManager.FaceTo(on, other.gameObject);                         // orienter le joueur vers le PNJ
 						playerManager.animatorController.SendAnims((Animator anim) => { anim.SetBool(Dialogue, true); });
 						//playerManager.animatorController?.anim.SetBool(Dialogue, true);		// activer l'animation 'dialogue' du joueur
 
 						// PNJ
+						other.FaceTo(on, playerManager.gameObject);                         // orienter le PNJ vers le joueur 						
 						other?.animatorController?.anim?.SetBool(Dialogue, true);			// activer l'animation 'dialogue' du pnj
 						other.GetComponentInChildren<DialogueTrigger>().Run();              // démarrer le dialogue	
 					});
 				} else {
 					// player
+					playerManager.FaceTo(false);                                            // cesser d'orienter le joueur vers le PNJ
 					playerManager.animatorController.SendAnims((Animator anim) => { anim.SetBool(Dialogue, false); });
 					//playerManager.animatorController?.anim.SetBool(Dialogue, false);		// désactiver l'animation 'dialogue' du joueur
 
 					// PNJ
+					other?.FaceTo(false);                                                   // cesser d'orienter le PNJ vers le joueur
 					other?.animatorController?.anim?.SetBool(Dialogue, false);				// désactiver l'animation 'dialogue' du pnj
 
 					SetSceneMode(SceneMode.normal, true, other);
