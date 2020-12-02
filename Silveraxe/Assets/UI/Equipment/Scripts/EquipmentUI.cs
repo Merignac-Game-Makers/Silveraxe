@@ -30,7 +30,7 @@ public class EquipmentUI : UIBase
 	}
 
 	void Update() {
-		if (Input.GetKeyDown(KeyCode.I)) {
+		if (Input.GetKeyDown(KeyCode.E)) {
 			Toggle();
 		}
 	}

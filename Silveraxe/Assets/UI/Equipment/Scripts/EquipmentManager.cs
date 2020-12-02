@@ -64,6 +64,9 @@ public class EquipmentManager
 
 		item.transform.position = new Vector3(0, -50, 0);
 
+		if (IsSetComplete() && GetSetLevel() != null) {
+			playerManager.Promote((Equipment.EquipmentLevel)GetSetLevel());
+		}
 	}
 
 
@@ -90,9 +93,35 @@ public class EquipmentManager
 		return false;
 	}
 
+	public Equipment.EquipmentLevel? GetSetLevel() {
+		if (!IsSetComplete())
+			return null;
+		Equipment.EquipmentLevel? level = entries[0].itemLevel;
+		foreach (EquipmentEntry entry in entries) {
+			if (entry.itemLevel != level)
+				return null;
+		}
+		return level;
+	}
 
-	public void RemoveItem(InventoryEntry entry) {
-		entry.ChangeQuantity(-1);               // retirer 1 à la quantité
+	public bool IsSetComplete() {
+		foreach (EquipmentEntry entry in entries) {
+			if (entry.item == null)
+				return false;
+		}
+		return true;
+
+	}
+
+	public void RemoveAll() {
+		foreach( EquipmentEntry entry in entries) {
+			RemoveItem(entry);
+		}
+	}
+
+	public void RemoveItem(EquipmentEntry entry) {
+		entry.item = null;
+		entry.ui.UpdateEntry();
 	}
 
 	public bool HasCompatibleItem(Target target) {

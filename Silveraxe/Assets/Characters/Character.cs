@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -30,6 +31,7 @@ public abstract class Character : InteractableObject
 	// pour les combats
 	public bool isInFightMode => fightController?.isInFightMode ?? false;
 	public FightController fightController { get; set; }
+	FightController[] fightControllers;
 	public bool isAlive => fightController.isAlive;
 
 	protected override void Start() {
@@ -61,6 +63,7 @@ public abstract class Character : InteractableObject
 		}
 
 		// pour les combats
+		fightControllers = GetComponentsInChildren<FightController>(true);
 		fightController = GetComponentInChildren<FightController>();
 		characterData = GetComponent<CharacterData>();              // caractéristiques du joueur
 		characterData.Init();                                       // ... initialisation
@@ -89,5 +92,11 @@ public abstract class Character : InteractableObject
 		var dist = (navAgent.radius + other.navAgent.radius) * 1.5f;
 		Vector3 pos = other.transform.position - dir * (dist / dir.magnitude);
 		return pos;
+	}
+
+	public void SendFightController(Action<FightController> action) {
+		foreach (FightController fightController in fightControllers) {
+			action(fightController);
+		}
 	}
 }

@@ -13,7 +13,7 @@ public class EquipmentEntry : Entry
 {
 	public Equipment item;
 	public new EquipmentEntryUI ui;
-
+	public Equipment.EquipmentLevel? itemLevel => item?.equipmentLevel;
 
 	public void Equip(Equipment item) {
 		this.item = item;

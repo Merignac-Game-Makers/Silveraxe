@@ -53,10 +53,10 @@ MonoBehaviour:
   useOutline: 1
   mode: 0
   Clicked: 0
-  ItemName: 
-  prefab: {fileID: 0}
-  ItemSprite: {fileID: 0}
-  Description: 
+  ItemName: Casque
+  prefab: {fileID: 2314152857888616099, guid: bb21a51d6fe33da40affaed1492ecb82, type: 3}
+  ItemSprite: {fileID: 21300000, guid: ca838a23cd643b540ab6a1ecabd071f8, type: 3}
+  Description: "Un casque m\xE9tallique"
   animate: 1
   dropable: 1
   lootCategory: 1
@@ -90,9 +90,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 1.2
+  m_Height: 0.5
   m_Direction: 1
-  m_Center: {x: 0, y: 0.5, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2147299729165583333
 GameObject:
   m_ObjectHideFlags: 0
@@ -295,12 +295,12 @@ PrefabInstance:
     - target: {fileID: 401716847658196490, guid: f0da400707e1ea949aa122ee76a187d0,
         type: 3}
       propertyPath: m_BoundingSphereOverride.y
-      value: 0
+      value: NaN
       objectReference: {fileID: 0}
     - target: {fileID: 401716847658196490, guid: f0da400707e1ea949aa122ee76a187d0,
         type: 3}
       propertyPath: m_BoundingSphereOverride.z
-      value: -0.02
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 401716847658196490, guid: f0da400707e1ea949aa122ee76a187d0,
         type: 3}
@@ -315,17 +315,22 @@ PrefabInstance:
     - target: {fileID: 9076847128044848530, guid: f0da400707e1ea949aa122ee76a187d0,
         type: 3}
       propertyPath: color.r
-      value: 0.3490566
+      value: 0.24528301
       objectReference: {fileID: 0}
     - target: {fileID: 9076847128044848530, guid: f0da400707e1ea949aa122ee76a187d0,
         type: 3}
       propertyPath: color.g
-      value: 0.3490566
+      value: 0.18014334
       objectReference: {fileID: 0}
     - target: {fileID: 9076847128044848530, guid: f0da400707e1ea949aa122ee76a187d0,
         type: 3}
       propertyPath: color.b
-      value: 0.18605375
+      value: 0.06594873
+      objectReference: {fileID: 0}
+    - target: {fileID: 9076847128044848530, guid: f0da400707e1ea949aa122ee76a187d0,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9221137885878090132, guid: f0da400707e1ea949aa122ee76a187d0,
         type: 3}

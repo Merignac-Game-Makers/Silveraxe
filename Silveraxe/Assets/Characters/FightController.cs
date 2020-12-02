@@ -38,7 +38,7 @@ public abstract class FightController : MonoBehaviour
 	protected virtual void Start() {
 		_this = GetComponentInParent<Character>();
 		animatorController = _this.GetComponentInChildren<NavAnimController>();
-		stats = GetComponentInParent<CharacterData>()?.stats;
+		stats = gameObject.GetComponentInParent<CharacterData>()?.stats;
 
 	}
 
@@ -53,7 +53,8 @@ public abstract class FightController : MonoBehaviour
 	public virtual void Fight_Attack() {
 		if (other.fightController.isAlive) {
 			blocked = Random.value > .6;                    // 60% de chances de toucher
-			animatorController.anim.SetTrigger(Attack);     // animation "attaqu"
+			animatorController.SendAnims((Animator anim) => { anim.SetTrigger(Attack); });
+			//animatorController.anim.SetTrigger(Attack);     // animation "attaque"
 			PlaySound(attack);                              // son "attaque"
 		}
 	}
@@ -64,7 +65,8 @@ public abstract class FightController : MonoBehaviour
 	}
 	/// Parer une attaque
 	public virtual void Fight_Block() {
-		animatorController.anim.SetTrigger(Block);
+		animatorController.SendAnims((Animator anim) => { anim.SetTrigger(Block); });
+		//animatorController.anim.SetTrigger(Block);
 		PlaySound(block);
 	}
 
@@ -77,9 +79,10 @@ public abstract class FightController : MonoBehaviour
 			stats.ChangeHealth(-1);								//	on perd de la vie
 			if (stats.CurrentHealth <= 0) {						//		si plus de vie
 				Die();											//			on est mort		
-			} else {											//		sinon
-				animatorController?.anim?.SetTrigger(Hit);		//			animation "prendre un coup"
-				PlaySound(hit);									//			son "prendre un coup"
+			} else {                                            //		sinon
+			animatorController.SendAnims((Animator anim) => { anim.SetTrigger(Hit); });
+			//				animatorController?.anim?.SetTrigger(Hit);		//			animation "prendre un coup"
+			PlaySound(hit);									//			son "prendre un coup"
 			}
 	}
 
@@ -95,12 +98,14 @@ public abstract class FightController : MonoBehaviour
 	}
 
 	void Die() {                                                    // en cas de décès
-		animatorController?.anim?.SetTrigger(Dead);                 // animation "mort"
+		animatorController.SendAnims((Animator anim) => { anim.SetTrigger(Dead); });
+		//		animatorController?.anim?.SetTrigger(Dead);                 // animation "mort"
 		PlaySound(die);                                             // son "mort"
 	}
 
 	public void OtherWin() {
-		other.animatorController?.anim?.SetTrigger(Victory);
+		other.animatorController.SendAnims((Animator anim) => { anim.SetTrigger(Victory); });
+		//		other.animatorController?.anim?.SetTrigger(Victory);
 		other.fightController.PlaySound(other.fightController.victory);
 	}
 

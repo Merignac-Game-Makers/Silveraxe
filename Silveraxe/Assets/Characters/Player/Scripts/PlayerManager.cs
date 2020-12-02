@@ -9,6 +9,16 @@ using static App;
 /// </summary>
 public class PlayerManager : Character
 {
+	public Transform prefabHolder;
+
+	public GameObject basicPrefab;
+	public GameObject mediumPrefab;
+	public GameObject highPrefab;
+
+	public Avatar basicAvatar;
+	public Avatar otherAvatar;
+
+
 	public MovementInput movementInput { get; private set; }
 
 	// Interactions
@@ -24,6 +34,11 @@ public class PlayerManager : Character
 		base.Start();
 
 		movementInput = GetComponentInChildren<MovementInput>();
+
+		ShowPrefab(basicPrefab, true);
+		ShowPrefab(mediumPrefab, false);
+		ShowPrefab(highPrefab, false);
+
 	}
 	#endregion
 
@@ -115,6 +130,48 @@ public class PlayerManager : Character
 
 	public override void Act() { }
 
+	public void Promote(Equipment.EquipmentLevel level) {
+		StartCoroutine(Ipromote(level));
+	}
+	IEnumerator Ipromote(Equipment.EquipmentLevel level) {
+
+		animatorController.SendAnims((Animator anim) => { anim.SetBool("Promote", true); });
+		//animatorController.anim.SetBool("Promote", true);
+
+		yield return new WaitForSeconds(1.25f);
+
+		//basicPrefab.gameObject.SetActive(level == Equipment.EquipmentLevel.basic);
+		//mediumPrefab.gameObject.SetActive(level == Equipment.EquipmentLevel.medium);
+		//highPrefab.gameObject.SetActive(level == Equipment.EquipmentLevel.high);
+
+		ShowPrefab(basicPrefab, level == Equipment.EquipmentLevel.basic);
+		ShowPrefab(mediumPrefab, level == Equipment.EquipmentLevel.medium);
+		ShowPrefab(highPrefab, level == Equipment.EquipmentLevel.high);
+
+		//for (int i = 0; i < prefabHolder.childCount; i++) {
+		//	Destroy(prefabHolder.GetChild(0).gameObject);
+		//}
+		//switch (level) {
+		//	case Equipment.EquipmentLevel.basic:
+		//		Instantiate(basicPrefab, prefabHolder);
+		//		break;
+		//	case Equipment.EquipmentLevel.medium:
+		//		Instantiate(mediumPrefab, prefabHolder);
+		//		break;
+		//	case Equipment.EquipmentLevel.high:
+		//		Instantiate(highPrefab, prefabHolder);
+		//		break;
+		//}
+		//characterData.equipment.RemoveAll();
+
+	}
+
+	void ShowPrefab(GameObject prefab, bool on) {
+		var renderers = prefab.GetComponentsInChildren<Renderer>();
+		foreach (Renderer r in renderers) {
+			r.enabled = on;
+		}
+	}
 	#endregion
 
 }

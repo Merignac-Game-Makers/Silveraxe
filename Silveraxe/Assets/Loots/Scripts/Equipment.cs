@@ -16,7 +16,11 @@ using UnityEngine.UI;
 /// </summary>
 public class Equipment : Loot
 {
+
+	public enum EquipmentLevel { basic, medium, high}
+
 	public EquipmentCategory equipmentCategory;
+	public EquipmentLevel equipmentLevel;
 
 	protected override void Take() {
 		// on ramasse l'objet

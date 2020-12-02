@@ -26,7 +26,8 @@ public static class SceneModeManager
 						interactableObjectsManager.SelectAll(false);                        // désélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
 
 						// player
-						playerManager.animatorController?.anim.SetBool(Dialogue, true);		// activer l'animation 'dialogue' du joueur
+						playerManager.animatorController.SendAnims((Animator anim) => { anim.SetBool(Dialogue, true); });
+						//playerManager.animatorController?.anim.SetBool(Dialogue, true);		// activer l'animation 'dialogue' du joueur
 
 						// PNJ
 						other?.animatorController?.anim?.SetBool(Dialogue, true);			// activer l'animation 'dialogue' du pnj
@@ -34,7 +35,8 @@ public static class SceneModeManager
 					});
 				} else {
 					// player
-					playerManager.animatorController?.anim.SetBool(Dialogue, false);		// désactiver l'animation 'dialogue' du joueur
+					playerManager.animatorController.SendAnims((Animator anim) => { anim.SetBool(Dialogue, false); });
+					//playerManager.animatorController?.anim.SetBool(Dialogue, false);		// désactiver l'animation 'dialogue' du joueur
 
 					// PNJ
 					other?.animatorController?.anim?.SetBool(Dialogue, false);				// désactiver l'animation 'dialogue' du pnj
@@ -50,8 +52,10 @@ public static class SceneModeManager
 						interactableObjectsManager.SelectAll(false);                        // masquer tous les actionsSprites pendant le combat
 
 						// player
-						playerManager.fightController.SetOther(other);
-						playerManager.animatorController?.anim?.SetBool(Fight, true);       // animation 'Attack'
+						playerManager.SendFightController((FightController fc) => { fc.SetOther(other); });
+						//playerManager.fightController.SetOther(other);
+						playerManager.animatorController.SendAnims((Animator anim) => { anim.SetBool(Fight, true); });
+						//playerManager.animatorController?.anim?.SetBool(Fight, true);       // animation 'Attack'
 						playerManager.FaceTo(on, other.gameObject);                         // orienter le joueur vers le PNJ
 
 						// PNJ
@@ -70,9 +74,11 @@ public static class SceneModeManager
 					other?.FaceTo(false);                                                   // cesser d'orienter le PNJ vers le joueur
 
 					// player
-					playerManager.animatorController?.anim?.SetBool(Fight, false);			// animation 'idle'
+					playerManager.animatorController.SendAnims((Animator anim) => { anim.SetBool(Fight, false); });
+					//playerManager.animatorController?.anim?.SetBool(Fight, false);			// animation 'idle'
 					playerManager.FaceTo(false);                                            // cesser d'orienter le joueur vers le PNJ
-					playerManager.fightController.SetOther(null);
+					playerManager.SendFightController((FightController fc) => { fc.SetOther(null); });
+					//playerManager.fightController.SetOther(null);
 
 					SetSceneMode(SceneMode.normal, true, other);
 				}
