@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8065821831427797251}
   - component: {fileID: 8065821831427797250}
   - component: {fileID: 8065821831427797248}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: IPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.2}
   m_RaycastTarget: 1
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -119,7 +119,7 @@ GameObject:
   - component: {fileID: 8065821832035216696}
   - component: {fileID: 8065821832035216699}
   - component: {fileID: 8065821832035216698}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Inventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -201,7 +201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
+  m_IgnoreReversedGraphics: 0
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2

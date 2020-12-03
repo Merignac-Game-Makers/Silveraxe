@@ -238,11 +238,11 @@ public class NavAnimController : MonoBehaviour
 
 	#endregion
 
-	public void SendAnims(Action<Animator> action) {
-		foreach (Animator anim in anims) {
-			action(anim);
-		}
-	}
+	//public void SendAnims(Action<Animator> action) {
+	//	foreach (Animator anim in anims) {
+	//		action(anim);
+	//	}
+	//}
 }
 
 

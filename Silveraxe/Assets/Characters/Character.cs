@@ -94,9 +94,9 @@ public abstract class Character : InteractableObject
 		return pos;
 	}
 
-	public void SendFightController(Action<FightController> action) {
-		foreach (FightController fightController in fightControllers) {
-			action(fightController);
-		}
-	}
+	//public void SendFightController(Action<FightController> action) {
+	//	foreach (FightController fightController in fightControllers) {
+	//		action(fightController);
+	//	}
+	//}
 }
