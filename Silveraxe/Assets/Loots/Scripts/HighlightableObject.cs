@@ -17,7 +17,7 @@ public abstract class HighlightableObject : MonoBehaviour
 	public bool useOutline = true;
 
 	public bool isOn { get; set; } = false;               // flag allumé ?
-	protected bool isMouseOver = false;
+	public bool isMouseOver { get; set; } = false;
 	public bool isInPlayerCollider { get; set; } = false;
 
 	// pour les projecteurs

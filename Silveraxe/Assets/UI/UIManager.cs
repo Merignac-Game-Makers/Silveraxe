@@ -52,15 +52,15 @@ public class UIManager : MonoBehaviour
 		this.state = state;                     // mémoriser le nouvel état de l'UI
 		switch (state) {
 			case State.dialog:
-				inventoryUI.SaveAndHide();
+				//inventoryUI.SaveAndHide();
 				//exitButton.SaveAndHide();
 				break;
 			case State.quit:
-				inventoryUI.SaveAndHide();
+				//inventoryUI.SaveAndHide();
 				//exitButton.SaveAndHide();
 				break;
 			default:
-				inventoryUI.Restore();
+				//inventoryUI.Restore();
 				//exitButton.Restore();
 				break;
 		}
@@ -89,25 +89,27 @@ public class UIManager : MonoBehaviour
 
 
 	public void DefineCursor() {
-		//if (inventoryUI.selectedEntry) {
-		//	cursor = Resize(inventoryUI.selectedEntry.item.ItemSprite.texture, defaultCursorSize);
-		//	Cursor.SetCursor(cursor, new Vector2(defaultCursorSize / 3, defaultCursorSize / 3), CursorMode.ForceSoftware);
-		//} else 
 		if (IsMouseInActiveArea()) {
-			cursor = playerManager.movementInput.cursor;
-			Cursor.SetCursor(cursor, new Vector2(defaultCursorSize / 3, defaultCursorSize / 3), CursorMode.ForceSoftware);
+			if (cursor != playerManager.movementInput.cursor) {
+				cursor = playerManager.movementInput.cursor;
+				Cursor.SetCursor(cursor, new Vector2(defaultCursorSize / 3, defaultCursorSize / 3), CursorMode.ForceSoftware);
+			}
 		} else {
-			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+			if (cursor) {
+				cursor = null;
+				Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+			}
 		}
 	}
 
-	Vector3 playerFeet => Camera.main.WorldToScreenPoint(playerManager.transform.position);
 	bool IsMouseInActiveArea() {
-		return Input.mousePosition.x > 0 &&
-			Input.mousePosition.x < Screen.width &&
-			Input.mousePosition.y > Screen.height * playerFeet.y / Screen.height &&
-			Input.mousePosition.y < Screen.height &&
-			(Input.mousePosition - playerFeet).magnitude > 50;
+		return InScreen() && !App.IsPointerOverUIElement();
 	}
 
+	bool InScreen() {
+		return Input.mousePosition.x > 0 &&
+			Input.mousePosition.x < Screen.width &&
+			Input.mousePosition.y > 0 &&
+			Input.mousePosition.y < Screen.height;
+	}
 }

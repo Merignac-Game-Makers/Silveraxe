@@ -16,7 +16,7 @@ using UnityEngine.UI;
 /// </summary>
 public class Loot : InteractableObject
 {
-	static float AnimationTime = 0.1f;
+	protected static float AnimationTime = 0.1f;
 
 	public string ItemName;
 	public GameObject prefab;
@@ -29,34 +29,32 @@ public class Loot : InteractableObject
 	public List<UsageEffect> UsageEffects;
 
 
-	public InventoryEntry entry { get; set; } = null;                             // L'entrée d'inventaire lorsque l'objet a été ramassé
+	public Entry entry { get; set; } = null;                             // L'entrée d'inventaire lorsque l'objet a été ramassé
 
 	public override bool IsInteractable() {                         // l'objet est intéractif si
 		return (!animate || m_AnimationTimer >= AnimationTime && isInPlayerCollider);       // l'animation de mise en place est terminée ou désactivée et le joueur est proche     && IsPlayerNear(5f)
 	}
 
-	Vector3 m_OriginalPosition;
-	Vector3 m_TargetPoint;
-	float m_AnimationTimer = 0.0f;
+	protected Vector3 m_OriginalPosition;
+	protected Vector3 m_TargetPoint;
+	protected float m_AnimationTimer = 0.0f;
 
-	public Loot(Loot item) {
-		ItemName = item.ItemName;
-		prefab = item.prefab;
-		ItemSprite = item.ItemSprite;
-		Description = item.Description;
-		animate = item.animate;
-		dropable = item.dropable;
-		lootCategory = item.lootCategory;
-		usable = item.usable;
-		UsageEffects = item.UsageEffects;
-	}
+	protected Target target;
+
+	//public Loot(Loot item) {
+	//	ItemName = item.ItemName;
+	//	prefab = item.prefab;
+	//	ItemSprite = item.ItemSprite;
+	//	Description = item.Description;
+	//	animate = item.animate;
+	//	dropable = item.dropable;
+	//	lootCategory = item.lootCategory;
+	//	usable = item.usable;
+	//	UsageEffects = item.UsageEffects;
+	//}
 
 	void Awake() {
-		StartCoroutine("CreateAnimation");
-
-		//m_OriginalPosition = transform.position;                    // préparation
-		//m_TargetPoint = transform.position;                         // de l'animation
-		//m_AnimationTimer = AnimationTime - 0.1f;                    // de mise en place
+		StartAnimation();
 	}
 
 
@@ -71,27 +69,24 @@ public class Loot : InteractableObject
 		}
 
 		// bouton d'action
-		if (Input.GetButtonDown("Fire1")) {
-			if (!interactableObjectsManager.MultipleSelection())
+		if (!IsPointerOverUIElement() && Input.GetButtonDown("Fire1")) {
+			if (!interactableObjectsManager.MultipleSelection() || isMouseOver)
 				Act();
+
 		}
 	}
 
-	private void OnMouseUp() {
-		if (isMouseOver)
-			Act();
+	void Act() {
+		if (IsInteractable())
+			Take();
 	}
 
-	void Act() {
-			if (IsInteractable())
-				Take();
+	public bool Equals(Loot other) {
+		return prefab == other.prefab;
 	}
 
 	public void StartAnimation() {
 		StartCoroutine("CreateAnimation");
-		//m_OriginalPosition = transform.position;                    // préparation
-		//m_TargetPoint = transform.position;                         // de l'animation
-		//m_AnimationTimer = AnimationTime - 0.1f;                    // de mise en place
 	}
 
 	IEnumerator CreateAnimation() {
@@ -109,61 +104,20 @@ public class Loot : InteractableObject
 		}
 		Highlight(isInPlayerCollider);
 	}
-	/// <summary>
-	/// Ramasser / déposer un objet
-	/// </summary>
-	/// <param name="character">le personnage (joueur, PNJ, ...)</param>
-	/// <param name="target">le lieu (lorsqu'on pose un objet)</param>
-	/// <param name="action">l'action : prendre ou poser</param>
-	//public override void InteractWith(CharacterData character, Action action = take, HighlightableObject target = null) {
-	//	base.InteractWith(character, action, target);
-	//	if (character.gameObject == playerManager.gameObject)
-	//		playerManager.StopAgent();
 
-	//	switch (action) {
-	//		case take:
-	//			Take();
-	//			break;
-	//		case drop:
-	//			break;
-	//		case talk:
-	//			break;
-	//	}
-
-	//	//if (action == take) {
-	//	//	Take();
-	//	//} else {
-	//	//	// si on dépose l'objet sur une cible
-	//	//	if (action == drop && target is Target) {
-	//	//		if ((target as Target).isAvailable(this)) {                // et que cet emplacement est disponible pour cet objet
-	//	//			Drop(target as Target);
-	//	//			//inventoryUI.DropItem(target as Target, entry);         // déposer l'objet d'inventaire
-	//	//		}
-	//	//	}
-	//	//}
-	//}
-
-	//public override void OnMouseEnter() {
-	//	base.OnMouseEnter();
-	//	if (IsHighlightable()) {
-	//		ToggleOutline(true);
-	//		//if (IsInteractable())
-	//		//	uiManager.SetCursor(cursor);
-	//	} 
-	//}
-
-	//public override void OnMouseExit() {
-	//	base.OnMouseExit();
-	//	ToggleOutline(false);
-	//	uiManager.ResetCursor();
-	//}
-
-	void Take() {
+	protected virtual void Take() {
 		// on ramasse l'objet
 		playerManager.StopAgent();
-		SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });
-		inventoryManager.AddItem(this);
-		targetsManager.OnTake();
+		if (!playerManager.characterData.inventory.isFull) {
+			playerManager.characterData.inventory.AddItem(this);
+			isInPlayerCollider = false;
+			SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });
+			targetsManager.OnTake();
+			if (target) {
+				target.item = null;
+				target = null;
+			}
+		}
 	}
 
 
@@ -173,10 +127,10 @@ public class Loot : InteractableObject
 	/// <param name="target">le lieu</param>
 	/// <param name="entry">l'entrée d'inventaire </param>
 	public void Drop(Target target) {
+		this.target = target;
 		animate = true;
 		transform.position = target.targetPos;
 		StartAnimation();
-		inventoryManager.RemoveItem(entry);       // retirer l'objet déposé de l'inventaire
-		target.Highlight(false);
+		playerManager.characterData.inventory.RemoveItem(entry as InventoryEntry);       // retirer l'objet déposé de l'inventaire
 	}
 }

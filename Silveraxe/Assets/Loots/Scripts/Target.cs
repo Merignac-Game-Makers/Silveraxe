@@ -18,18 +18,32 @@ public class Target : InteractableObject
 
 	Transform prefabHolder;
 	Transform target;
+	public Loot item { get; set; }
 
 	public override bool IsHighlightable() {
-		if (!isFree) return false;
-		if (inventoryUI.selectedEntry == null) return false;
-		var item = inventoryUI.selectedEntry.item;
-		if (!item.dropable) return false;
-		if (filterMode == FilterMode.allow && !filterItems.Contains(item.lootCategory)) return false;
-		if (filterMode == FilterMode.refuse && filterItems.Contains(item.lootCategory)) return false;
+		if (item != null) return false;                                                                     // ne peut contenir qu'un seul objet d'inventaire
+		if (!playerManager.characterData.inventory.HasCompatibleItem(this)) return false;                   // l'inventaire doit contenir un objet compatible		
 		return true;
 	}
 
-	public bool isFree => !GetComponentInChildren<Loot>();      // ne peut contenir qu'un seul objet d'inventaire
+	public override bool IsInteractable() {
+		if (!isHighlightable) return false;
+		if (inventoryUI.selectedEntry == null) return false;                                                        // un objet d'inventaire doit être sélectionné	
+		if (!CompatibleWith(inventoryUI.selectedEntry.loot)) return false;                                          // l'objet sélectionné doit être compatible
+
+		//var selectedItem = inventoryUI.selectedEntry.item;
+		//if (!selectedItem.dropable) return false;																	// l'objet sélectionné doit être déposable
+		//if (filterMode == FilterMode.allow && !filterItems.Contains(selectedItem.lootCategory)) return false;		// si on est en mode 'autorise' => il doit être autorisé sur cette cible
+		//if (filterMode == FilterMode.refuse && filterItems.Contains(selectedItem.lootCategory)) return false;		// si on est en mode 'refuse'   => il ne doit pas être interdit sur cette cible
+		return base.IsInteractable();
+	}
+
+	public bool CompatibleWith(Loot testItem) {
+		if (!testItem.dropable) return false;                                                                   // l'objet sélectionné doit être déposable
+		if (filterMode == FilterMode.allow && !filterItems.Contains(testItem.lootCategory)) return false;       // si on est en mode 'autorise' => il doit être autorisé sur cette cible
+		if (filterMode == FilterMode.refuse && filterItems.Contains(testItem.lootCategory)) return false;       // si on est en mode 'refuse'   => il ne doit pas être interdit sur cette cible
+		return true;
+	}
 
 	public Vector3 targetPos => target.position;
 
@@ -49,20 +63,19 @@ public class Target : InteractableObject
 	}
 
 	private void Update() {
-		if (Input.GetButtonDown("Fire1") && !interactableObjectsManager.MultipleSelection()) {
-			Act();
+		if (!IsPointerOverUIElement() && Input.GetButtonDown("Fire1")) {
+			if (!interactableObjectsManager.MultipleSelection() || isMouseOver) {
+				Act();
+			}
 		}
-	}
-
-	private void OnMouseUp() {
-		if (isMouseOver)
-			Act();
 	}
 
 	void Act() {
 		if (IsInteractable()) {
-			inventoryUI.selectedEntry.item.Drop(this);
 			Highlight(false);
+			item = inventoryUI.selectedEntry.loot;
+			inventoryUI.selectedEntry?.Select(false);
+			item.Drop(this);
 		}
 	}
 }

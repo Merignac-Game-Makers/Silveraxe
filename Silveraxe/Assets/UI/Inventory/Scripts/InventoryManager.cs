@@ -11,16 +11,17 @@ using static App;
 public class InventoryManager
 {
 
-	// Pas de limite au nombre d'objets en inventaire
-	private const int numSlots = 0;
+	private int numSlots = 0;							// capacité de l'inventaire
+	public bool isFull => entries.Count == numSlots;	// l'inventaire est-il complet ?
+
 	public List<InventoryEntry> entries = new List<InventoryEntry>();
 
 
 	CharacterData owner;
 
-	public void Init(CharacterData owner) {
+	public void Init(CharacterData owner, int capacity) {
 		this.owner = owner;
-		inventoryManager = this;
+		numSlots = capacity;
 	}
 
 	/// <summary>
@@ -31,27 +32,30 @@ public class InventoryManager
 	/// </summary>
 	/// <param name="item">l'objet à ajouter</param>
 	public void AddItem(Loot item) {
+		if (isFull) return;
+
 		bool found = false;
 		for (int i = 0; i < entries.Count; ++i) {           // pour chaque entrée existante
-			if (entries[i].item == item) {                  // si l'objet contenu est identique
-				entries[i].count += 1;                      // ajouter 1 à la quantité
+			if (entries[i].item.Equals(item)) {				// si l'objet contenu est identique
+				entries[i].ChangeQuantity(1);               // ajouter 1 à la quantité
 				found = true;                               // trouvé
-				entries[i].ui.UpdateEntry();                // mettre l'objet d'interface associé à jour	
 				item.entry = entries[i];
 				item.transform.position = new Vector3(0, -50, 0);
 				break;
 			}
 		}
 
-		if (!found) {                                       // si on n'a pas trouvé
-			InventoryEntry entry = new InventoryEntry(item);// créer une nouvelle entrée
-			entry.ui =                                      // créer l'ojet d'interface associé
-				inventoryUI.AddItemEntry(entries.Count - 1, entry);
-			entry.item.entry = entry;
+		if (!found) {												// si on n'a pas trouvé
+			InventoryEntry entry = new InventoryEntry(item);			// créer une nouvelle entrée d'inventaire
+			foreach (ItemEntryUI entryUI in inventoryUI.entries) {		// trouver un emplacement d'affichage libre
+				if (entryUI.isFree) {
+					entryUI.Init(entry);
+					break;
+				}
+			}
 			entries.Add(entry);
 			item.transform.position = new Vector3(0, -50, 0);
 		}
-		inventoryUI.UpdateEntries();
 	}
 
 
@@ -79,10 +83,13 @@ public class InventoryManager
 
 
 	public void RemoveItem(InventoryEntry entry) {
-		entry.count -= 1;                                               // retirer 1 à la quantité
-		if (entry.count <= 0) {                                         // si la quantité est nulle
-			entries.Remove(entry);                                      // retirer l'entrée de l'inventaire
+		entry.ChangeQuantity(-1);               // retirer 1 à la quantité
+	}
+
+	public bool HasCompatibleItem(Target target) {
+		foreach (InventoryEntry entry in entries) {
+			if (target.CompatibleWith(entry.item)) return true;
 		}
-		entry.ui.UpdateEntry();
+		return false;
 	}
 }

@@ -1,4 +1,5 @@
 //Copyright Filmstorm (C) 2018 - Movement Controller for Root Motion and built in IK solver
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -49,6 +50,7 @@ public class NavAnimController : MonoBehaviour
 	public LayerMask EnvironmentLayer1 { get => EnvironmentLayer2; set => EnvironmentLayer2 = value; }
 	public LayerMask EnvironmentLayer2 { get => environmentLayer; set => environmentLayer = value; }
 
+	Animator[] anims;
 	#endregion
 
 	#region Initialization
@@ -57,14 +59,16 @@ public class NavAnimController : MonoBehaviour
 	void Start() {
 		//timeScale = 1f;
 
+		anims = GetComponentsInChildren<Animator>(true);
+
 		anim = GetComponentInChildren<Animator>();
 		agent = GetComponent<NavMeshAgent>();
 		movementInput = GetComponent<MovementInput>();
 
 		if (anim == null)
-			Debug.LogError("We require " + transform.name + " game object to have an animator. This will allow for Foot IK to function");
+			Debug.LogError("We require " + transform.name + " game object to have at least an animator. This will allow for Foot IK to function");
 		if (agent == null)
-			Debug.LogError("We require " + transform.name + " game object to have a Nav Mesh Agent. This will allow for Foot IK to function");
+			Debug.LogError("We require " + transform.name + " game object to have at least a Nav Mesh Agent. This will allow for Foot IK to function");
 	}
 	#endregion
 
@@ -77,15 +81,17 @@ public class NavAnimController : MonoBehaviour
 		//Calculate Input Vectors
 		inputX = tmp.x;         // latéral
 		inputZ = tmp.z;         // avant/arrière
-		anim.SetFloat("InputX",inputX, animSmoothTime, Time.deltaTime);    //* 2f
-		anim.SetFloat("InputZ", inputZ, animSmoothTime, Time.deltaTime);   //* 2f
 
+		//var v = Mathf.Abs(anim.GetFloat("InputX") + anim.GetFloat("InputZ"));
+		foreach (Animator anim in anims) {
+			if (anim.enabled) {
+				anim.SetFloat("InputX", inputX, animSmoothTime, Time.deltaTime);
+				anim.SetFloat("InputZ", inputZ, animSmoothTime, Time.deltaTime);
+				//anim.SetFloat("velocity", v, animSmoothTime, Time.deltaTime);
 
-		//anim.SetFloat("InputX", movementInput.sTranslation, animSmoothTime, Time.deltaTime);    //* 2f
-		//anim.SetFloat("InputZ", movementInput.fTranslation, animSmoothTime, Time.deltaTime);   //* 2f
-																							   //anim.SetFloat("velocity", agent.velocity.sqrMagnitude, animSmoothTime, Time.deltaTime);
-		var v = Mathf.Abs(anim.GetFloat("InputX") + anim.GetFloat("InputZ"));
-		anim.SetFloat("velocity", v, animSmoothTime, Time.deltaTime);
+			}
+		}
+
 
 	}
 
@@ -232,7 +238,11 @@ public class NavAnimController : MonoBehaviour
 
 	#endregion
 
-
+	//public void SendAnims(Action<Animator> action) {
+	//	foreach (Animator anim in anims) {
+	//		action(anim);
+	//	}
+	//}
 }
 
 

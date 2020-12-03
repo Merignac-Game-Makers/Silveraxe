@@ -31,6 +31,7 @@ public abstract class FightController : MonoBehaviour
 	public bool isAlive => stats.CurrentHealth > 0;
 
 	bool blocked = false;
+	public bool critical { get; set; } = false;
 	public bool isInFightMode => animatorController?.anim?.GetBool(SceneModeManager.Fight) ?? false;
 
 
@@ -38,13 +39,13 @@ public abstract class FightController : MonoBehaviour
 	protected virtual void Start() {
 		_this = GetComponentInParent<Character>();
 		animatorController = _this.GetComponentInChildren<NavAnimController>();
-		stats = GetComponentInParent<CharacterData>()?.Stats;
+		stats = gameObject.GetComponentInParent<CharacterData>()?.stats;
 
 	}
 
 	public void SetOther(Character o) {
 		other = o;
-		otherStats = other?.GetComponent<CharacterData>()?.Stats;
+		otherStats = other?.GetComponent<CharacterData>()?.stats;
 	}
 
 
@@ -52,8 +53,11 @@ public abstract class FightController : MonoBehaviour
 	/// Attaquer
 	public virtual void Fight_Attack() {
 		if (other.fightController.isAlive) {
-			blocked = Random.value > .6;                    // 60% de chances de toucher
-			animatorController.anim.SetTrigger(Attack);     // animation "attaqu"
+			bool crit = false;
+			blocked = !CalculAttack(stats.baseStats.agility, otherStats.baseStats.defense, out crit);       // Random.value > .6;                    // 60% de chances de toucher
+			other.fightController.critical = crit;
+			//animatorController.SendAnims((Animator anim) => { anim.SetTrigger(Attack); });
+			animatorController.anim.SetTrigger(Attack);     // animation "attaque"
 			PlaySound(attack);                              // son "attaque"
 		}
 	}
@@ -64,23 +68,29 @@ public abstract class FightController : MonoBehaviour
 	}
 	/// Parer une attaque
 	public virtual void Fight_Block() {
+		//animatorController.SendAnims((Animator anim) => { anim.SetTrigger(Block); });
 		animatorController.anim.SetTrigger(Block);
 		PlaySound(block);
 	}
 
 	/// Notre attaque touche l'ennemi
 	public virtual void Fight_hit() {
-		if (!blocked) other.fightController.Fight_GetHit();
+		if (enabled && !blocked)
+			other.fightController.Fight_GetHit();
 	}
 	/// Encaisser un coup
 	public virtual void Fight_GetHit() {
-			stats.ChangeHealth(-1);								//	on perd de la vie
-			if (stats.CurrentHealth <= 0) {						//		si plus de vie
-				Die();											//			on est mort		
-			} else {											//		sinon
-				animatorController?.anim?.SetTrigger(Hit);		//			animation "prendre un coup"
-				PlaySound(hit);									//			son "prendre un coup"
-			}
+		int weapon = 3;
+		int strength = otherStats.baseStats.strength;
+		int defense = stats.baseStats.defense;
+		stats.ChangeHealth(-(CalculDamage(weapon, strength, defense, critical)));  //	on perd de la vie
+		if (stats.CurrentHealth <= 0) {                     //		si plus de vie
+			Die();                                          //			on est mort		
+		} else {                                            //		sinon
+			//animatorController.SendAnims((Animator anim) => { anim.SetTrigger(Hit); });
+			animatorController?.anim?.SetTrigger(Hit);		//			animation "prendre un coup"
+			PlaySound(hit);                                 //			son "prendre un coup"
+		}
 	}
 
 	public void Fight_End() {                                       // sortir du mode combat 
@@ -95,16 +105,36 @@ public abstract class FightController : MonoBehaviour
 	}
 
 	void Die() {                                                    // en cas de décès
+		//animatorController.SendAnims((Animator anim) => { anim.SetTrigger(Dead); });
 		animatorController?.anim?.SetTrigger(Dead);                 // animation "mort"
 		PlaySound(die);                                             // son "mort"
 	}
 
 	public void OtherWin() {
+		//other.animatorController.SendAnims((Animator anim) => { anim.SetTrigger(Victory); });
 		other.animatorController?.anim?.SetTrigger(Victory);
 		other.fightController.PlaySound(other.fightController.victory);
 	}
 
 
+	public bool CalculAttack(int agility, int defense, out bool critical) {
+		int dice = Random.Range(0, 20);
+		int bonus = (agility / 2) - 5;
+
+		critical = dice + bonus > defense * 2;
+
+		return dice + bonus > defense;
+	}
+
+	public int CalculDamage(int weapon, int strength, int defense, bool critical) {
+		int dice = Random.Range(0, weapon);
+		int damages = ((strength / 2) - 5) + dice;
+		int absorption = defense - 10;
+		int k = critical ? 2 : 1;
+
+		int result = k * Mathf.Max(0, damages - absorption);
+		return result;
+	}
 
 	// AUDIO
 
