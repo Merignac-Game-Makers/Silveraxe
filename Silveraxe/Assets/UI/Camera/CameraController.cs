@@ -12,8 +12,7 @@ public class CameraController : MonoBehaviour
 {
 	public Camera GameplayCamera;
 	public CinemachineVirtualCamera vCamFollow;
-	public CinemachineVirtualCamera vCamDialogue;
-	public GameObject CameraTarget;
+	public CinemachineVirtualCamera vCamLateral;
 
 	CinemachineVirtualCamera activeCamera => cinemachineBrain?.ActiveVirtualCamera?.VirtualCameraGameObject.GetComponent<CinemachineVirtualCamera>();
 
@@ -52,7 +51,7 @@ public class CameraController : MonoBehaviour
 
 	public void SetCamera(CinemachineVirtualCamera vCam) {
 		vCamFollow?.gameObject.SetActive(vCam == vCamFollow);
-		vCamDialogue?.gameObject.SetActive(vCam == vCamDialogue);
+		vCamLateral?.gameObject.SetActive(vCam == vCamLateral);
 	}
 }
 

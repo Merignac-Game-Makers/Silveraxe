@@ -34,6 +34,7 @@ public abstract class FightController : MonoBehaviour
 	public bool critical { get; set; } = false;
 	public bool isInFightMode => animatorController?.anim?.GetBool(SceneModeManager.Fight) ?? false;
 
+	int dice;
 
 	// INITIALISATION
 	protected virtual void Start() {
@@ -53,10 +54,7 @@ public abstract class FightController : MonoBehaviour
 	/// Attaquer
 	public virtual void Fight_Attack() {
 		if (other.fightController.isAlive) {
-			bool crit = false;
-			blocked = !CalculAttack(stats.baseStats.agility, otherStats.baseStats.defense, out crit);       // Random.value > .6;                    // 60% de chances de toucher
-			other.fightController.critical = crit;
-			//animatorController.SendAnims((Animator anim) => { anim.SetTrigger(Attack); });
+			blocked = !CalculAttack();						// Le coup touche-t-il ? est-il critique ?
 			animatorController.anim.SetTrigger(Attack);     // animation "attaque"
 			PlaySound(attack);                              // son "attaque"
 		}
@@ -80,10 +78,7 @@ public abstract class FightController : MonoBehaviour
 	}
 	/// Encaisser un coup
 	public virtual void Fight_GetHit() {
-		int weapon = 3;
-		int strength = otherStats.baseStats.strength;
-		int defense = stats.baseStats.defense;
-		stats.ChangeHealth(-(CalculDamage(weapon, strength, defense, critical)));  //	on perd de la vie
+		stats.ChangeHealth(-CalculDamage());				//	on perd de la vie
 		if (stats.CurrentHealth <= 0) {                     //		si plus de vie
 			Die();                                          //			on est mort		
 		} else {                                            //		sinon
@@ -117,19 +112,28 @@ public abstract class FightController : MonoBehaviour
 	}
 
 
-	public bool CalculAttack(int agility, int defense, out bool critical) {
-		int dice = Random.Range(0, 20);
-		int bonus = (agility / 2) - 5;
+	public bool CalculAttack() {
+		int agility = stats.baseStats.agility;                      // notre agilité
+		int strength = stats.baseStats.strength;                    // notre force
+		int otherDefense = otherStats.baseStats.defense;            // la défense de l'aversaire
+		int otherAgility = otherStats.baseStats.agility;            // l'agilité de l'aversaire
 
-		critical = dice + bonus > defense * 2;
+		int dice = Random.Range(0, 20);								// 1 dé 20
+		int bonus = agility + strength / 4;							// bonus lié à l'agilité et à la force
 
-		return dice + bonus > defense;
+		other.fightController.critical =  (dice + bonus) > (otherDefense + otherAgility) / 2;	// le coup est-il critique ? => on transmet l'information à l'autre combattant pour le calcul des dégâts
+
+		return (dice + bonus) > (otherDefense + otherAgility) / 4;								// le coup porte-t-il ?
 	}
 
-	public int CalculDamage(int weapon, int strength, int defense, bool critical) {
-		int dice = Random.Range(0, weapon);
-		int damages = ((strength / 2) - 5) + dice;
-		int absorption = defense - 10;
+	public int CalculDamage() {
+		int weapon = 3;										// la puissance de l'arme
+		int strength = otherStats.baseStats.strength;		// la force de celui qui nous attaque
+		int defense = stats.baseStats.defense;				// notre défense
+
+		dice = Random.Range(0, weapon);
+		int damages = (strength / 2) + dice;
+		int absorption = defense/2;
 		int k = critical ? 2 : 1;
 
 		int result = k * Mathf.Max(0, damages - absorption);
