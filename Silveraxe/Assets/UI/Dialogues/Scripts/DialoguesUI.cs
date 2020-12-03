@@ -73,7 +73,8 @@ public class DialoguesUI : UIBase
 	public override void Toggle() {}
 
 	public void Show() {
-		StartCoroutine(IShow());
+		if (SceneModeManager.sceneMode == SceneMode.dialogue)
+			StartCoroutine(IShow());
 	}
 	IEnumerator IShow() {
 		var cm = Camera.main.GetComponent<CinemachineBrain>();
