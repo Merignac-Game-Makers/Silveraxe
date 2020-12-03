@@ -9,13 +9,13 @@ public class CharacterData : MonoBehaviour // HighlightableObject
 {
 	public string CharacterName;
 
-	public StatSystem Stats;
+	public StatSystem stats;
 	/// <summary>
 	/// The starting weapon equipped when the Character is created. Set through the Unity Editor.
 	/// </summary>
 	//public Weapon StartingWeapon;
-	public InventoryManager Inventory = new InventoryManager();
-	//public EquipmentSystem Equipment = new EquipmentSystem();
+	public InventoryManager inventory = new InventoryManager();
+	public EquipmentManager equipment = new EquipmentManager();
 
 	public AudioClip[] HitClip;
 
@@ -37,9 +37,9 @@ public class CharacterData : MonoBehaviour // HighlightableObject
 
 
 	public void Init() {
-		Stats.Init(this);
-		Inventory.Init(this);
-		//Equipment.Init(this);
+		stats.Init(this);
+		inventory.Init(this, 6);
+		equipment.Init(this);
 	}
 
 

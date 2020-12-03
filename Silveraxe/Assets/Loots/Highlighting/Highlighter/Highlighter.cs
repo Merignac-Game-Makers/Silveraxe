@@ -11,9 +11,9 @@ public class Highlighter : MonoBehaviour
     void Start()
     {
         m_renderer = transform.parent.GetComponentInChildren<MeshRenderer>();
-		if (m_renderer) {
-			m_renderer.material = new Material(m_renderer.material);  // duplication du material pour ne pas changer tous les objets simultanément
-		}
+		//if (m_renderer) {
+		//	m_renderer.material = new Material(m_renderer.material);  // duplication du material pour ne pas changer tous les objets simultanément
+		//}
 
 		light = GetComponentInChildren<Light>();
 

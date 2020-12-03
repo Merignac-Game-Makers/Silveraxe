@@ -74,8 +74,6 @@ public class DialoguesUI : UIBase
 
 	public void Show() {
 		StartCoroutine(IShow());
-		container_NPC.transform.position = Camera.main.WorldToScreenPoint(pnj.transform.position);
-		container_PLAYER.transform.position = Camera.main.WorldToScreenPoint(playerManager.transform.position);
 	}
 	IEnumerator IShow() {
 		var cm = Camera.main.GetComponent<CinemachineBrain>();
@@ -83,6 +81,8 @@ public class DialoguesUI : UIBase
 			yield return new WaitForEndOfFrame();
 		panel.SetActive(true);
 		uiManager.ManageButtons(dialog);
+		container_NPC.transform.position = Camera.main.WorldToScreenPoint(pnj.transform.position);
+		container_PLAYER.transform.position = Camera.main.WorldToScreenPoint(playerManager.transform.position);
 
 	}
 	public void Hide() {
