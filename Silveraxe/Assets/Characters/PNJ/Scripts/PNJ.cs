@@ -26,7 +26,8 @@ public class PNJ : Character
 
 
 	public override bool IsInteractable() {
-		if (!isInPlayerCollider || !playerManager.isAlive) return false;
+		if (!playerManager.isAlive) return false;
+		if (!isClosest) return false;
 		switch (SceneModeManager.sceneMode) {
 			case SceneMode.normal:
 				if (alignment == Alignment.ennemy)
@@ -58,16 +59,13 @@ public class PNJ : Character
 
 	void Update() {
 		// bouton d'action
-		if (Input.GetButtonDown("Fire1")) {
-			if (!interactableObjectsManager.MultipleSelection() || isMouseOver) {
-				Act();
-			}
+		if (Input.GetButtonDown("Fire1") && !uiManager.isClicOnUI) {
+			Act();
 		}
 	}
 
-
 	public override void Act() {
-		if (isOn && IsInteractable() && !uiManager.isClicOnUI) {
+		if (isOn && IsInteractable()) {
 			switch (alignment) {
 				case Alignment.friend:
 					Talk();

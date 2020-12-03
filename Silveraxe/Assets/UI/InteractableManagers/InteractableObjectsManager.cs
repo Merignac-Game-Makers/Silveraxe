@@ -24,26 +24,36 @@ public class InteractableObjectsManager : MonoBehaviour
 	void Start() {
 	}
 
-	public bool MultipleSelection() {
-		bool found = false;
-		foreach (InteractableObject obj in objects) {
-			if (obj.isOn) { //.IsSelected()
-				if (found)
-					return true;
-				found = true;
-			}
-		}
-		return false;
-	}
-
-	//public void showActionSprites(bool on) {
+	//public bool MultipleSelection() {
+	//	bool found = false;
 	//	foreach (InteractableObject obj in objects) {
-	//		if (obj.isOn && obj.actionSprite != null) {
-	//			obj.actionSprite.enabled = on;
-	//			//obj.mutedActionSprite = !on;
+	//		if (obj.isOn) { //.IsSelected()
+	//			if (found)
+	//				return true;
+	//			found = true;
 	//		}
 	//	}
+	//	return false;
 	//}
+
+	float dist;
+	float d;
+	InteractableObject closest;
+	public InteractableObject Closest() {
+		dist = 999999;
+		closest = null;
+		foreach (InteractableObject obj in objects) {
+			if (!obj.isInPlayerCollider)
+				continue;
+			d = (obj.transform.position - playerManager.transform.position).sqrMagnitude;
+			if (d < dist) {
+				closest = obj;
+				dist = d;
+			}
+		}
+		return closest;
+	}
+
 
 	public void SelectAll(bool on) {
 		foreach (InteractableObject obj in objects) {

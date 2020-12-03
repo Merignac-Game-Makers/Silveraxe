@@ -40,19 +40,6 @@ public abstract class Character : InteractableObject
 		// pour les déplacements
 		navAgent = GetComponentInChildren<NavMeshAgent>();                     // préparation de la navigation
 
-		// pour les dialogues
-		//portraitCamera = GetComponentInChildren<Camera>(true);
-		//GetPortraitTarget();
-		//if (portraitCameraTarget) {
-		//	var pLookAt = portraitCamera.GetComponent<LookAtConstraint>();
-		//	var aim = new ConstraintSource() { sourceTransform = portraitCameraTarget, weight = 1 };
-		//	if (pLookAt.sourceCount == 0) {
-		//		pLookAt.AddSource(aim);
-		//	} else {
-		//		pLookAt.SetSource(0, aim);
-		//	}
-		//}
-
 		// pour les animations
 		animatorController = GetComponentInChildren<NavAnimController>();
 		lookAt = GetComponent<LookAtConstraint>();
@@ -70,14 +57,6 @@ public abstract class Character : InteractableObject
 
 	}
 
-	void GetPortraitTarget() {
-		foreach (string name in targetNames) {
-			portraitCameraTarget = transform.FindDeepChild(name);
-			if (portraitCameraTarget)
-				break;
-		}
-	}
-
 	public abstract void Act();
 
 	public void FaceTo(bool on, GameObject other = null) {
@@ -93,10 +72,4 @@ public abstract class Character : InteractableObject
 		Vector3 pos = other.transform.position - dir * (dist / dir.magnitude);
 		return pos;
 	}
-
-	//public void SendFightController(Action<FightController> action) {
-	//	foreach (FightController fightController in fightControllers) {
-	//		action(fightController);
-	//	}
-	//}
 }

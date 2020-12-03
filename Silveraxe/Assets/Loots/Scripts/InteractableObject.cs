@@ -23,11 +23,10 @@ public abstract class InteractableObject : HighlightableObject
 	public Mode mode;                                       // le mode d'intéraction de cet objet
 
 	public virtual bool IsInteractable() {                  // l'objet est-il actif pour l'intéraction ?
-		return IsHighlightable() && isInPlayerCollider;
+		return IsHighlightable() && isClosest;
 	}
 
-	[HideInInspector]
-	public bool Clicked;                                    // flag clic sur l'objet ?
+	public bool isClosest => this == App.interactableObjectsManager.Closest();
 
 	public Image actionSprite { get; protected set; }
 	public bool selectionMuted { get; set; }  = false;
@@ -63,8 +62,10 @@ public abstract class InteractableObject : HighlightableObject
 
 
 	public override bool Highlight(bool on) {
-		if (actionSprite && IsInteractable())
-			actionSprite.enabled = on && SceneModeManager.sceneMode == SceneMode.normal;
+		//if (actionSprite && IsInteractable())
+		//	actionSprite.enabled = on && SceneModeManager.sceneMode == SceneMode.normal;
+		if (actionSprite)
+			actionSprite.enabled = on && IsInteractable() && SceneModeManager.sceneMode == SceneMode.normal;
 		return base.Highlight(on);
 	}
 

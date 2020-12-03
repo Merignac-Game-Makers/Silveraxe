@@ -52,23 +52,33 @@ public class PlayerManager : Character
 			interactable = other.gameObject.GetComponent<InteractableObject>();
 			if (interactable != null) {							// si l'objet rencontré est un 'intéractible'
 				interactable.isInPlayerCollider = true;
-				if (interactable.IsInteractable()) {			//		si son statut est 'actif'
+				//if (interactable.IsInteractable()) {			//		si son statut est 'actif'
 					interactable.Highlight(true);				//			montrer le sprite d'action
-				}
+				//}
 			}
 		}
+	}
+
+	public void OnTriggerStay(Collider other) {
+		if (other.gameObject != gameObject) {
+			interactable = other.gameObject.GetComponent<InteractableObject>();
+			if (interactable != null) {							// si l'objet rencontré est un 'intéractible'
+				interactable.isInPlayerCollider = true;
+				interactable.Highlight(true);               //			montrer le sprite d'action
+			}
+		}	
 	}
 
 	public void OnTriggerExit(Collider other) {
 		if (other.gameObject != gameObject) {
 			interactable = other.gameObject.GetComponent<InteractableObject>();
-			if (interactable != null) {                 // si l'objet rencontré est un 'intéractible'
-				interactable.Highlight(false);
+			if (interactable != null) {												// si l'objet rencontré est un 'intéractible'
+				interactable.Highlight(false);										// éteindre l'objet
 				interactable.isInPlayerCollider = false;
 			}
-			var character = other.GetComponent<Character>();
-			if (character && character.isInFightMode) {
-				SceneModeManager.SetSceneMode(SceneMode.fight, false, character);
+			var character = other.GetComponent<Character>();						// si c'est un PNJ
+			if (character && character.isInFightMode) {								// en mode combat
+				SceneModeManager.SetSceneMode(SceneMode.fight, false, character);	// repasser la scène en mode normal (on a pris la fuite)
 			}
 		}
 	}

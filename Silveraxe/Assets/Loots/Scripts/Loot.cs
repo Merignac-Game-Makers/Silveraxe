@@ -29,10 +29,11 @@ public class Loot : InteractableObject
 	public List<UsageEffect> UsageEffects;
 
 
-	public Entry entry { get; set; } = null;                             // L'entrée d'inventaire lorsque l'objet a été ramassé
+	public Entry entry { get; set; } = null;										// L'entrée d'inventaire lorsque l'objet a été ramassé
 
-	public override bool IsInteractable() {                         // l'objet est intéractif si
-		return (!animate || m_AnimationTimer >= AnimationTime && isInPlayerCollider);       // l'animation de mise en place est terminée ou désactivée et le joueur est proche     && IsPlayerNear(5f)
+	public override bool IsInteractable() {                                         // l'objet est intéractif si
+		if (animate && m_AnimationTimer < AnimationTime) return false;				// l'animation de mise en place est terminée
+		return base.IsInteractable();												//  
 	}
 
 	protected Vector3 m_OriginalPosition;
@@ -69,9 +70,8 @@ public class Loot : InteractableObject
 		}
 
 		// bouton d'action
-		if (!IsPointerOverUIElement() && Input.GetButtonDown("Fire1")) {
-			if (!interactableObjectsManager.MultipleSelection() || isMouseOver)
-				Act();
+		if (Input.GetButtonDown("Fire1") && !uiManager.isClicOnUI) {
+			Act();
 
 		}
 	}

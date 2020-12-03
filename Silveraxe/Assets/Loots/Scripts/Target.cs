@@ -30,11 +30,6 @@ public class Target : InteractableObject
 		if (!isHighlightable) return false;
 		if (inventoryUI.selectedEntry == null) return false;                                                        // un objet d'inventaire doit être sélectionné	
 		if (!CompatibleWith(inventoryUI.selectedEntry.loot)) return false;                                          // l'objet sélectionné doit être compatible
-
-		//var selectedItem = inventoryUI.selectedEntry.item;
-		//if (!selectedItem.dropable) return false;																	// l'objet sélectionné doit être déposable
-		//if (filterMode == FilterMode.allow && !filterItems.Contains(selectedItem.lootCategory)) return false;		// si on est en mode 'autorise' => il doit être autorisé sur cette cible
-		//if (filterMode == FilterMode.refuse && filterItems.Contains(selectedItem.lootCategory)) return false;		// si on est en mode 'refuse'   => il ne doit pas être interdit sur cette cible
 		return base.IsInteractable();
 	}
 
@@ -64,9 +59,9 @@ public class Target : InteractableObject
 
 	private void Update() {
 		if (!IsPointerOverUIElement() && Input.GetButtonDown("Fire1")) {
-			if (!interactableObjectsManager.MultipleSelection() || isMouseOver) {
+			//if (!interactableObjectsManager.MultipleSelection() || isMouseOver) {
 				Act();
-			}
+			//}
 		}
 	}
 
