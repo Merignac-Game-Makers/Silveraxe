@@ -22,7 +22,7 @@ public static class SceneModeManager
 				// scène
 				if (on && sceneMode == SceneMode.normal) {
 					playerManager.navAgent.SetDestination(playerManager.ActPosition(other), () => {
-						cameraController.SetCamera(cameraController.vCamDialogue);          // activer la caméra 'dialogue'
+						cameraController.SetCamera(cameraController.vCamLateral);			// activer la caméra latérale
 						interactableObjectsManager.SelectAll(false);                        // désélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
 
 						// player
@@ -53,6 +53,7 @@ public static class SceneModeManager
 			case SceneMode.fight:
 				if (on && sceneMode == SceneMode.normal) {
 					playerManager.navAgent.SetDestination(playerManager.ActPosition(other), () => {
+						cameraController.SetCamera(cameraController.vCamLateral);           // activer la caméra latérale
 						interactableObjectsManager.SelectAll(false);                        // masquer tous les actionsSprites pendant le combat
 
 						// player
