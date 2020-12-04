@@ -10,10 +10,12 @@ using static App;
 ///		- le nombre d'exemplaires détenu
 ///		- la référence à l'interface utilisateur associé
 /// </summary>
+[System.Serializable]
 public class InventoryEntry : Entry
 {
 	public Loot item;
 	public int count = 1;
+	[System.NonSerialized]
 	public new ItemEntryUI ui;
 
 	public InventoryEntry(Loot item) {
@@ -23,6 +25,12 @@ public class InventoryEntry : Entry
 	public void ChangeQuantity(int amount) {
 		count += amount;
 		ui.UpdateEntry();
+	}
+
+	public void Clear() {
+		count = 0;
+		item = null;
+		ui = null;
 	}
 }
 

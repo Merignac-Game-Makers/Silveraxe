@@ -16,9 +16,12 @@ using UnityEngine.Animations;
 /// </summary>
 public abstract class InteractableObject : HighlightableObject
 {
+
+	public System.Guid guid { get; set; }
+
 	public enum Action { take, drop, talk }
 
-	public enum Mode { onClick, onTheFly, onTheFlyOnce }	// modes d'intéraction possibles
+	public enum Mode { onClick, onTheFly, onTheFlyOnce }    // modes d'intéraction possibles
 
 	public Mode mode;                                       // le mode d'intéraction de cet objet
 
@@ -26,28 +29,32 @@ public abstract class InteractableObject : HighlightableObject
 		return IsHighlightable() && isClosest;
 	}
 
-	public bool isClosest => this == App.interactableObjectsManager.Closest();
+	public bool isClosest => this == App.interactableObjectsManager.closest;
 
 	public Image actionSprite { get; protected set; }
-	public bool selectionMuted { get; set; }  = false;
+	public bool selectionMuted { get; set; } = false;
 	float timer;
 
 
 	protected override void Start() {
 		base.Start();
+
+		guid = GetComponent<GuidComponent>().GetGuid();
+
 		// ajouter des MeshColliders si nécessaire
 		var meshes = GetComponentsInChildren<MeshFilter>();
 		foreach (MeshFilter m in meshes) {
-			if (m.GetComponent<MeshCollider>()==null)
+			if (m.GetComponent<MeshCollider>() == null)
 				m.gameObject.AddComponent<MeshCollider>();
 
 		}
+
 		// lier le sprite
 		actionSprite = GetComponentInChildren<Image>();
 		if (actionSprite) {
 			actionSprite.enabled = false;
 			var lookAt = actionSprite.GetComponent<LookAtConstraint>();
-			var aim = new ConstraintSource() { sourceTransform = Camera.main.transform, weight = 1};
+			var aim = new ConstraintSource() { sourceTransform = Camera.main.transform, weight = 1 };
 			if (lookAt.sourceCount == 0) {
 				lookAt.AddSource(aim);
 			} else {
@@ -57,13 +64,7 @@ public abstract class InteractableObject : HighlightableObject
 
 	}
 
-	//public virtual void OnTriggerEnter(Collider other) { }
-	//public virtual void OnTriggerExit(Collider other) { }
-
-
 	public override bool Highlight(bool on) {
-		//if (actionSprite && IsInteractable())
-		//	actionSprite.enabled = on && SceneModeManager.sceneMode == SceneMode.normal;
 		if (actionSprite)
 			actionSprite.enabled = on && IsInteractable() && SceneModeManager.sceneMode == SceneMode.normal;
 		return base.Highlight(on);
@@ -81,4 +82,23 @@ public abstract class InteractableObject : HighlightableObject
 
 
 
+
+
+	public virtual void Deserialize(object serialized) {
+		if (serialized is SInteractable) {
+			SInteractable s = serialized as SInteractable;
+			transform.position = s.position.toVector();                     // position
+			transform.rotation = s.rotation.toQuaternion();                 // rotation
+		}
+	}
+
+}
+
+
+[Serializable]
+public abstract class SInteractable
+{
+	public byte[] guid;
+	public float[] position;
+	public float[] rotation;
 }

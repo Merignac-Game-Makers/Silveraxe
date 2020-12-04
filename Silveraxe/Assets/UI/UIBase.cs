@@ -11,9 +11,11 @@ public abstract class UIBase : MonoBehaviour
 	public virtual bool isOn => (panel==null && gameObject.activeInHierarchy) || panel.activeInHierarchy;
 
 
-	public abstract void Toggle();
+	public virtual void Toggle() {
+		panel.SetActive(!panel.activeInHierarchy);
+	}
 
-	public void Show(bool on) {
+	public virtual void Show(bool on) {
 		panel.SetActive(on);
 	}
 }

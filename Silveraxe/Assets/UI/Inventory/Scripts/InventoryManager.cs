@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 using static App;
@@ -8,6 +9,7 @@ using static App;
 /// TYPE of object, but those can be stacked without limit (e.g. 1 slot used by health potions, but contains 20
 /// health potions)
 /// </summary>
+[Serializable]
 public class InventoryManager
 {
 
@@ -17,10 +19,10 @@ public class InventoryManager
 	public List<InventoryEntry> entries = new List<InventoryEntry>();
 
 
-	CharacterData owner;
+	//CharacterData owner;
 
 	public void Init(CharacterData owner, int capacity) {
-		this.owner = owner;
+		//this.owner = owner;
 		numSlots = capacity;
 	}
 

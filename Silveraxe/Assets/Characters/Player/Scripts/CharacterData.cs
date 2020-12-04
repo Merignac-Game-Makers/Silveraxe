@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 
 /// <summary>
 /// This defines a character in the game. The name Character is used in a loose sense, it just means something that
 /// can be attacked and have some stats including health. It could also be an inanimate object like a breakable box.
 /// </summary>
+[Serializable]
 public class CharacterData : MonoBehaviour // HighlightableObject
 {
 	public string CharacterName;
@@ -18,6 +20,24 @@ public class CharacterData : MonoBehaviour // HighlightableObject
 	public EquipmentManager equipment = new EquipmentManager();
 
 	public AudioClip[] HitClip;
+
+
+	public void Init() {
+		stats.Init(this);
+		inventory.Init(this, 6);
+		equipment.Init(this);
+	}
+
+
+
+
+
+
+
+
+
+	// TODO: voir la fusion de la suite avec FightController
+
 
 	/// <summary>
 	/// Callback for when that CharacterData receive damage. E.g. used by the player character to trigger the right
@@ -34,13 +54,6 @@ public class CharacterData : MonoBehaviour // HighlightableObject
 	//}
 
 	//float m_AttackCoolDown;
-
-
-	public void Init() {
-		stats.Init(this);
-		inventory.Init(this, 6);
-		equipment.Init(this);
-	}
 
 
 	/// <summary>
@@ -75,13 +88,6 @@ public class CharacterData : MonoBehaviour // HighlightableObject
 
 	//    return true;
 	//}
-
-	/// <summary>
-	/// Call when the character die (health reach 0).
-	/// </summary>
-	public void Death() {
-		//Stats.Death();
-	}
 
 	/// <summary>
 	/// Attack the given target. NOTE : this WON'T check if the target CAN be attacked, you should make sure before

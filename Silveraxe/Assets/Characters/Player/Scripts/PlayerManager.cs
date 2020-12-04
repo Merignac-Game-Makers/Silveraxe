@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -62,11 +63,11 @@ public class PlayerManager : Character
 	public void OnTriggerStay(Collider other) {
 		if (other.gameObject != gameObject) {
 			interactable = other.gameObject.GetComponent<InteractableObject>();
-			if (interactable != null) {							// si l'objet rencontré est un 'intéractible'
+			if (interactable != null) {                         // si l'objet rencontré est un 'intéractible'
 				interactable.isInPlayerCollider = true;
 				interactable.Highlight(true);               //			montrer le sprite d'action
 			}
-		}	
+		}
 	}
 
 	public void OnTriggerExit(Collider other) {

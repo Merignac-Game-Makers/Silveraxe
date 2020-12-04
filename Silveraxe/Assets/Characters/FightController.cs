@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using static App;
+
 public abstract class FightController : MonoBehaviour
 {
 	[Header("Audio")]
@@ -14,12 +16,11 @@ public abstract class FightController : MonoBehaviour
 	public AudioClip[] victory;
 
 
-
-	const string Attack = "Attack";
-	const string Block = "Block";
-	const string Hit = "Hit";
-	const string Dead = "Die";
-	const string Victory = "Victory";
+	const string ATTACK = "Attack";
+	const string BLOCK = "Block";
+	const string HIT = "Hit";
+	const string DIE = "Die";
+	const string VICTORY = "Victory";
 
 	protected NavAnimController animatorController;
 	protected StatSystem stats;
@@ -27,12 +28,11 @@ public abstract class FightController : MonoBehaviour
 	protected Character _this;
 	public Character other { get; private set; }
 
-	protected string Fight => SceneModeManager.Fight;
 	public bool isAlive => stats.CurrentHealth > 0;
 
 	bool blocked = false;
 	public bool critical { get; set; } = false;
-	public bool isInFightMode => animatorController?.anim?.GetBool(SceneModeManager.Fight) ?? false;
+	public bool isInFightMode => animatorController?.anim?.GetBool(FIGHT) ?? false;
 
 	int dice;
 
@@ -55,7 +55,7 @@ public abstract class FightController : MonoBehaviour
 	public virtual void Fight_Attack() {
 		if (other.fightController.isAlive) {
 			blocked = !CalculAttack();						// Le coup touche-t-il ? est-il critique ?
-			animatorController.anim.SetTrigger(Attack);     // animation "attaque"
+			animatorController.anim.SetTrigger(ATTACK);     // animation "attaque"
 			PlaySound(attack);                              // son "attaque"
 		}
 	}
@@ -66,8 +66,7 @@ public abstract class FightController : MonoBehaviour
 	}
 	/// Parer une attaque
 	public virtual void Fight_Block() {
-		//animatorController.SendAnims((Animator anim) => { anim.SetTrigger(Block); });
-		animatorController.anim.SetTrigger(Block);
+		animatorController.anim.SetTrigger(BLOCK);
 		PlaySound(block);
 	}
 
@@ -82,8 +81,7 @@ public abstract class FightController : MonoBehaviour
 		if (stats.CurrentHealth <= 0) {                     //		si plus de vie
 			Die();                                          //			on est mort		
 		} else {                                            //		sinon
-			//animatorController.SendAnims((Animator anim) => { anim.SetTrigger(Hit); });
-			animatorController?.anim?.SetTrigger(Hit);		//			animation "prendre un coup"
+			animatorController?.anim?.SetTrigger(HIT);		//			animation "prendre un coup"
 			PlaySound(hit);                                 //			son "prendre un coup"
 		}
 	}
@@ -100,14 +98,12 @@ public abstract class FightController : MonoBehaviour
 	}
 
 	void Die() {                                                    // en cas de décès
-		//animatorController.SendAnims((Animator anim) => { anim.SetTrigger(Dead); });
-		animatorController?.anim?.SetTrigger(Dead);                 // animation "mort"
+		animatorController?.anim?.SetTrigger(DIE);                 // animation "mort"
 		PlaySound(die);                                             // son "mort"
 	}
 
 	public void OtherWin() {
-		//other.animatorController.SendAnims((Animator anim) => { anim.SetTrigger(Victory); });
-		other.animatorController?.anim?.SetTrigger(Victory);
+		other.animatorController?.anim?.SetTrigger(VICTORY);
 		other.fightController.PlaySound(other.fightController.victory);
 	}
 
@@ -144,20 +140,20 @@ public abstract class FightController : MonoBehaviour
 
 	public void PlaySound(string sound) {
 		switch (sound) {
-			case Attack:
+			case ATTACK:
 				PlaySound(attack);
 				break;
-			case Block:
+			case BLOCK:
 				if (blocked)
 					other.fightController.PlaySound(block);
 				break;
-			case Hit:
+			case HIT:
 				PlaySound(hit);
 				break;
-			case Dead:
+			case DIE:
 				PlaySound(die);
 				break;
-			case Victory:
+			case VICTORY:
 				PlaySound(victory);
 				break;
 		}

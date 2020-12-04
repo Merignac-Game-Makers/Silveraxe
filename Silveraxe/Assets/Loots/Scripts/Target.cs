@@ -7,7 +7,7 @@ using static App;
 /// <summary>
 /// Objet intéractible sur lequel on peut déposer un objet d'inventaire (loot)
 /// </summary>
-public class Target : InteractableObject
+public class Target : InteractableObject, ISave
 {
 	public enum FilterMode { allow, refuse }
 
@@ -60,7 +60,7 @@ public class Target : InteractableObject
 	private void Update() {
 		if (!IsPointerOverUIElement() && Input.GetButtonDown("Fire1")) {
 			//if (!interactableObjectsManager.MultipleSelection() || isMouseOver) {
-				Act();
+			Act();
 			//}
 		}
 	}
@@ -73,4 +73,33 @@ public class Target : InteractableObject
 			item.Drop(this);
 		}
 	}
+
+
+	#region sauvegarde
+	public void Serialize(List<object> sav) {
+		sav.Add(new STarget() {
+			guid = guid.ToByteArray(),
+			position = transform.position.toArray(),                // position
+			rotation = transform.rotation.toArray(),                 // rotation
+			target_ItemGuid = guid.ToByteArray()
+		});
+	}
+
+	public override void Deserialize(object serialized) {
+		base.Deserialize(serialized);
+		if (serialized is STarget) {
+			STarget s = serialized as STarget;
+			item = Game.current.allGuidComponents[new System.Guid(s.target_ItemGuid)]?.GetComponent<Loot>();
+		}
+	}
+	#endregion
+}
+
+/// <summary>
+/// Classe pour la sauvegarde
+/// </summary>
+[System.Serializable]
+public class STarget : SInteractable
+{
+	public byte[] target_ItemGuid = System.Guid.Empty.ToByteArray();
 }

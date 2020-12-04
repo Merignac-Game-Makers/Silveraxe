@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations;
 
 using static App;
 
-public abstract class Character : InteractableObject
+public abstract class Character : InteractableObject, ISave
 {
 
 	// CharacterData
@@ -23,15 +21,9 @@ public abstract class Character : InteractableObject
 	public NavAnimController animatorController { get; set; }
 	LookAtConstraint lookAt;
 
-	// pour les dialogues
-	Camera portraitCamera;
-	public Transform portraitCameraTarget { get; set; }
-	string[] targetNames = new string[] { "head" };
-
 	// pour les combats
 	public bool isInFightMode => fightController?.isInFightMode ?? false;
 	public FightController fightController { get; set; }
-	FightController[] fightControllers;
 	public bool isAlive => fightController.isAlive;
 
 	protected override void Start() {
@@ -50,7 +42,6 @@ public abstract class Character : InteractableObject
 		}
 
 		// pour les combats
-		fightControllers = GetComponentsInChildren<FightController>(true);
 		fightController = GetComponentInChildren<FightController>();
 		characterData = GetComponent<CharacterData>();              // caractéristiques du joueur
 		characterData.Init();                                       // ... initialisation
@@ -72,4 +63,47 @@ public abstract class Character : InteractableObject
 		Vector3 pos = other.transform.position - dir * (dist / dir.magnitude);
 		return pos;
 	}
+
+
+
+	#region sauvegarde
+	public SCharacter serialized;
+	public void Serialize(List<object> sav) {
+		sav.Add(new SCharacter() {
+			guid = guid.ToByteArray(),
+			position = transform.position.toArray(),                // position
+			rotation = transform.rotation.toArray(),                 // rotation
+			stats = characterData.stats.baseStats,                        // statistiques
+			inventory = new InventoryData(characterData.inventory),       // inventaire
+			equipment = new EquipmentData(characterData.equipment),       // équipement
+			navAgentDestination = navAgent ? navAgent.destination.toArray() : null
+		}); ;
+	}
+
+	public override void Deserialize(object serialized) {
+		base.Deserialize(serialized);
+		if (serialized is SCharacter) {
+			SCharacter s = serialized as SCharacter;
+			characterData.stats.baseStats.Copy(s.stats);                        // statistiques
+			s.inventory.CopyTo(characterData.inventory);                        // inventaire
+			s.equipment.CopyTo(characterData.equipment);                        // équipement
+			if (navAgent)
+				navAgent.destination = s.navAgentDestination.toVector();
+		}
+
+	}
+	#endregion
+}
+
+
+/// <summary>
+/// Classe pour la sauvegarde
+/// </summary>
+[System.Serializable]
+public class SCharacter : SInteractable
+{
+	public StatSystem.Stats stats;
+	public InventoryData inventory;
+	public EquipmentData equipment;
+	public float[] navAgentDestination;
 }

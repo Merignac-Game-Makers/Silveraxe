@@ -26,6 +26,13 @@ public static class App {
 	public static EquipmentUI equipmentUI;
 	public static StatsUI statsUI;
 
+
+	//--------------------
+	// strings
+	public const string DIALOGUE = "Dialogue";
+	public const string FIGHT = "Fight";
+
+
 	//--------------------
 	// Texture <=> fichier
 	/// SAVE TEXTURE
@@ -103,4 +110,19 @@ public static class App {
 		}
 	}
 
+	// Extension pour permettre la sérialisation / désérialisation de Vector3
+	public static float[] toArray(this Vector3 vector) {
+		return new float[] { vector.x, vector.y, vector.z };
+	}
+	public static Vector3 toVector(this float[] array) {
+		return new Vector3(array[0], array[1], array[2]);
+	}
+
+	// Extension pour permettre la sérialisation / désérialisation de Quaternion
+	public static float[] toArray(this Quaternion quaternion) {
+		return new float[] { quaternion.x, quaternion.y, quaternion.z, quaternion.w };
+	}
+	public static Quaternion toQuaternion(this float[] array) {
+		return new Quaternion(array[0], array[1], array[2], array[3]);
+	}
 }

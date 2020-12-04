@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour
 	public State state { get; private set; }    // l'état actuel de l'UI
 	private State prevState;                    // l'état précédent de l'UI
 
-	public QuitUI quitUi;                       // interface Quit	
+	public MenuUI menuUI;								// interface Menu principal	
 
 	public int defaultCursorSize = 64;
 
@@ -27,6 +27,10 @@ public class UIManager : MonoBehaviour
 
 	void Awake() {
 		uiManager = this;
+	}
+
+	private void Start() {
+		menuUI.Show(true);
 	}
 
 	private void Update() {
@@ -40,7 +44,7 @@ public class UIManager : MonoBehaviour
 
 	public void ShowQuitUi() {
 		ManageButtons(State.quit);
-		quitUi.Show(true);
+		menuUI.Toggle();
 	}
 
 	/// <summary>
