@@ -86,7 +86,8 @@ public abstract class Character : InteractableObject, ISave
 			SCharacter s = serialized as SCharacter;
 			characterData.stats.baseStats.Copy(s.stats);                        // statistiques
 			s.inventory.CopyTo(characterData.inventory);                        // inventaire
-			s.equipment.CopyTo(characterData.equipment);                        // équipement
+			if (s.equipment!=null)
+				s.equipment.CopyTo(characterData.equipment);					// équipement
 			if (navAgent)
 				navAgent.destination = s.navAgentDestination.toVector();
 		}

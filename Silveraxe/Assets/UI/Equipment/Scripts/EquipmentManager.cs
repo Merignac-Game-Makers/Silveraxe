@@ -75,7 +75,12 @@ public class EquipmentManager
 		}
 	}
 
-
+	public void Clear() {
+		for (int i=0; i<entries.Length; i++) {
+			entries[i].item = null;
+			equipmentUI.entries[i].Show(false);
+		}
+	}
 
 	/// <summary>
 	/// This will *try* to use the item. If the item return true when used, this will decrement the stack count and
