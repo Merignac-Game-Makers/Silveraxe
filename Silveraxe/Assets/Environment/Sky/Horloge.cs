@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Horloge : MonoBehaviour
 {
+    public float daySpeed = 1f;
+
     public Animator skyAnimator;
     public Transform horloge;
 
@@ -17,6 +19,8 @@ public class Horloge : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        skyAnimator.speed = daySpeed;
+
         rotation.z = -horlogeValue;
         horloge.rotation = Quaternion.Euler(rotation);
     }
