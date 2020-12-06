@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using TMPro;
 
 public class LightDetector : MonoBehaviour
 {
 
 	public float threshold;
+	public bool debug;
+	public TMP_Text debugText;
+
 	Camera cam;
 	RenderTexture rt;
 	RenderTexture tmp;
@@ -17,7 +21,10 @@ public class LightDetector : MonoBehaviour
 
 	float lightLevel;
 
-	public bool trigger => Trigger();
+
+
+	public bool trigger => lightLevel > threshold;
+	public float value => lightLevel;
 
 	private void Start() {
 		cam = GetComponentInChildren<Camera>();
@@ -40,9 +47,11 @@ public class LightDetector : MonoBehaviour
 			lightLevel += (.2126f * c.r) + (.7152f * c.g) + (.0722f * c.b);
 		}
 		lightLevel /= colors.Length;
-	}
 
-	bool Trigger() {
-		return lightLevel > threshold;
+		if (debug) {
+			debugText.text = lightLevel.ToString();
+		} else {
+			debugText.text = "";
+		}
 	}
 }

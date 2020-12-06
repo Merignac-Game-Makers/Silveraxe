@@ -16,11 +16,11 @@ public abstract class FightController : MonoBehaviour
 	public AudioClip[] victory;
 
 
-	const string ATTACK = "Attack";
-	const string BLOCK = "Block";
-	const string HIT = "Hit";
-	const string DIE = "Die";
-	const string VICTORY = "Victory";
+	protected const string ATTACK = "Attack";
+	protected const string BLOCK = "Block";
+	protected const string HIT = "Hit";
+	protected const string DIE = "Die";
+	protected const string VICTORY = "Victory";
 
 	protected NavAnimController animatorController;
 	protected StatSystem stats;
@@ -97,14 +97,14 @@ public abstract class FightController : MonoBehaviour
 		}
 	}
 
-	void Die() {                                                    // en cas de décès
+	public virtual void Die() {                                                    // en cas de décès
 		animatorController?.anim?.SetTrigger(DIE);                 // animation "mort"
 		PlaySound(die);                                             // son "mort"
 	}
 
 	public void OtherWin() {
-		other.animatorController?.anim?.SetTrigger(VICTORY);
-		other.fightController.PlaySound(other.fightController.victory);
+		other?.animatorController?.anim?.SetTrigger(VICTORY);
+		other?.fightController.PlaySound(other.fightController.victory);
 	}
 
 

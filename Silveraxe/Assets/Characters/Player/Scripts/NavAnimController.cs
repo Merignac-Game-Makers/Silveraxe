@@ -102,7 +102,7 @@ public class NavAnimController : MonoBehaviour
 
 	// Update is called once per frame
 	void Update() {
-		if (movementInput)
+		//if (movementInput)
 			InputMagnitude();
 		//Time.timeScale = timeScale;
 
