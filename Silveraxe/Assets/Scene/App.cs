@@ -97,6 +97,7 @@ public static class App {
 	//----------------------------------------------------------------------------------------------
 	// Extension de NavMesh Agent 'set destination' pour ajouter un callback à la fin du déplacement
 	public static NavMeshAgent SetDestination(this NavMeshAgent navAgent, Vector3 pos, Action callback = null) {
+		playerManager.StopCoroutine("Igoto");
 		playerManager.StartCoroutine(Igoto(navAgent, pos, callback));
 		return navAgent;
 	}

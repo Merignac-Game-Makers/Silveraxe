@@ -34,6 +34,7 @@ public class Horloge : MonoBehaviour
 			daySpeed = float.Parse(speed);
 		}
 		catch (Exception e) {
+			Debug.LogError(e.Message);
 			speedFactor.text = daySpeed.ToString();
 		}
 	}

@@ -41,7 +41,6 @@ public abstract class FightController : MonoBehaviour
 		_this = GetComponentInParent<Character>();
 		animatorController = _this.GetComponentInChildren<NavAnimController>();
 		stats = gameObject.GetComponentInParent<CharacterData>()?.stats;
-
 	}
 
 	public void SetOther(Character o) {

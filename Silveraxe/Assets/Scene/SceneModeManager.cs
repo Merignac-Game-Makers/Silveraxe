@@ -54,13 +54,14 @@ public static class SceneModeManager
 						interactableObjectsManager.SelectAll(false);                        // masquer tous les actionsSprites pendant le combat
 
 						// player
-						//playerManager.SendFightController((FightController fc) => { fc.SetOther(other); });
+						playerManager.StopAgent();
 						playerManager.fightController.SetOther(other);
-						//playerManager.animatorController.SendAnims((Animator anim) => { anim.SetBool(Fight, true); });
 						playerManager.animatorController?.anim?.SetBool(FIGHT, true);       // animation 'Attack'
 						playerManager.FaceTo(on, other.gameObject);                         // orienter le joueur vers le PNJ
 
 						// PNJ
+						other.navAgent.ResetPath();                    // annulation de la navigation en cours
+						other.navAgent.velocity = Vector3.zero;        // vitesse nulle
 						other.fightController.SetOther(playerManager);
 						other.animatorController?.anim?.SetBool(FIGHT, true);				// animation 'fight idle'
 						other.FaceTo(on, playerManager.gameObject);                         // orienter le PNJ vers le joueur 						
