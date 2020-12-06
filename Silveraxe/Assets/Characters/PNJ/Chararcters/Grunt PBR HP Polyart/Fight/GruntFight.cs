@@ -15,7 +15,7 @@ public class GruntFight : FightController
 	}
 
 	private void FixedUpdate() {
-		if (SceneModeManager.sceneMode == SceneMode.fight && isAlive) {
+		if (SceneModeManager.sceneMode == SceneMode.fight && isAlive && App.playerManager.fightController.other == _this) {
 			timer -= Time.fixedDeltaTime;
 			if (timer < 0) {
 				timer = attackRate / 2f * (1 +  Random.value);		// la prochaine attaque dans un délai entre attackRate et attackRate/2
