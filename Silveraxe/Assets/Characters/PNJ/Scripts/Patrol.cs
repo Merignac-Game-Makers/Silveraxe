@@ -15,81 +15,119 @@ public class Patrol : MonoBehaviour
 	public float detectionRange = 5;
 	public float detectionAngle = 60;
 
-	FightController fightController;
-
 	RaycastHit[] hits = new RaycastHit[16];
 	List<RaycastHit> hitsList;
+
+	Character sentinel;
+	GuardMode defMode;
+	float defSpeed;
+
 
 	public enum GuardMode { idle, patrol, attack }
 
 	void Start() {
+		sentinel = GetComponentInParent<Character>();
 		agent = GetComponentInParent<NavMeshAgent>();
-		fightController = GetComponent<FightController>();
 
 		// Disabling auto-braking allows for continuous movement
 		// between points (ie, the agent doesn't slow down as it
 		// approaches a destination point).
 		agent.autoBraking = false;
-		if (guardMode == GuardMode.patrol)
-			GotoNextPoint();
+
+		defMode = guardMode;                    // mémoriser le mode initial
+		defSpeed = agent.speed;                 // mémoriser la vitesse initiale
+												//if (guardMode == GuardMode.patrol)
+												//	GotoNextPoint();
 	}
 
 
 	void GotoNextPoint() {
-		// Returns if no points have been set up
-		if (points.Length == 0)
+
+		if (points.Length == 0)                             // Returns if no points have been set up
 			return;
 
-		// Set the agent to go to the currently selected destination.
-		agent.destination = points[destPoint].position;
-
-		// Choose the next point in the array as the destination,
-		// cycling to the start if necessary.
-		destPoint = (destPoint + 1) % points.Length;
+		agent.destination = points[destPoint].position;     // Set the agent to go to the currently selected destination.
+		destPoint = (destPoint + 1) % points.Length;        // Choose the next point in the array as the destination, cycling to the start if necessary.
 	}
 
 
 	void Update() {
-		// Choose the next destination point when the agent gets
-		// close to the current one.
-		if (guardMode == GuardMode.patrol  && !agent.pathPending && agent.remainingDistance < agent.radius * 2)
-			GotoNextPoint();
 
-		if (playerDetection() && SceneModeManager.sceneMode != SceneMode.fight) {
-			Attack();
+		switch (guardMode) {
+			case GuardMode.idle:                                                        // si la sentinelle est en poste fixe
+				if (playerDetection())                                                      // si la sentinelle voit le joueur
+					Attack();                                                               // attaquer
+				break;
+			case GuardMode.patrol:                                                      // si la sentinelle patrouille
+				if (playerDetection())                                                      // si la sentinelle voit le joueur
+					Attack();                                                               // attaquer
+				else if (!agent.pathPending && agent.remainingDistance < agent.radius * 2)  // sinon, à l'approche d'un point de passage
+					GotoNextPoint();                                                        // aller au point de passage suivant
+				break;
+			case GuardMode.attack:                                                      // si la sentinelle est en combat
+				break;
 		}
+
 	}
 
+	Vector3 playerVector;
+	Vector3 dir;
+	float sqrDistance;
+	Vector3[] corners = new Vector3[8];
+	Vector3 playerPos;
 	bool playerDetection() {
-		// detection
-		// Cast a sphere wrapping character controller 10 meters forward
-		// to see if it is about to hit anything.
-		int hitCount = Physics.SphereCastNonAlloc(head.transform.position, .5f, head.transform.forward, hits, detectionRange);
-		if (hitCount > 1) {
-			RaycastHit[] tmp = new RaycastHit[hitCount - 1];
-			Array.Copy(hits, 1, tmp, 0, hitCount - 1);
-			hitsList = new List<RaycastHit>(tmp);
-			hitsList.Sort(SortByDistance);
-			if (hitsList[0].collider.gameObject == App.playerManager.gameObject) {
-				Vector3 dir = (hitsList[0].point - head.transform.position).normalized;
-				return Vector3.Dot(head.transform.forward, dir) >= Mathf.Cos(detectionAngle * Mathf.Deg2Rad);
+
+		if (SceneModeManager.sceneMode != SceneMode.normal)         // détection seulement en mode 'normal'
+			return false;
+
+		playerPos = App.playerManager.transform.position;
+		playerVector = playerPos - head.transform.position;         // vecteur jusqu'au joueur
+		dir = playerVector.normalized;                                                          // direction du joueur
+		sqrDistance = playerVector.sqrMagnitude;                                                // distance jusqu'au joueur (au carré)
+
+		if (sqrDistance > detectionRange * detectionRange) {                                            // si le joueur est trop loin
+			return false;                                                                               //		=> pas vu
+		} else if (Vector3.Dot(transform.forward, dir) < Mathf.Cos(detectionAngle * Mathf.Deg2Rad)) {   // si le joueur est hors de l'angle de vision							
+			return false;                                                                               //		=> pas vu
+		} else {
+			corners = App.playerManager.GetBounds();	// les coins de la 'bounding box' du joueur
+			foreach (Vector3 corner in corners) {       // pour chaque coin
+				var o = Physics.Raycast(head.transform.position, (corner - head.transform.position).normalized, playerVector.magnitude);
+				if (!o) {			// s'il n'y a pas d'obstacle
+					return true;	// on voit le joueur
+				}
 			}
 			return false;
 		}
-		return false;
+
 	}
 
 	void Attack() {
-		guardMode = GuardMode.attack;
 		agent.speed = 5;
-		agent.SetDestination(App.playerManager.ActPosition(GetComponentInParent<Character>()), () => {
-			SceneModeManager.SetSceneMode(SceneMode.fight, true, GetComponentInParent<Character>());
-		});
+		agent.autoBraking = true;
 
+		guardMode = GuardMode.attack;
+		agent.SetDestination(App.playerManager.ActPosition(sentinel, SceneMode.fight));
+		StopCoroutine(IAttack());		// stopper le callback précédent (ne pas passer en mode combat à la position initiale du joueur s'il s'est déplacé)
+		StartCoroutine(IAttack());		// engager le mode combat quand on a rattrapé le joueur
+
+		IEnumerator IAttack() {
+			while (playerDetection() && (agent.pathPending || agent.remainingDistance > agent.radius))
+				yield return new WaitForEndOfFrame();
+
+			if (sentinel.isInPlayerCollider) {																// si on est proche du joueur
+				SceneModeManager.SetSceneMode(SceneMode.fight, true, GetComponentInParent<Character>());	//		engager le combat
+			} else {																						// si le joueur s'est enfui
+				RestoreInitialMode();																		//		reprendre la patrouille
+			}
+		}
 	}
 
-
-	int SortByDistance(RaycastHit p1, RaycastHit p2) {
-		return p1.distance.CompareTo(p2.distance);
+	public void RestoreInitialMode() {
+		agent.autoBraking = false;
+		agent.speed = defSpeed;
+		guardMode = defMode;
+		agent.destination = points[destPoint].position;
 	}
+
 }

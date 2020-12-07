@@ -26,14 +26,13 @@ public abstract class InteractableObject : HighlightableObject
 	public Mode mode;                                       // le mode d'intéraction de cet objet
 
 	public virtual bool IsInteractable() {                  // l'objet est-il actif pour l'intéraction ?
-		return IsHighlightable() && isClosest;
+		return IsHighlightable() && isInPlayerCollider && isClosest;
 	}
 
 	public bool isClosest => this == App.interactableObjectsManager.closest;
 
 	public Image actionSprite { get; protected set; }
 	public bool selectionMuted { get; set; } = false;
-	float timer;
 
 
 	protected override void Start() {

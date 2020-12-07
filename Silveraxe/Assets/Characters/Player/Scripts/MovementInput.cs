@@ -43,7 +43,7 @@ public class MovementInput : MonoBehaviour
 				fTranslation *= Time.deltaTime;
 				sTranslation *= Time.deltaTime;
 				move = new Vector3(sTranslation, 0, fTranslation);
-				dest = transform.TransformPoint(move);
+				dest = transform.TransformPoint(move.normalized * navAgent.radius);
 				navAgent.updateRotation = fTranslation > .1;
 				navAgent.SetDestination(dest);
 			} else {

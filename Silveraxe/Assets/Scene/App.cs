@@ -9,7 +9,8 @@ using UnityEngine.EventSystems;
 /// <summary>
 /// Objets statiques disponibles dans l'ensemble de l'application
 /// </summary>
-public static class App {
+public static class App
+{
 
 	public static CameraController cameraController;
 
@@ -95,21 +96,23 @@ public static class App {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	// Extension de NavMesh Agent 'set destination' pour ajouter un callback à la fin du déplacement
+	// Extension de NavMesh Agent 'SetDestination' pour ajouter un callback à la fin du déplacement
 	public static NavMeshAgent SetDestination(this NavMeshAgent navAgent, Vector3 pos, Action callback = null) {
-		playerManager.StopCoroutine("Igoto");
-		playerManager.StartCoroutine(Igoto(navAgent, pos, callback));
+		playerManager.StopCoroutine(Igoto());
+		playerManager.StartCoroutine(Igoto());
 		return navAgent;
-	}
-	static IEnumerator Igoto(NavMeshAgent navAgent, Vector3 pos, Action callback) {
-		navAgent.updateRotation = true;
-		navAgent.SetDestination(pos);
-		if (callback != null) {
-			while (navAgent.remainingDistance > navAgent.radius)
-				yield return new WaitForEndOfFrame();
-			callback();
+
+		IEnumerator Igoto() {
+			navAgent.updateRotation = true;
+			navAgent.SetDestination(pos);
+			if (callback != null) {
+				while (navAgent.pathPending || navAgent.remainingDistance > navAgent.radius)
+					yield return new WaitForEndOfFrame();
+				callback();
+			}
 		}
 	}
+
 
 	// Extension pour permettre la sérialisation / désérialisation de Vector3
 	public static float[] toArray(this Vector3 vector) {

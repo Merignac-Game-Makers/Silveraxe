@@ -74,9 +74,11 @@ public class PNJ : Character
 					Talk();
 					break;
 				case Alignment.ennemy:
-					if (!isInFightMode && playerManager.isAlive)
-						SceneModeManager.SetSceneMode(SceneMode.fight, true, this);
-					else {
+					if (!isInFightMode && playerManager.isAlive) {
+						playerManager.navAgent.SetDestination(ActPosition(playerManager, SceneMode.fight), () => {
+							SceneModeManager.SetSceneMode(SceneMode.fight, true, this);
+						});
+					}  else {
 						playerManager.fightController.Fight_Attack();
 					}
 					break;
