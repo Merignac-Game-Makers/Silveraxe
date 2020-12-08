@@ -91,7 +91,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18.25
+  m_fontSize: 17.9
   m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -632,11 +632,11 @@ RectTransform:
   m_Father: {fileID: 7132758585285607060}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 553.46, y: 256.28}
-  m_SizeDelta: {x: 99.08331, y: 20.43518}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -10, y: -60}
+  m_SizeDelta: {x: 100, y: 20}
+  m_Pivot: {x: 1, y: 1}
 --- !u!222 &7132758585187358637
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -998,6 +998,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   daySpeed: 5
   skyAnimator: {fileID: 0}
-  horloge: {fileID: 7132758584707044348}
+  spinner: {fileID: 7132758584707044348}
   speedFactor: {fileID: 7132758585187358639}
   horlogeValue: 0

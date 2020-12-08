@@ -36,8 +36,6 @@ public class InteractableObjectsManager : MonoBehaviour
 		dist = 999999;
 		closest = null;
 		foreach (InteractableObject obj in objects) {
-			//if (!obj.isInPlayerCollider)
-			//	continue;
 			if (!obj.IsHighlightable())
 				continue;
 			d = (obj.transform.position - playerManager.transform.position).sqrMagnitude;

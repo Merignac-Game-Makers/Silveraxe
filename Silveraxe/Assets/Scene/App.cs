@@ -11,11 +11,10 @@ using UnityEngine.EventSystems;
 /// </summary>
 public static class App
 {
-
+	public static SceneLoader sceneLoader;
 	public static CameraController cameraController;
 
 	public static UIManager uiManager;
-	//public static InventoryManager inventoryManager;
 	public static SFXManager sfxManager;
 	public static PlayerManager playerManager;
 	public static MessageManager messageManager;
@@ -26,6 +25,9 @@ public static class App
 	public static InventoryUI inventoryUI;
 	public static EquipmentUI equipmentUI;
 	public static StatsUI statsUI;
+
+	public static Vector3 crossScenePosition;
+	public static bool screneCrossing;
 
 
 	//--------------------

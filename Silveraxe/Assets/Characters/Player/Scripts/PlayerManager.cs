@@ -41,31 +41,13 @@ public class PlayerManager : Character
 
 
 	#region Intéractions
-	/// <summary>
-	/// détection de collision avec les objets intéractibles
-	/// Si l'objet est un intéractible au statut 'actif'
-	///		=> m_TargetInteractable contient l'objet
-	///		=> m_TargetCollider contient son collider
-	/// </summary>
-	/// <param name="other">objet rencontré</param>
-	public void OnTriggerEnter(Collider other) {
-		if (other.gameObject != gameObject) {
-			interactable = other.gameObject.GetComponent<InteractableObject>();
-			if (interactable != null) {							// si l'objet rencontré est un 'intéractible'
-				interactable.isInPlayerCollider = true;
-				//if (interactable.IsInteractable()) {			//		si son statut est 'actif'
-					interactable.Highlight(true);				//			montrer le sprite d'action
-				//}
-			}
-		}
-	}
 
 	public void OnTriggerStay(Collider other) {
 		if (other.gameObject != gameObject) {
 			interactable = other.gameObject.GetComponent<InteractableObject>();
 			if (interactable != null) {                         // si l'objet rencontré est un 'intéractible'
 				interactable.isInPlayerCollider = true;
-				interactable.Highlight(true);               //			montrer le sprite d'action
+				interactable.Highlight(true);					//			montrer le sprite d'action
 			}
 		}
 	}

@@ -6,9 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Plugins/CrossSceneReference/Samples/LoadFirst.unity
-    guid: 6f8ba3c4c3bf19d4999033b50832272b
+    path: Assets/Scenes/NeverUnload.unity
+    guid: a90ce2f1c3321b5488eacd20772e0593
   - enabled: 1
-    path: Assets/Plugins/CrossSceneReference/Samples/LoadSecond.unity
-    guid: 8acfd1b1a375f2049a2dde40d955ce3f
+    path: Assets/Scenes/OutDoor.unity
+    guid: 683594098e2ad684c852d0ea47dd4522
+  - enabled: 1
+    path: Assets/Scenes/Castle.unity
+    guid: f16c3e554073fd648be74ba76ec30b0b
+  - enabled: 1
+    path: Assets/Scenes/PurpleCrystalMine.unity
+    guid: b93b9be5f4de9c94cbf55c288f8746f2
   m_configObjects: {}
