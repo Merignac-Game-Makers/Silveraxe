@@ -15,6 +15,15 @@ public class GruntFight : FightController
 
 	public AudioClip[] petrified;
 
+	private void OnEnable() {
+		if (lightDetector)
+			lightDetector.OnTriggerOn += SunFlashed;
+	}
+	private void OnDisable() {
+		if (lightDetector)
+			lightDetector.OnTriggerOn -= SunFlashed;
+	}
+
 	protected override void Start() {
 		base.Start();
 		timer = attackRate;
@@ -29,21 +38,26 @@ public class GruntFight : FightController
 			}
 		}
 
-		if (isAlive && lightDetector && lightDetector.trigger) {
+		if (isAlive && lightDetector && lightDetector.isOn) {
 			stats.ChangeHealth(-stats.CurrentHealth);
 			CheckLife();
 		}
 	}
 
 	public override void Die() {
-		if (lightDetector.trigger) {
+		if (lightDetector && lightDetector.isOn) {
 			animatorController?.anim?.SetTrigger(DIE);                 // animation "mort"
 			PlaySound(petrified);                                      // son "pétrifié"
 			polyartSkin.SetActive(false);
 			rockSkin.SetActive(true);
+			_this.navAgent.isStopped = true;
 		} else {
 			base.Die();
 		}
+	}
 
+	void SunFlashed() {
+		stats.ChangeHealth(-stats.CurrentHealth);
+		Die();
 	}
 }

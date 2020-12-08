@@ -31,9 +31,11 @@ public class ChangeScene : MonoBehaviour
 	void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) {
 		if (scene.buildIndex != LevelToLoad) {
 			SceneManager.SetActiveScene(scene);
-			App.playerManager.transform.position = App.crossScenePosition;
-			App.playerManager.transform.rotation = Quaternion.identity;
-			//App.playerManager.navAgent.enabled = true;
+			if (App.playerManager) {
+				App.playerManager.transform.position = App.crossScenePosition;
+				App.playerManager.transform.rotation = Quaternion.identity;
+				//App.playerManager.navAgent.enabled = true;
+			}
 
 		}
 	}

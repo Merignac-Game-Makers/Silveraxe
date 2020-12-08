@@ -109,7 +109,7 @@ public static class App
 			navAgent.SetDestination(pos);
 			if (callback != null) {
 				while (navAgent.pathPending || navAgent.remainingDistance > navAgent.radius)
-					yield return new WaitForEndOfFrame();
+					yield return null;
 				callback();
 			}
 		}
