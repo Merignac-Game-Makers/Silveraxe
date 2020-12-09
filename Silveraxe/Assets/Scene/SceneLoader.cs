@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.AI;
 
 public class SceneLoader : MonoBehaviour
 {
+	public NavMeshAgent playerNavMesh;
+
 	bool testing = false;
 
 	public int currentLevelIndex { get; set; } = 0;
@@ -21,10 +24,10 @@ public class SceneLoader : MonoBehaviour
 		if (testing) return;
 		if (!SceneManager.GetSceneByBuildIndex(scene).isLoaded) {
 			App.screneCrossing = true;
-			if (App.playerManager.navAgent)
-				App.playerManager.StopAgent();
-			App.playerManager.navAgent.enabled = false;
-			SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
+            if (playerNavMesh.enabled)
+                App.playerManager.StopAgent();
+            App.playerManager.navAgent.enabled = false;
+			StartCoroutine(LoadAsyncScene(scene));
 			if (currentLevelIndex != 0) {
 				UnloadScene(currentLevelIndex);
 			}
@@ -38,6 +41,19 @@ public class SceneLoader : MonoBehaviour
 			yield return new WaitForEndOfFrame();
 			SceneManager.UnloadSceneAsync(scene);
 		}
+	}
+
+	IEnumerator LoadAsyncScene(int scene)
+    {
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
+
+		// Wait until the asynchronous scene fully loads
+		while (!asyncLoad.isDone)
+		{
+			yield return null;
+		}
+
+		playerNavMesh.enabled = true;
 	}
 
 }

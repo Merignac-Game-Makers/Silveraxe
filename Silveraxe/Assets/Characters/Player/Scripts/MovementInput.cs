@@ -36,14 +36,19 @@ public class MovementInput : MonoBehaviour
 
 		if (!playerManager.isAlive) return;                             // quand on est mort, on ne bouge plus !
 
-		if (screneCrossing) {
-			if (Input.GetAxis("Vertical") == 0 && Input.GetAxis("Horizontal") == 0) {
-				screneCrossing = false;
-				playerManager.navAgent.enabled = true;
-			}
-		}
+        if (screneCrossing)
+        {
+            if (Input.GetAxis("Vertical") == 0 && Input.GetAxis("Horizontal") == 0)
+            {
+                screneCrossing = false;
+            }
+			else
+            {
+				return;
+            }
+        }
 
-		if (!playerManager.navAgent.enabled) return;                    // si le navAgent est désactivé, on ne bouge plus ! (transitions entre les scènees)
+        if (!playerManager.navAgent.enabled) return;                    // si le navAgent est désactivé, on ne bouge plus ! (transitions entre les scènees)
 
 		if (SceneModeManager.sceneMode != SceneMode.dialogue) {         // en mode dialogue on ne bouge pas non plus
 			if ((Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)) {
