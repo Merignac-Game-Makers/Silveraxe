@@ -81,7 +81,7 @@ public class LightDetector : MonoBehaviour
 
 		// infos de débuggage
 		if (debug) {
-			debugText.text = lightLevel.ToString();
+			debugText.text = (lightLevel*100).ToString("0");
 		} else {
 			debugText.text = "";
 		}

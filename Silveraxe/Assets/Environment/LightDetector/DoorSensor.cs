@@ -43,9 +43,18 @@ public class DoorSensor : MonoBehaviour
 
     void OpenDoor() {
         doorOrc.OpenDoor();
-	}
+        //lightDetector.threshold = thresholdToClose;
+    }
     void CloseDoor() {
         doorOrc.CloseDoor();
+        //lightDetector.threshold = thresholdToOpen;
     }
 
+    public void ToggleThreshold() {
+        if (lightDetector.threshold == thresholdToOpen)
+            lightDetector.threshold = thresholdToClose;
+        else
+            lightDetector.threshold = thresholdToOpen;
+
+    }
 }

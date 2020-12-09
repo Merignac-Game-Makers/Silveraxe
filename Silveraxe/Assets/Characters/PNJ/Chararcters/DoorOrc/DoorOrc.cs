@@ -8,7 +8,10 @@ public class DoorOrc : MonoBehaviour
 	public Animator orcAnim;
 	public Animator doorAnim;
 	public Character doorOrc;
+	public DoorSensor sensor;
+
 	NavMeshAgent orcAgent;
+
 
 	private void Start() {
 		orcAgent = doorOrc.GetComponent<NavMeshAgent>();
@@ -36,6 +39,10 @@ public class DoorOrc : MonoBehaviour
 			yield return null;
 		}
 		doorAnim.SetTrigger("Close");
+	}
+
+	public void ToggleDetectorThreshold() {
+		sensor.ToggleThreshold();
 	}
 }
 

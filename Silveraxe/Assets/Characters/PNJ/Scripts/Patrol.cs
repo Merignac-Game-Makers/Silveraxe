@@ -90,11 +90,11 @@ public class Patrol : MonoBehaviour
 		} else if (Vector3.Dot(transform.forward, dir) < Mathf.Cos(detectionAngle * Mathf.Deg2Rad)) {   // si le joueur est hors de l'angle de vision							
 			return false;                                                                               //		=> pas vu
 		} else {
-			corners = App.playerManager.GetBounds();	// les coins de la 'bounding box' du joueur
+			corners = App.playerManager.GetBounds();    // les coins de la 'bounding box' du joueur
 			foreach (Vector3 corner in corners) {       // pour chaque coin
 				var o = Physics.Raycast(head.transform.position, (corner - head.transform.position).normalized, playerVector.magnitude);
-				if (!o) {			// s'il n'y a pas d'obstacle
-					return true;	// on voit le joueur
+				if (!o) {           // s'il n'y a pas d'obstacle
+					return true;    // on voit le joueur
 				}
 			}
 			return false;
@@ -108,26 +108,28 @@ public class Patrol : MonoBehaviour
 
 		guardMode = GuardMode.attack;
 		agent.SetDestination(App.playerManager.ActPosition(sentinel, SceneMode.fight));
-		StopCoroutine(IAttack());		// stopper le callback précédent (ne pas passer en mode combat à la position initiale du joueur s'il s'est déplacé)
-		StartCoroutine(IAttack());		// engager le mode combat quand on a rattrapé le joueur
+		StopCoroutine(IAttack());       // stopper le callback précédent (ne pas passer en mode combat à la position initiale du joueur s'il s'est déplacé)
+		StartCoroutine(IAttack());      // engager le mode combat quand on a rattrapé le joueur
 
 		IEnumerator IAttack() {
 			while (playerDetection() && (agent.pathPending || agent.remainingDistance > agent.radius))
 				yield return new WaitForEndOfFrame();
 
-			if (sentinel.isInPlayerCollider) {																// si on est proche du joueur
-				SceneModeManager.SetSceneMode(SceneMode.fight, true, GetComponentInParent<Character>());	//		engager le combat
-			} else {																						// si le joueur s'est enfui
-				RestoreInitialMode();																		//		reprendre la patrouille
+			if (sentinel.isInPlayerCollider) {                                                              // si on est proche du joueur
+				SceneModeManager.SetSceneMode(SceneMode.fight, true, GetComponentInParent<Character>());    //		engager le combat
+			} else {                                                                                        // si le joueur s'est enfui
+				RestoreInitialMode();                                                                       //		reprendre la patrouille
 			}
 		}
 	}
 
 	public void RestoreInitialMode() {
-		agent.autoBraking = false;
-		agent.speed = defSpeed;
-		guardMode = defMode;
-		agent.destination = points[destPoint].position;
+		if (sentinel.isAlive) {
+			agent.autoBraking = false;
+			agent.speed = defSpeed;
+			guardMode = defMode;
+			agent.destination = points[destPoint].position;
+		}
 	}
 
 }
