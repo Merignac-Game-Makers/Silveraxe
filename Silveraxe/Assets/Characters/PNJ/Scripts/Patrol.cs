@@ -15,9 +15,6 @@ public class Patrol : MonoBehaviour
 	public float detectionRange = 5;
 	public float detectionAngle = 60;
 
-	RaycastHit[] hits = new RaycastHit[16];
-	List<RaycastHit> hitsList;
-
 	Character sentinel;
 	GuardMode defMode;
 	float defSpeed;
@@ -32,7 +29,8 @@ public class Patrol : MonoBehaviour
 		// Disabling auto-braking allows for continuous movement
 		// between points (ie, the agent doesn't slow down as it
 		// approaches a destination point).
-		agent.autoBraking = false;
+		if (guardMode == GuardMode.patrol)
+			agent.autoBraking = false;
 
 		defMode = guardMode;                    // mémoriser le mode initial
 		defSpeed = agent.speed;                 // mémoriser la vitesse initiale

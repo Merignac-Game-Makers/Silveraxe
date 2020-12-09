@@ -6,7 +6,7 @@ public class DoorSensor : MonoBehaviour
 {
 
     public LightDetector lightDetector;
-    public DoorOrc doorOrc;
+    public DoorOrc doorPivot;
 
     public float thresholdToOpen;
     public float thresholdToClose;
@@ -27,8 +27,8 @@ public class DoorSensor : MonoBehaviour
     }
 
 	private void Update() {
-		if (!doorOrc.doorOrc.isAlive) {
-            doorOrc.doorAnim.speed = 0;
+		if (!doorPivot.doorOrc.isAlive) {
+            doorPivot.doorAnim.speed = 0;
             //doorOrc.doorAnim.SetTrigger("Stop");
             //doorOrc.doorAnim.StopPlayback();
             //lightDetector.enabled = false;
@@ -42,11 +42,11 @@ public class DoorSensor : MonoBehaviour
     }
 
     void OpenDoor() {
-        doorOrc.OpenDoor();
+        doorPivot.OpenDoor();
         //lightDetector.threshold = thresholdToClose;
     }
     void CloseDoor() {
-        doorOrc.CloseDoor();
+        doorPivot.CloseDoor();
         //lightDetector.threshold = thresholdToOpen;
     }
 
