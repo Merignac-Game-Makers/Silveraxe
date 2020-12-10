@@ -21,17 +21,19 @@ public class SceneLoader : MonoBehaviour
 	}
 
 	public void LoadScene(int scene) {
-		if (testing) return;
-		if (!SceneManager.GetSceneByBuildIndex(scene).isLoaded) {
+		if (!testing && !SceneManager.GetSceneByBuildIndex(scene).isLoaded) {
 			App.screneCrossing = true;
-            if (playerNavMesh.enabled)
-                App.playerManager.StopAgent();
-            App.playerManager.navAgent.enabled = false;
+			if (playerNavMesh.enabled)
+				App.playerManager.StopAgent();
+			App.playerManager.navAgent.enabled = false;
 			StartCoroutine(LoadAsyncScene(scene));
 			if (currentLevelIndex != 0) {
 				UnloadScene(currentLevelIndex);
 			}
 			currentLevelIndex = scene;
+		} else {
+			playerNavMesh.enabled = true;
+
 		}
 	}
 
@@ -43,13 +45,11 @@ public class SceneLoader : MonoBehaviour
 		}
 	}
 
-	IEnumerator LoadAsyncScene(int scene)
-    {
+	IEnumerator LoadAsyncScene(int scene) {
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
 
 		// Wait until the asynchronous scene fully loads
-		while (!asyncLoad.isDone)
-		{
+		while (!asyncLoad.isDone) {
 			yield return null;
 		}
 

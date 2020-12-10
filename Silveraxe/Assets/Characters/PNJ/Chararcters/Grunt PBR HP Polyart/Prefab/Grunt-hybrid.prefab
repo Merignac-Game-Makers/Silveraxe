@@ -2012,7 +2012,7 @@ Transform:
   m_Children:
   - {fileID: 1499880866727747782}
   - {fileID: 5275599001758118785}
-  - {fileID: 3563507612434595911}
+  - {fileID: 5813988191230159430}
   - {fileID: 7174650293614363314}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -2265,7 +2265,7 @@ MonoBehaviour:
   victory:
   - {fileID: 8300000, guid: 1182750778ad5ae4f8d9072f7fd30fd3, type: 3}
   attackRate: 2
-  lightDetector: {fileID: 3563507612434595908}
+  lightDetector: {fileID: 5813988191230159429}
   polyartSkin: {fileID: 3138834783050964522}
   rockSkin: {fileID: 968250888502493575}
   petrified:
@@ -2347,11 +2347,16 @@ PrefabInstance:
       propertyPath: threshold
       value: 0.8
       objectReference: {fileID: 0}
+    - target: {fileID: 5194640791191878161, guid: dd667057055f4f04f87907d7f4469972,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd667057055f4f04f87907d7f4469972, type: 3}
---- !u!114 &3563507612434595908 stripped
+--- !u!114 &5813988191230159429 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3011890523267436563, guid: dd667057055f4f04f87907d7f4469972,
+  m_CorrespondingSourceObject: {fileID: 5194640791191878162, guid: dd667057055f4f04f87907d7f4469972,
     type: 3}
   m_PrefabInstance: {fileID: 1781311307201908823}
   m_PrefabAsset: {fileID: 0}
@@ -2361,9 +2366,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 742ca7df225bac641bb1b265f54123b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &3563507612434595911 stripped
+--- !u!4 &5813988191230159430 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 3011890523267436560, guid: dd667057055f4f04f87907d7f4469972,
+  m_CorrespondingSourceObject: {fileID: 5194640791191878161, guid: dd667057055f4f04f87907d7f4469972,
     type: 3}
   m_PrefabInstance: {fileID: 1781311307201908823}
   m_PrefabAsset: {fileID: 0}

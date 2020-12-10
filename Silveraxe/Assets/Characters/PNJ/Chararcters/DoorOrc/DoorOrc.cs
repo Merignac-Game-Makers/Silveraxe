@@ -9,6 +9,8 @@ public class DoorOrc : MonoBehaviour
 	public Character doorOrc;
 	public DoorSensor sensor;
 
+	public Loot loot;
+
 	public Transform safePoint;
 	public Transform actionPoint;
 
@@ -26,12 +28,6 @@ public class DoorOrc : MonoBehaviour
 		safePoint.gameObject.SetActive(false);
 		actionPoint.gameObject.SetActive(false);
 	}
-
-	//public void DoorOrcMove(float amount) {
-	//	if (doorOrc.isAlive)
-	//		doorOrc.navAgent.SetDestination(doorOrc.transform.position + doorOrc.transform.forward * amount);
-	//		//doorOrc.navAgent.SetDestination(doorOrc.transform.position + doorOrc.transform.forward * amount);
-	//}
 
 	public void GotoActionPoint() {
 		if (doorOrc.isAlive)
@@ -68,6 +64,11 @@ public class DoorOrc : MonoBehaviour
 
 	public void ToggleDetectorThreshold() {
 		sensor.ToggleThreshold();
+	}
+
+	public void LootEnabled(int on){
+		loot.gameObject.SetActive(on==1);
+		doorOrc.enabled = on==1;
 	}
 }
 

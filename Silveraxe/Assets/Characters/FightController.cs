@@ -54,6 +54,8 @@ public abstract class FightController : MonoBehaviour
 	public virtual void Fight_Attack() {
 		if (other.fightController.isAlive) {
 			blocked = !CalculAttack();						// Le coup touche-t-il ? est-il critique ?
+			if (!blocked)
+				other.fightController.stats.ChangeHealth(-CalculDamage());                //	l'adversaire perd de la vie
 			animatorController.anim.SetTrigger(ATTACK);     // animation "attaque"
 			PlaySound(attack);                              // son "attaque"
 		}
@@ -76,7 +78,7 @@ public abstract class FightController : MonoBehaviour
 	}
 	/// Encaisser un coup
 	public virtual void Fight_GetHit() {
-		stats.ChangeHealth(-CalculDamage());				//	on perd de la vie
+		//stats.ChangeHealth(-CalculDamage());				//	on perd de la vie
 		if (stats.CurrentHealth <= 0) {                     //		si plus de vie
 			Die();                                          //			on est mort		
 		} else {                                            //		sinon

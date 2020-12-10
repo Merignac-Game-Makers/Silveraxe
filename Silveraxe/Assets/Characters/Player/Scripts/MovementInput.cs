@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using Cinemachine;
 
 using static App;
 
@@ -36,19 +37,15 @@ public class MovementInput : MonoBehaviour
 
 		if (!playerManager.isAlive) return;                             // quand on est mort, on ne bouge plus !
 
-        if (screneCrossing)
-        {
-            if (Input.GetAxis("Vertical") == 0 && Input.GetAxis("Horizontal") == 0)
-            {
-                screneCrossing = false;
-            }
-			else
-            {
+		if (screneCrossing) {
+			if (Input.GetAxis("Vertical") == 0 && Input.GetAxis("Horizontal") == 0) {
+				screneCrossing = false;
+			} else {
 				return;
-            }
-        }
+			}
+		}
 
-        if (!playerManager.navAgent.enabled) return;                    // si le navAgent est désactivé, on ne bouge plus ! (transitions entre les scènees)
+		if (!playerManager.navAgent.enabled) return;                    // si le navAgent est désactivé, on ne bouge plus ! (transitions entre les scènees)
 
 		if (SceneModeManager.sceneMode != SceneMode.dialogue) {         // en mode dialogue on ne bouge pas non plus
 			if ((Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)) {
@@ -65,11 +62,20 @@ public class MovementInput : MonoBehaviour
 				sTranslation = 0;
 			}
 		}
+
+		if (Input.GetKeyDown(KeyCode.A)) {
+			var c = cameraController.vCamFollow.GetCinemachineComponent<CinemachineComposer>();
+			c.m_TrackedObjectOffset.y = 6;
+		}
+		if (Input.GetKeyUp(KeyCode.A)) {
+			var c = cameraController.vCamFollow.GetCinemachineComponent<CinemachineComposer>();
+			c.m_TrackedObjectOffset.y = 2;
+		}
 	}
 
 	private void FixedUpdate() {
 		if (SceneModeManager.sceneMode != SceneMode.dialogue) {     // rotation en fonction de la direction de la souris
-			if (fTranslation > .1 || Input.GetAxis("Fire3")>0) {
+			if (fTranslation > .1 || Input.GetAxis("Fire3") > 0) {
 				transform.Rotate(Vector3.up, screenDirection.normalized.x * rotationSensitivity);
 			}
 		}

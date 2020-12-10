@@ -26,6 +26,7 @@ public class PNJ : Character
 
 
 	public override bool IsInteractable() {
+		if (!enabled) return false;
 		if (!playerManager.isAlive) return false;
 		if (!isClosest) return false;
 		switch (SceneModeManager.sceneMode) {
