@@ -35,7 +35,7 @@ public class StatsUI : UIBase
 	public override void Toggle() {
 		panel.SetActive(!isOn);
 		//PNJ_Stats.transform.position = Camera.main.WorldToScreenPoint(playerManager.fightController.other.transform.position);
-		player_Stats.transform.position = Camera.main.WorldToScreenPoint(playerManager.transform.position);
+		//player_Stats.transform.position = Camera.main.WorldToScreenPoint(playerManager.transform.position);
 	}
 	public void Show() {
 		panel.SetActive(true);
@@ -44,7 +44,7 @@ public class StatsUI : UIBase
 		player = playerManager.characterData.stats;
 
 		//PNJ_Stats.transform.position = Camera.main.WorldToScreenPoint(playerManager.fightController.other.transform.position);
-		player_Stats.transform.position = Camera.main.WorldToScreenPoint(playerManager.transform.position);
+		//player_Stats.transform.position = Camera.main.WorldToScreenPoint(playerManager.transform.position);
 	}
 	public void Hide() {
 		panel.SetActive(false);

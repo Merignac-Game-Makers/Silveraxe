@@ -57,7 +57,7 @@ public class EquipmentEntryUI : EntryUI
 		}
 	}
 
-	void Show(bool on) {
+	public void Show(bool on) {
 		content.SetActive(on);
 	}
 

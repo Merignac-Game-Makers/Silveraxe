@@ -9,12 +9,12 @@ using UnityEngine.EventSystems;
 /// <summary>
 /// Objets statiques disponibles dans l'ensemble de l'application
 /// </summary>
-public static class App {
-
+public static class App
+{
+	public static SceneLoader sceneLoader;
 	public static CameraController cameraController;
 
 	public static UIManager uiManager;
-	//public static InventoryManager inventoryManager;
 	public static SFXManager sfxManager;
 	public static PlayerManager playerManager;
 	public static MessageManager messageManager;
@@ -25,6 +25,16 @@ public static class App {
 	public static InventoryUI inventoryUI;
 	public static EquipmentUI equipmentUI;
 	public static StatsUI statsUI;
+
+	public static Vector3 crossScenePosition;
+	public static bool screneCrossing;
+
+
+	//--------------------
+	// strings
+	public const string DIALOGUE = "Dialogue";
+	public const string FIGHT = "Fight";
+
 
 	//--------------------
 	// Texture <=> fichier
@@ -88,19 +98,37 @@ public static class App {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	// Extension de NavMesh Agent 'set destination' pour ajouter un callback à la fin du déplacement
+	// Extension de NavMesh Agent 'SetDestination' pour ajouter un callback à la fin du déplacement
 	public static NavMeshAgent SetDestination(this NavMeshAgent navAgent, Vector3 pos, Action callback = null) {
-		playerManager.StartCoroutine(Igoto(navAgent, pos, callback));
+		playerManager.StopCoroutine(Igoto());
+		playerManager.StartCoroutine(Igoto());
 		return navAgent;
-	}
-	static IEnumerator Igoto(NavMeshAgent navAgent, Vector3 pos, Action callback) {
-		navAgent.updateRotation = true;
-		navAgent.SetDestination(pos);
-		if (callback != null) {
-			while (navAgent.remainingDistance > navAgent.radius)
-				yield return new WaitForEndOfFrame();
-			callback();
+
+		IEnumerator Igoto() {
+			navAgent.updateRotation = true;
+			navAgent.SetDestination(pos);
+			if (callback != null) {
+				while (navAgent.pathPending || navAgent.remainingDistance > navAgent.radius)
+					yield return null;
+				callback();
+			}
 		}
 	}
 
+
+	// Extension pour permettre la sérialisation / désérialisation de Vector3
+	public static float[] toArray(this Vector3 vector) {
+		return new float[] { vector.x, vector.y, vector.z };
+	}
+	public static Vector3 toVector(this float[] array) {
+		return new Vector3(array[0], array[1], array[2]);
+	}
+
+	// Extension pour permettre la sérialisation / désérialisation de Quaternion
+	public static float[] toArray(this Quaternion quaternion) {
+		return new float[] { quaternion.x, quaternion.y, quaternion.z, quaternion.w };
+	}
+	public static Quaternion toQuaternion(this float[] array) {
+		return new Quaternion(array[0], array[1], array[2], array[3]);
+	}
 }

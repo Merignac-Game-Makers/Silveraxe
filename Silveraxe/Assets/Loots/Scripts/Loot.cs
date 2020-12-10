@@ -14,7 +14,7 @@ using UnityEngine.UI;
 ///
 /// Finally it will notify the LootUI that a new loot is available in the world so the UI displays the name.
 /// </summary>
-public class Loot : InteractableObject
+public class Loot : InteractableObject, ISave
 {
 	protected static float AnimationTime = 0.1f;
 
@@ -41,18 +41,6 @@ public class Loot : InteractableObject
 	protected float m_AnimationTimer = 0.0f;
 
 	protected Target target;
-
-	//public Loot(Loot item) {
-	//	ItemName = item.ItemName;
-	//	prefab = item.prefab;
-	//	ItemSprite = item.ItemSprite;
-	//	Description = item.Description;
-	//	animate = item.animate;
-	//	dropable = item.dropable;
-	//	lootCategory = item.lootCategory;
-	//	usable = item.usable;
-	//	UsageEffects = item.UsageEffects;
-	//}
 
 	void Awake() {
 		StartAnimation();
@@ -133,4 +121,30 @@ public class Loot : InteractableObject
 		StartAnimation();
 		playerManager.characterData.inventory.RemoveItem(entry as InventoryEntry);       // retirer l'objet déposé de l'inventaire
 	}
+
+
+
+
+	#region sauvegarde
+	public void Serialize(List<object> sav) {
+		sav.Add(new SLoot() {
+			guid = guid.ToByteArray(),
+			position = transform.position.toArray(),                // position
+			rotation = transform.rotation.toArray(),                 // rotation
+		});
+	}
+
+	public override void Deserialize(object serialized) {
+		base.Deserialize(serialized);
+	}
+	#endregion
+}
+
+/// <summary>
+/// Classe pour la sauvegarde
+/// </summary>
+[System.Serializable]
+public class SLoot : SInteractable
+{
+
 }

@@ -13,37 +13,30 @@ public class InteractableObjectsManager : MonoBehaviour
 	public Texture2D dropIcon;
 	public Texture2D fightIcon;
 
-	InteractableObject[] objects;
+	List<InteractableObject> objects;
 
 
 	private void Awake() {
 		interactableObjectsManager = this;
-		objects = FindObjectsOfType<InteractableObject>();
+		objects = new List<InteractableObject>(FindObjectsOfType<InteractableObject>());
+		objects.Remove(playerManager);
 	}
 
 	void Start() {
 	}
 
-	//public bool MultipleSelection() {
-	//	bool found = false;
-	//	foreach (InteractableObject obj in objects) {
-	//		if (obj.isOn) { //.IsSelected()
-	//			if (found)
-	//				return true;
-	//			found = true;
-	//		}
-	//	}
-	//	return false;
-	//}
+	private void Update() {
+		Closest();
+	}
 
 	float dist;
 	float d;
-	InteractableObject closest;
+	public InteractableObject closest { get; private set; }
 	public InteractableObject Closest() {
 		dist = 999999;
 		closest = null;
 		foreach (InteractableObject obj in objects) {
-			if (!obj.isInPlayerCollider)
+			if (!obj.IsHighlightable())
 				continue;
 			d = (obj.transform.position - playerManager.transform.position).sqrMagnitude;
 			if (d < dist) {

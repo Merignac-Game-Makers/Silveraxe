@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 using static App;
 
@@ -73,6 +74,8 @@ public abstract class HighlightableObject : MonoBehaviour
 	/// false : éteindre le projecteur
 	/// </summary>
 	public virtual bool Highlight(bool on) {
+		if (!enabled) return false;
+
 		bool found = false;
 
 		if (IsHighlightable() || on==false) {

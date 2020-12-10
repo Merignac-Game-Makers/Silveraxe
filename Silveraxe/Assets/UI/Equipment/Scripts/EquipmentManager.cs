@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 using static App;
@@ -8,17 +9,22 @@ using static App;
 /// TYPE of object, but those can be stacked without limit (e.g. 1 slot used by health potions, but contains 20
 /// health potions)
 /// </summary>
+[Serializable]
 public class EquipmentManager
 {
 
 	EquipmentEntry weaponEntry = new EquipmentEntry();
+	[System.NonSerialized]
 	EquipmentEntry helmetEntry = new EquipmentEntry();
+	[System.NonSerialized]
 	EquipmentEntry armorEntry = new EquipmentEntry();
+	[System.NonSerialized]
 	EquipmentEntry shieldEntry = new EquipmentEntry();
 
+	[System.NonSerialized]
 	public EquipmentEntry[] entries = new EquipmentEntry[4];
 
-
+	[System.NonSerialized]
 	CharacterData owner;
 
 	public void Init(CharacterData owner) {
@@ -69,7 +75,12 @@ public class EquipmentManager
 		}
 	}
 
-
+	public void Clear() {
+		for (int i=0; i<entries.Length; i++) {
+			entries[i].item = null;
+			equipmentUI.entries[i].Show(false);
+		}
+	}
 
 	/// <summary>
 	/// This will *try* to use the item. If the item return true when used, this will decrement the stack count and
