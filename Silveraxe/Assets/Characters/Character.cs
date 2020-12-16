@@ -24,7 +24,7 @@ public abstract class Character : InteractableObject, ISave
 	// pour les combats
 	public bool isInFightMode => fightController?.isInFightMode ?? false;
 	public FightController fightController { get; private set; }
-	public bool isAlive => fightController.isAlive;
+	public bool isAlive => fightController ?  fightController.isAlive: true;
 
 	public Patrol patrol { get; private set; }
 
@@ -102,29 +102,40 @@ public abstract class Character : InteractableObject, ISave
 
 
 	#region sauvegarde
-	public SCharacter serialized;
-	public void Serialize(List<object> sav) {
+	/// <summary>
+	/// Ajouter la sérialisation des infos à sauvegarder pour cet objet à la sauvegarde générale 'sav'
+	/// </summary>
+	/// <param name="sav">la sauvegarde en cours d'élaboration</param>
+	public virtual void Serialize(List<object> sav) {
 		sav.Add(new SCharacter() {
-			guid = guid.ToByteArray(),
-			position = transform.position.toArray(),                // position
-			rotation = transform.rotation.toArray(),                 // rotation
-			stats = characterData.stats.baseStats,                        // statistiques
-			inventory = new InventoryData(characterData.inventory),       // inventaire
-			equipment = new EquipmentData(characterData.equipment),       // équipement
-			navAgentDestination = navAgent ? navAgent.destination.toArray() : null
+			guid = guid.ToByteArray(),													// identifiant unique
+			position = transform.position.toArray(),									// position
+			rotation = transform.rotation.toArray(),                                    // rotation
+			stats0 = characterData.stats.baseStats,                                     // statistiques de base
+			stats1 = characterData.stats.stats,											// statistiques de base
+			currentHealth = characterData.stats.CurrentHealth,							// points de vie courants						
+			inventory = new InventoryData(characterData.inventory),						// inventaire
+			navAgentDestination = navAgent ? navAgent.destination.toArray() : null		// destination de navigation
 		}); ;
 	}
 
+	/// <summary>
+	/// Restaurer les valeurs précédement  sérialisées 
+	/// </summary>
+	/// <param name="serialized"></param>
 	public override void Deserialize(object serialized) {
 		base.Deserialize(serialized);
 		if (serialized is SCharacter) {
 			SCharacter s = serialized as SCharacter;
-			characterData.stats.baseStats.Copy(s.stats);                        // statistiques
+			characterData.stats.baseStats.Copy(s.stats0);                       // statistiques de base
+			characterData.stats.stats.Copy(s.stats1);                           // statistiques courantes
+			characterData.stats.LoadCurrentHealth(s.currentHealth);				// points de vie courants
 			s.inventory.CopyTo(characterData.inventory);                        // inventaire
-			if (s.equipment!=null)
-				s.equipment.CopyTo(characterData.equipment);					// équipement
 			if (navAgent)
-				navAgent.destination = s.navAgentDestination.toVector();
+				navAgent.destination = s.navAgentDestination.toVector();        // destination de navigation
+
+			if (!isAlive)
+				animatorController.anim.SetBool("IsDead", true);
 		}
 
 	}
@@ -138,8 +149,9 @@ public abstract class Character : InteractableObject, ISave
 [System.Serializable]
 public class SCharacter : SInteractable
 {
-	public StatSystem.Stats stats;
-	public InventoryData inventory;
-	public EquipmentData equipment;
-	public float[] navAgentDestination;
+	public StatSystem.Stats stats0;             // statistiques de base
+	public StatSystem.Stats stats1;             // statistiques courantes
+	public int currentHealth;					// points de vie courants
+	public InventoryData inventory;				// inventaire
+	public float[] navAgentDestination;			// destination
 }

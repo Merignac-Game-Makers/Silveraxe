@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine;
 
-using static InteractableObject.Action;
 using static App;
 using UnityEngine.UI;
 

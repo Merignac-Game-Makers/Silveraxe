@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.AI;
+using System;
 
 public class SceneLoader : MonoBehaviour
 {
@@ -12,12 +13,14 @@ public class SceneLoader : MonoBehaviour
 
 	public int currentLevelIndex { get; set; } = 0;
 
+
+	private void Awake() {
+				App.sceneLoader = this;
+	}
+
 	private void Start() {
-
 		testing = SceneManager.sceneCount > 1;
-		App.sceneLoader = this;
 		LoadScene(1);
-
 	}
 
 	public void LoadScene(int scene) {
@@ -33,7 +36,6 @@ public class SceneLoader : MonoBehaviour
 			currentLevelIndex = scene;
 		} else {
 			playerNavMesh.enabled = true;
-
 		}
 	}
 
@@ -56,4 +58,27 @@ public class SceneLoader : MonoBehaviour
 		playerNavMesh.enabled = true;
 	}
 
+
+	#region sauvegarde
+	/// <summary>
+	/// Restaurer les valeurs précédement sérialisées
+	/// </summary>
+	/// <param name="serialized">les valeurs sérialisées</param>
+	public virtual void Deserialize(object serialized) {
+		if (serialized is SScene) {
+			SScene s = serialized as SScene;
+		}
+	}
+	#endregion
+
+
+}
+
+/// <summary>
+/// Classe pour la sauvegarde
+/// </summary>
+[System.Serializable]
+public abstract class SScene
+{
+	public string id;         // nom de la scène
 }

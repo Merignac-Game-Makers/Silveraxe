@@ -17,14 +17,14 @@ public static class SaveLoad
 		file.Close();
     }
 
-    public static void Load() {
+    public static void Load(bool withPlayer) {
 		if (File.Exists(Application.persistentDataPath + "/savedGames.gd")) {
 			BinaryFormatter bf = new BinaryFormatter();
 			FileStream file = File.Open(Application.persistentDataPath + "/savedGames.gd", FileMode.Open);
 			//savedGames = (List<Game>)bf.Deserialize(file);
 			Game.current = (Game)bf.Deserialize(file);
 			file.Close();
-			Game.current.Load();
+			Game.current.Load(withPlayer);
 		} else {
 			Game.current = new Game();
 		}

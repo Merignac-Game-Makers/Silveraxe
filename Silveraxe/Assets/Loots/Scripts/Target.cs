@@ -77,20 +77,30 @@ public class Target : InteractableObject, ISave
 
 
 	#region sauvegarde
+	/// <summary>
+	/// Ajouter la sérialisation des infos à sauvegarder pour cet objet à la sauvegarde générale 'sav'
+	/// </summary>
+	/// <param name="sav">la sauvegarde en cours d'élaboration</param>
 	public void Serialize(List<object> sav) {
 		sav.Add(new STarget() {
-			guid = guid.ToByteArray(),
+			guid = guid.ToByteArray(),								// identifiant unique
 			position = transform.position.toArray(),                // position
-			rotation = transform.rotation.toArray(),                 // rotation
-			target_ItemGuid = guid.ToByteArray()
+			rotation = transform.rotation.toArray(),                // rotation
+			target_ItemGuid = item ? item.guid.ToByteArray() : System.Guid.Empty.ToByteArray() // l'id de l'objet posé sur la cible (s'il existe)
 		});
 	}
 
+	/// <summary>
+	/// Restaurer les valeurs précédement  sérialisées 
+	/// </summary>
+	/// <param name="serialized">la sérialisation des infos de cet objet</param>
 	public override void Deserialize(object serialized) {
 		base.Deserialize(serialized);
 		if (serialized is STarget) {
 			STarget s = serialized as STarget;
-			item = Game.current.allGuidComponents[new System.Guid(s.target_ItemGuid)]?.GetComponent<Loot>();
+			var id = new System.Guid(s.target_ItemGuid);
+			if (id!= System.Guid.Empty)
+				item = Game.current.allGuidComponents[id].GetComponent<Loot>();
 		}
 	}
 	#endregion
@@ -102,5 +112,5 @@ public class Target : InteractableObject, ISave
 [System.Serializable]
 public class STarget : SInteractable
 {
-	public byte[] target_ItemGuid = System.Guid.Empty.ToByteArray();
+	public byte[] target_ItemGuid = System.Guid.Empty.ToByteArray();		// identifiant du Loot posé sur la cible (s'il existe) -> valeur par défaut = 'Empty' = pas de Loot
 }

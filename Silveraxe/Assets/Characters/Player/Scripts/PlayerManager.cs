@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -112,5 +113,50 @@ public class PlayerManager : Character
 		set.Equip(set.sword, swordHand);
 	}
 	#endregion
+
+
+	#region sauvegarde
+	/// <summary>
+	/// Ajouter la sérialisation des infos à sauvegarder pour cet objet à la sauvegarde générale 'sav'
+	/// </summary>
+	/// <param name="sav">la sauvegarde en cours d'élaboration</param>
+	//public new SPlayer serialized;
+	public override  void Serialize(List<object> sav) {
+		sav.Add(new SPlayer() {
+			guid = guid.ToByteArray(),                                                  // identifiant unique
+			position = transform.position.toArray(),                                    // position
+			rotation = transform.rotation.toArray(),                                    // rotation
+			stats0 = characterData.stats.baseStats,                                     // statistiques de base
+			stats1 = characterData.stats.stats,                                         // statistiques de base
+			currentHealth = characterData.stats.CurrentHealth,                          // points de vie courants						
+			inventory = new InventoryData(characterData.inventory),                     // inventaire
+			equipment = new EquipmentData(characterData.equipment),                     // équipement
+			navAgentDestination = navAgent ? navAgent.destination.toArray() : null      // destination de navigation
+		}); ;
+	}
+
+	/// <summary>
+	/// Restaurer les valeurs précédement  sérialisées 
+	/// </summary>
+	/// <param name="serialized"></param>
+	public override void Deserialize(object serialized) {
+		base.Deserialize(serialized);
+		if (serialized is SPlayer) {
+			SPlayer s = serialized as SPlayer;
+			if (s.equipment != null)
+				s.equipment.CopyTo(characterData.equipment);                    // équipement
+		}
+	}
+	#endregion
+
+}
+
+/// <summary>
+/// Classe pour la sauvegarde
+/// </summary>
+[System.Serializable]
+public class SPlayer : SCharacter
+{
+	public EquipmentData equipment;             // équipement
 
 }

@@ -126,14 +126,22 @@ public class Loot : InteractableObject, ISave
 
 
 	#region sauvegarde
+	/// <summary>
+	/// Ajouter la sérialisation des infos à sauvegarder pour cet objet à la sauvegarde générale 'sav'
+	/// </summary>
+	/// <param name="sav">la sauvegarde en cours d'élaboration</param>
 	public void Serialize(List<object> sav) {
 		sav.Add(new SLoot() {
 			guid = guid.ToByteArray(),
-			position = transform.position.toArray(),                // position
+			position = transform.position.toArray(),                 // position
 			rotation = transform.rotation.toArray(),                 // rotation
 		});
 	}
 
+	/// <summary>
+	/// Restaurer les valeurs précédement  sérialisées 
+	/// </summary>
+	/// <param name="serialized"></param>
 	public override void Deserialize(object serialized) {
 		base.Deserialize(serialized);
 	}
@@ -142,6 +150,8 @@ public class Loot : InteractableObject, ISave
 
 /// <summary>
 /// Classe pour la sauvegarde
+/// 
+/// Pour Loot : rien de plus que pour les objets intéractibles de base
 /// </summary>
 [System.Serializable]
 public class SLoot : SInteractable

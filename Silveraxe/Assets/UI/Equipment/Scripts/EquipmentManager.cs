@@ -61,7 +61,7 @@ public class EquipmentManager
 		}
 
 		entries[idx].Equip(item);
-		foreach (EquipmentEntryUI entryUI in equipmentUI.entries) {     // trouver un emplacement d'affichage correspondant (même catégorie)
+		foreach (EquipmentEntryUI entryUI in equipmentUI.entries) {			// trouver un emplacement d'affichage correspondant (même catégorie)
 			if (entryUI.equipmentCategory == item.equipmentCategory) {
 				entryUI.Init(entries[idx]);                                 // équiper
 				break;

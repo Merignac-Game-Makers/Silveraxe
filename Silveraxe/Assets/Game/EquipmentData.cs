@@ -34,8 +34,8 @@ public class EEntryData
 	}
 
 	public void CopyTo(EquipmentManager equipment) {
-		if (new System.Guid(itemGuid) != System.Guid.Empty)
+		if (new System.Guid(itemGuid) != System.Guid.Empty) {
 			equipment.AddItem(Game.current.allGuidComponents[new System.Guid(itemGuid)].GetComponent<Equipment>());    // retrouver l'item dans la scène
-
+		}
 	}
 }

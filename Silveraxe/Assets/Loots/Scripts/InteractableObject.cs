@@ -80,9 +80,10 @@ public abstract class InteractableObject : HighlightableObject
 	}
 
 
-
-
-
+	/// <summary>
+	/// Restaurer les valeurs précédement sérialisées
+	/// </summary>
+	/// <param name="serialized">les valeurs sérialisées</param>
 	public virtual void Deserialize(object serialized) {
 		if (serialized is SInteractable) {
 			SInteractable s = serialized as SInteractable;
@@ -93,11 +94,13 @@ public abstract class InteractableObject : HighlightableObject
 
 }
 
-
+/// <summary>
+/// Classe pour la sauvegarde
+/// </summary>
 [Serializable]
 public abstract class SInteractable
 {
-	public byte[] guid;
-	public float[] position;
-	public float[] rotation;
+	public byte[] guid;			// identifiant unique
+	public float[] position;	// position
+	public float[] rotation;	// rotation
 }

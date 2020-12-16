@@ -272,6 +272,10 @@ public class StatSystem
 		CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, stats.health);
 	}
 
+	public void LoadCurrentHealth(int value) {
+		CurrentHealth = value;
+	}
+
 	void UpdateFinalStats() {
 		bool maxHealthChange = false;
 		int previousHealth = stats.health;
