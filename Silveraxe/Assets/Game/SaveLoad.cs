@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
@@ -7,26 +6,32 @@ public static class SaveLoad
 {
 	//public static List<Game> savedGames = new List<Game>();
 
-
-    public static void Save() {
-        //savedGames.Add(Game.current);
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(Application.persistentDataPath + "/savedGames.gd");
-		//bf.Serialize(file, savedGames);
-		bf.Serialize(file, Game.current);
+	public static void SaveData(string fileName, List<object> data) {
+		BinaryFormatter bf = new BinaryFormatter();
+		FileStream file = File.Create(Application.persistentDataPath + "/" + fileName + ".data");
+		bf.Serialize(file, data);
 		file.Close();
-    }
+	}
 
-    public static void Load(bool withPlayer) {
-		if (File.Exists(Application.persistentDataPath + "/savedGames.gd")) {
+	public static void LoadPlayerData(string filename = "player") {
+		var fullPath = Application.persistentDataPath + "/" + filename + ".data";
+		if (File.Exists(fullPath)) {
 			BinaryFormatter bf = new BinaryFormatter();
-			FileStream file = File.Open(Application.persistentDataPath + "/savedGames.gd", FileMode.Open);
-			//savedGames = (List<Game>)bf.Deserialize(file);
-			Game.current = (Game)bf.Deserialize(file);
+			FileStream file = File.Open(fullPath, FileMode.Open);
+			List<object> data = (List<object>)bf.Deserialize(file);
 			file.Close();
-			Game.current.Load(withPlayer);
-		} else {
-			Game.current = new Game();
+			Game.current.LoadPlayer(data);
+		} 
+	}
+
+	public static void LoadSceneData(string filename) {
+		var fullPath = Application.persistentDataPath + "/" + filename + ".data";
+		if (File.Exists(fullPath)) {
+			BinaryFormatter bf = new BinaryFormatter();
+			FileStream file = File.Open(fullPath, FileMode.Open);
+			List<object> data = (List<object>)bf.Deserialize(file);
+			file.Close();
+			Game.current.LoadScene(data);
 		}
 	}
 }

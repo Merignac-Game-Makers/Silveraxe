@@ -4761,7 +4761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7607a74d944ecbd45ae3330a5cf9af11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LevelToLoad: 2
+  LevelToLoad: Castle
   pos: {x: 0, y: -0.09, z: 1.4}
 --- !u!136 &459257724
 CapsuleCollider:
@@ -7265,9 +7265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d764f4a553401ec48b954a9db692b3a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerNavMesh: {fileID: 0}
   horloge: {fileID: 1534136126}
-  skyAnimator: {fileID: 1740991178}
 --- !u!1001 &677935352
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15447,7 +15445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7607a74d944ecbd45ae3330a5cf9af11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LevelToLoad: 3
+  LevelToLoad: PurpleCrystalMine
   pos: {x: 0, y: 0.16, z: 1.4}
 --- !u!136 &1191832430
 CapsuleCollider:

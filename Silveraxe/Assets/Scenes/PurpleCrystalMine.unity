@@ -1464,6 +1464,11 @@ PrefabInstance:
       propertyPath: pos.y
       value: -0.19
       objectReference: {fileID: 0}
+    - target: {fileID: 1401182051833780728, guid: 3800514ddc0b0d64588c89e8ce2c0eff,
+        type: 3}
+      propertyPath: LevelToLoad
+      value: OutDoor
+      objectReference: {fileID: 0}
     - target: {fileID: 1401182051833780730, guid: 3800514ddc0b0d64588c89e8ce2c0eff,
         type: 3}
       propertyPath: m_Layer
@@ -24508,6 +24513,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1539261932}
   - component: {fileID: 1539261931}
+  - component: {fileID: 1539261933}
   m_Layer: 10
   m_Name: World
   m_TagString: Untagged
@@ -24562,6 +24568,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1539261933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539261930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36f68514749295747acc0010f4488188, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1539384389 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4338867686750646, guid: 8e2a80e35db1ddd4090f8cc5ca764511,

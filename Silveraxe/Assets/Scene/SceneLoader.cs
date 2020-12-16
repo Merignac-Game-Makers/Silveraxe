@@ -8,38 +8,37 @@ using System;
 public class SceneLoader : MonoBehaviour
 {
 	public NavMeshAgent playerNavMesh;
+	public string defaultScene;
 
 	bool testing = false;
 
 	public int currentLevelIndex { get; set; } = 0;
-
+	public string currentSceneName { get; set; } = "";
 
 	private void Awake() {
-				App.sceneLoader = this;
+		App.sceneLoader = this;
 	}
 
 	private void Start() {
 		testing = SceneManager.sceneCount > 1;
-		LoadScene(1);
+		LoadScene(defaultScene);
 	}
 
-	public void LoadScene(int scene) {
-		if (!testing && !SceneManager.GetSceneByBuildIndex(scene).isLoaded) {
-			App.screneCrossing = true;
-			if (playerNavMesh.enabled)
+	public void LoadScene(string scene) {
+		if (!testing && !SceneManager.GetSceneByName(scene).isLoaded) {
+			App.sceneCrossing = true;
+			if (playerNavMesh.enabled) {
 				App.playerManager.StopAgent();
-			App.playerManager.navAgent.enabled = false;
-			StartCoroutine(LoadAsyncScene(scene));
-			if (currentLevelIndex != 0) {
-				UnloadScene(currentLevelIndex);
+				App.playerManager.navAgent.enabled = false;
 			}
-			currentLevelIndex = scene;
+			StartCoroutine(LoadAsyncScene(scene));
+
 		} else {
 			playerNavMesh.enabled = true;
 		}
 	}
 
-	public void UnloadScene(int scene) {
+	public void UnloadScene(string scene) {
 		StartCoroutine(Unload());
 		IEnumerator Unload() {
 			yield return new WaitForEndOfFrame();
@@ -47,7 +46,7 @@ public class SceneLoader : MonoBehaviour
 		}
 	}
 
-	IEnumerator LoadAsyncScene(int scene) {
+	IEnumerator LoadAsyncScene(string scene) {
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
 
 		// Wait until the asynchronous scene fully loads
@@ -55,22 +54,18 @@ public class SceneLoader : MonoBehaviour
 			yield return null;
 		}
 
-		playerNavMesh.enabled = true;
-	}
-
-
-	#region sauvegarde
-	/// <summary>
-	/// Restaurer les valeurs précédement sérialisées
-	/// </summary>
-	/// <param name="serialized">les valeurs sérialisées</param>
-	public virtual void Deserialize(object serialized) {
-		if (serialized is SScene) {
-			SScene s = serialized as SScene;
+		SceneSaver[] sSavers = FindObjectsOfType<SceneSaver>();
+		foreach (SceneSaver sSaver in sSavers) {					// décharger toutes les scènes autres que celle qu'on vient de charger
+			if (sSaver.gameObject.scene.name != scene) {
+				UnloadScene(sSaver.gameObject.scene.name);
+			}
 		}
-	}
-	#endregion
 
+		currentSceneName = scene; 
+		playerNavMesh.enabled = true;
+		SaveLoad.LoadSceneData(scene);
+		Game.current.SavePlayer();
+	}
 
 }
 

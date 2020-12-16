@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-
+using UnityEngine.SceneManagement;
 using static App;
 
 /// <summary>
@@ -121,9 +121,10 @@ public class PlayerManager : Character
 	/// </summary>
 	/// <param name="sav">la sauvegarde en cours d'élaboration</param>
 	//public new SPlayer serialized;
-	public override  void Serialize(List<object> sav) {
-		sav.Add(new SPlayer() {
+	public SPlayer Serialize() {
+		return new SPlayer() {
 			guid = guid.ToByteArray(),                                                  // identifiant unique
+			currentSceneName = sceneLoader.currentSceneName,							// index de la scène actuelle
 			position = transform.position.toArray(),                                    // position
 			rotation = transform.rotation.toArray(),                                    // rotation
 			stats0 = characterData.stats.baseStats,                                     // statistiques de base
@@ -132,7 +133,7 @@ public class PlayerManager : Character
 			inventory = new InventoryData(characterData.inventory),                     // inventaire
 			equipment = new EquipmentData(characterData.equipment),                     // équipement
 			navAgentDestination = navAgent ? navAgent.destination.toArray() : null      // destination de navigation
-		}); ;
+		};	
 	}
 
 	/// <summary>
@@ -143,6 +144,7 @@ public class PlayerManager : Character
 		base.Deserialize(serialized);
 		if (serialized is SPlayer) {
 			SPlayer s = serialized as SPlayer;
+			sceneLoader.currentSceneName = s.currentSceneName;
 			if (s.equipment != null)
 				s.equipment.CopyTo(characterData.equipment);                    // équipement
 		}
@@ -157,6 +159,6 @@ public class PlayerManager : Character
 [System.Serializable]
 public class SPlayer : SCharacter
 {
+	public string currentSceneName;				// nom de la scène dans laquelle se trouve la joueur
 	public EquipmentData equipment;             // équipement
-
 }

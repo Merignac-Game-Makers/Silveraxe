@@ -6,13 +6,17 @@ using UnityEngine.SceneManagement;
 public class ChangeScene : MonoBehaviour
 {
 
-	public int LevelToLoad;
+	public string LevelToLoad;
 	public Vector3 pos;
 
 	float timer;
 
 	private void Awake() {
-		timer = 5;
+		Temporize();
+	}
+
+	public void Temporize() {
+		timer = 1;
 	}
 
 	void Update() {
@@ -29,14 +33,12 @@ public class ChangeScene : MonoBehaviour
 	}
 
 	void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) {
-		if (scene.buildIndex != LevelToLoad) {
+		if (scene.name != LevelToLoad) {
 			SceneManager.SetActiveScene(scene);
 			if (App.playerManager) {
 				App.playerManager.transform.position = App.crossScenePosition;
 				App.playerManager.transform.rotation = Quaternion.identity;
-				//App.playerManager.navAgent.enabled = true;
 			}
-
 		}
 	}
 
@@ -44,8 +46,11 @@ public class ChangeScene : MonoBehaviour
 	private void OnTriggerEnter(Collider other) {
 		if (timer <= 0) {
 			if (other == App.playerManager.GetComponent<CharacterController>()) {
-				App.crossScenePosition = pos;
-				App.sceneLoader.LoadScene(LevelToLoad);
+
+				Game.current.SaveScene(); 					// sauvegarder la scène qu'on quitte
+
+				App.crossScenePosition = pos;				// coordonnées d'arrivée dans la scène cible
+				App.sceneLoader.LoadScene(LevelToLoad);		// charger la scène cible
 			}
 		}
 	}

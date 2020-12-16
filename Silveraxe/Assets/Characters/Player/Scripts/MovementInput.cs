@@ -37,9 +37,9 @@ public class MovementInput : MonoBehaviour
 
 		if (!playerManager.isAlive) return;                             // quand on est mort, on ne bouge plus !
 
-		if (screneCrossing) {
+		if (sceneCrossing) {
 			if (Input.GetAxis("Vertical") == 0 && Input.GetAxis("Horizontal") == 0) {
-				screneCrossing = false;
+				sceneCrossing = false;
 			} else {
 				return;
 			}

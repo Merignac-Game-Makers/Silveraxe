@@ -27,7 +27,8 @@ public static class App
 	public static StatsUI statsUI;
 
 	public static Vector3 crossScenePosition;
-	public static bool screneCrossing;
+	public static bool sceneCrossing;
+	public static bool isLoadingData;
 
 
 	//--------------------

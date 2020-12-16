@@ -4,6 +4,7 @@ using System.Collections;
 using static App;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class Game
@@ -27,34 +28,56 @@ public class Game
 		allGuidComponents = GetAllGuidComponents();
 	}
 
-	public void Save(bool withPlayer) {
+
+	public void Save() {
+		SavePlayer();
+		SaveScene();
+	}
+
+	public void SavePlayer() {
+		SPlayer s = playerManager.Serialize();              // sérialiser les informations à sauvegarder
+		SaveLoad.SaveData("player", new List<object>() { s });  // enregistrer le fichier
+	}
+
+	public void SaveScene() {
 		sav = new List<object>();
 
-		GameObject.Find("World").GetComponent<OutdoorSceneSaver>().Serialize(sav);
+		GameObject.Find("World").GetComponent<SceneSaver>().Serialize(sav);
 
 		GuidComponent[] items = Object.FindObjectsOfType<GuidComponent>(); // tous les GuidComponents
 		foreach (GuidComponent item in items) {
-			if (ISave<Loot>(item, sav)) continue;							// si l'objet est un Loot => sauver et passer à l'objet suivant
-			if (ISave<Target>(item, sav)) continue;							// si l'objet est un Target => sauver et passer à l'objet suivant
-			if (withPlayer)													// si on a choisi de sauver le joueur
-				if (ISave<PlayerManager>(item, sav)) continue;              //	- si l'objet est un PlayerManager => sauver et passer à l'objet suivant
-			if (ISave<Character>(item, sav)) continue;                      // si l'objet est un Character => sauver et passer à l'objet suivant
+			if (ISave<Loot>(item, sav)) continue;                           // si l'objet est un Loot => sauver et passer à l'objet suivant
+			if (ISave<Target>(item, sav)) continue;                         // si l'objet est un Target => sauver et passer à l'objet suivant
+			if (!IsType<PlayerManager>(item))                               // l'item N'est PAS le joueur
+				if (ISave<Character>(item, sav)) continue;                  // si l'objet est un Character => sauver et passer à l'objet suivant
 		}
 
-		SaveLoad.Save();	// enregistrer le fichier
+		string sceneName = sceneLoader.currentSceneName;
+		SaveLoad.SaveData(sceneName, sav);    // enregistrer le fichier
 	}
 
-	public void Load(bool withPlayer) {
+	public void LoadPlayer(List<object> data) {
+		if (data.Count == 1) {
+			playerManager.Deserialize(data[0]);
+		}
+	}
+
+	public void LoadScene(List<object> data) {
 		allGuidComponents = GetAllGuidComponents();
+		SceneSaver[] sSavers = GameObject.FindObjectsOfType<SceneSaver>();
 
-		GameObject.Find("World").GetComponent<OutdoorSceneSaver>().Deserialize(sav[0]);
-		sav.RemoveAt(0);
+		foreach (SceneSaver sSaver in sSavers) {
+			if (sSaver.gameObject.scene.name == ((SerializedScene)data[0]).id) {
+				sSaver.Deserialize(data[0]);
 
-		foreach (SInteractable item in sav) {
-			ILoad(item, withPlayer);
+				data.RemoveAt(0);
+				foreach (SInteractable item in data) {
+					ILoad(item);
+				}
+				break;
+			}
 		}
 	}
-
 
 	Dictionary<System.Guid, GameObject> GetAllGuidComponents() {
 		Dictionary<System.Guid, GameObject> allGuidComponents = new Dictionary<System.Guid, GameObject>();
@@ -86,18 +109,9 @@ public class Game
 		return (iItem != null && iItem is T);
 	}
 
-	void ILoad(SInteractable serialized, bool withPlayer) {
+	void ILoad(SInteractable serialized) {
 		var guid = new System.Guid(serialized.guid);
 		InteractableObject iItem = current.allGuidComponents[guid].GetComponent<InteractableObject>();      // retrouver l'objet dans la scène (même guid)
-
-		if (withPlayer) {																					// si on a décidé de restaurer le joueur
-			iItem.Deserialize(serialized);																	//		restaurer les valeurs sauvegardées sans vérification
-		} else {																							// si on a décidé de NE PAS restaurer le joueur
-			PlayerManager player = current.allGuidComponents[guid].GetComponent<PlayerManager>();           //	vérifier si l'objet sérialisé est le joueur
-			if (player != null)                                                                             //	si c'est le joueur
-				return;                                                                                     //		passer à l'objet suivnant
-			else                                                                                            //	si ce n'est pas le joueur
-				iItem.Deserialize(serialized);                                                              //		restaurer les valeurs sauvegardées
-		}
+		iItem.Deserialize(serialized);                                                                      // restaurer les valeurs sauvegardées
 	}
 }
