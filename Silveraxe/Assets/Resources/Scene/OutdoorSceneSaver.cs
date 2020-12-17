@@ -8,6 +8,7 @@ public class OutdoorSceneSaver : SceneSaver
 {
 
 	public Horloge horloge;
+	public Light sunLight;
 
 	/// <summary>
 	/// Ajouter la sérialisation des infos à sauvegarder pour cet objet à la sauvegarde générale 'sav'
@@ -17,7 +18,9 @@ public class OutdoorSceneSaver : SceneSaver
 		int idx = App.sceneLoader.currentLevelIndex;
 		sav.Add(new OutdoorScene() {
 			id = App.sceneLoader.currentSceneName,          // nom de scene
-			datetime = horloge.sceneDateTime				// heure
+			sunTime = horloge.GetSunTime() ,				// heure
+			sunIntensity = sunLight.intensity,				// intensité de la lumière solaire
+			sunColor = sunLight.color.ToArray()				// couleur de la lumière solaire
 		});
 	}
 
@@ -29,16 +32,20 @@ public class OutdoorSceneSaver : SceneSaver
 	public override void Deserialize(object serialized) {
 		if (serialized is OutdoorScene) {
 			OutdoorScene s = serialized as OutdoorScene;
-			horloge.SetDateTime(s.datetime);
+			horloge.SetDateTime(s.sunTime);
+			sunLight.intensity = s.sunIntensity;
+			sunLight.color = s.sunColor.ToColor();
 		}
 	}
 }
 
-	/// <summary>
-	/// Classe pour la sauvegarde
-	/// </summary>
-	[System.Serializable]
-    public class OutdoorScene : SerializedScene
-    {
-		public DateTime datetime;
-	}
+/// <summary>
+/// Classe pour la sauvegarde
+/// </summary>
+[System.Serializable]
+public class OutdoorScene : SerializedScene
+{
+	public float sunTime;
+	public float sunIntensity;
+	public float[] sunColor;
+}

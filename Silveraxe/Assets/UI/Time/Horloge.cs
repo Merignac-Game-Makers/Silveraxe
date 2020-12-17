@@ -59,7 +59,19 @@ public class Horloge : MonoBehaviour
 
 	public void SetDateTime(DateTime dateTime) {
 		sceneDateTime = dateTime;
-		sunTime = (float)(dateTime.TimeOfDay.TotalDays) ;
+		sunTime = dateTime.Ticks ;
+	}
+	public void SetDateTime(float seconds) {
+		sceneDateTime = new DateTime(1,1,1).AddSeconds(seconds);
+		sunTime = seconds;
+	}
+
+	public DateTime GetSceneDateTime() {
+		return new DateTime(1, 1, 1).AddSeconds(sunTime);
+	}
+
+	public float GetSunTime() {
+		return sunTime;
 	}
 
 	public void SetDaySpeed(string speed) {

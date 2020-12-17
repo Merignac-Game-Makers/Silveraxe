@@ -109,13 +109,13 @@ public abstract class Character : InteractableObject, ISave
 	public virtual void Serialize(List<object> sav) {
 		sav.Add(new SCharacter() {
 			guid = guid.ToByteArray(),													// identifiant unique
-			position = transform.position.toArray(),									// position
-			rotation = transform.rotation.toArray(),                                    // rotation
+			position = transform.position.ToArray(),									// position
+			rotation = transform.rotation.ToArray(),                                    // rotation
 			stats0 = characterData.stats.baseStats,                                     // statistiques de base
 			stats1 = characterData.stats.stats,											// statistiques de base
 			currentHealth = characterData.stats.CurrentHealth,							// points de vie courants						
 			inventory = new InventoryData(characterData.inventory),						// inventaire
-			navAgentDestination = navAgent ? navAgent.destination.toArray() : null		// destination de navigation
+			navAgentDestination = navAgent ? navAgent.destination.ToArray() : null		// destination de navigation
 		}); ;
 	}
 
@@ -132,7 +132,7 @@ public abstract class Character : InteractableObject, ISave
 			characterData.stats.LoadCurrentHealth(s.currentHealth);				// points de vie courants
 			s.inventory.CopyTo(characterData.inventory);                        // inventaire
 			if (navAgent)
-				navAgent.destination = s.navAgentDestination.toVector();        // destination de navigation
+				navAgent.destination = s.navAgentDestination.ToVector();        // destination de navigation
 
 			if (!isAlive)
 				animatorController.anim.SetBool("IsDead", true);

@@ -117,19 +117,30 @@ public static class App
 	}
 
 
+	//----------------------------------------------------------------------------------------------
 	// Extension pour permettre la sérialisation / désérialisation de Vector3
-	public static float[] toArray(this Vector3 vector) {
+	public static float[] ToArray(this Vector3 vector) {
 		return new float[] { vector.x, vector.y, vector.z };
 	}
-	public static Vector3 toVector(this float[] array) {
+	public static Vector3 ToVector(this float[] array) {
 		return new Vector3(array[0], array[1], array[2]);
 	}
 
+	//----------------------------------------------------------------------------------------------
 	// Extension pour permettre la sérialisation / désérialisation de Quaternion
-	public static float[] toArray(this Quaternion quaternion) {
+	public static float[] ToArray(this Quaternion quaternion) {
 		return new float[] { quaternion.x, quaternion.y, quaternion.z, quaternion.w };
 	}
-	public static Quaternion toQuaternion(this float[] array) {
+	public static Quaternion ToQuaternion(this float[] array) {
 		return new Quaternion(array[0], array[1], array[2], array[3]);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	// Extension pour permettre la sérialisation / désérialisation de Quaternion
+	public static float[] ToArray(this Color color) {
+		return new float[] { color.r, color.g, color.b, color.a };
+	}
+	public static Color ToColor(this float[] array) {
+		return new Color(array[0], array[1], array[2], array[3]);
 	}
 }

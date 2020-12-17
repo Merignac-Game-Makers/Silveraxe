@@ -87,8 +87,8 @@ public abstract class InteractableObject : HighlightableObject
 	public virtual void Deserialize(object serialized) {
 		if (serialized is SInteractable) {
 			SInteractable s = serialized as SInteractable;
-			transform.position = s.position.toVector();                     // position
-			transform.rotation = s.rotation.toQuaternion();                 // rotation
+			transform.position = s.position.ToVector();                     // position
+			transform.rotation = s.rotation.ToQuaternion();                 // rotation
 		}
 	}
 

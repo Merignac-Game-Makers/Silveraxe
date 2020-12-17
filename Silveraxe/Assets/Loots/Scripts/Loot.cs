@@ -133,8 +133,8 @@ public class Loot : InteractableObject, ISave
 	public void Serialize(List<object> sav) {
 		sav.Add(new SLoot() {
 			guid = guid.ToByteArray(),
-			position = transform.position.toArray(),                 // position
-			rotation = transform.rotation.toArray(),                 // rotation
+			position = transform.position.ToArray(),                 // position
+			rotation = transform.rotation.ToArray(),                 // rotation
 		});
 	}
 

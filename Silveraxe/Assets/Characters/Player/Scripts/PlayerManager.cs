@@ -122,17 +122,21 @@ public class PlayerManager : Character
 	/// <param name="sav">la sauvegarde en cours d'élaboration</param>
 	//public new SPlayer serialized;
 	public SPlayer Serialize() {
+		if (sceneLoader.currentSceneName == "") {
+			var cScene = FindObjectOfType<SceneSaver>().gameObject.scene.name;
+			sceneLoader.currentSceneName = cScene;
+		}
 		return new SPlayer() {
 			guid = guid.ToByteArray(),                                                  // identifiant unique
 			currentSceneName = sceneLoader.currentSceneName,							// index de la scène actuelle
-			position = transform.position.toArray(),                                    // position
-			rotation = transform.rotation.toArray(),                                    // rotation
+			position = transform.position.ToArray(),                                    // position
+			rotation = transform.rotation.ToArray(),                                    // rotation
 			stats0 = characterData.stats.baseStats,                                     // statistiques de base
 			stats1 = characterData.stats.stats,                                         // statistiques de base
 			currentHealth = characterData.stats.CurrentHealth,                          // points de vie courants						
 			inventory = new InventoryData(characterData.inventory),                     // inventaire
 			equipment = new EquipmentData(characterData.equipment),                     // équipement
-			navAgentDestination = navAgent ? navAgent.destination.toArray() : null      // destination de navigation
+			navAgentDestination = navAgent ? navAgent.destination.ToArray() : null      // destination de navigation
 		};	
 	}
 

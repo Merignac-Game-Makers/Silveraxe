@@ -84,8 +84,8 @@ public class Target : InteractableObject, ISave
 	public void Serialize(List<object> sav) {
 		sav.Add(new STarget() {
 			guid = guid.ToByteArray(),								// identifiant unique
-			position = transform.position.toArray(),                // position
-			rotation = transform.rotation.toArray(),                // rotation
+			position = transform.position.ToArray(),                // position
+			rotation = transform.rotation.ToArray(),                // rotation
 			target_ItemGuid = item ? item.guid.ToByteArray() : System.Guid.Empty.ToByteArray() // l'id de l'objet posé sur la cible (s'il existe)
 		});
 	}
