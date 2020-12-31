@@ -30,19 +30,29 @@ public class Game
 
 
 	public void Save() {
-		SavePlayer();
+		SHeader();
 		SaveScene();
+		SavePlayer();
 	}
 
+	public void SHeader() {
+		SHeader sHeader = new SHeader {					// sérialiser les informations à sauvegarder
+			version = App.saveVersion,
+			scene = App.currentSceneName
+		};
+		SaveLoad.SaveHeaderFile(sHeader);				 // enregistrer le fichier
+	}
+
+
 	public void SavePlayer() {
-		SPlayer s = playerManager.Serialize();              // sérialiser les informations à sauvegarder
-		SaveLoad.SaveData("player", new List<object>() { s });  // enregistrer le fichier
+		SPlayer sPlayer = (SPlayer)playerManager.Serialize();    // sérialiser les informations à sauvegarder
+		SaveLoad.SavePlayerFile(sPlayer);						 // enregistrer le fichier
 	}
 
 	public void SaveScene() {
 		sav = new List<object>();
 
-		GameObject.Find("World").GetComponent<SceneSaver>().Serialize(sav);
+		sav.Add(Object.FindObjectOfType<SceneSaver>().Serialize());
 
 		GuidComponent[] items = Object.FindObjectsOfType<GuidComponent>(); // tous les GuidComponents
 		foreach (GuidComponent item in items) {
@@ -52,27 +62,36 @@ public class Game
 				if (ISave<Character>(item, sav)) continue;                  // si l'objet est un Character => sauver et passer à l'objet suivant
 		}
 
-		string sceneName = sceneLoader.currentSceneName;
-		SaveLoad.SaveData(sceneName, sav);    // enregistrer le fichier
+		SaveLoad.SaveSceneFile(App.currentSceneName, sav);                  // enregistrer le fichier
 	}
 
-	public void LoadPlayer(List<object> data) {
-		if (data.Count == 1) {
-			playerManager.Deserialize(data[0]);
+	public void LoadHeader() {
+		object data = SaveLoad.LoadHeaderFile();
+		if (data !=null && data is SHeader) {
+			SHeader header = data as SHeader;
+			App.currentSceneName = header.scene;
 		}
 	}
 
-	public void LoadScene(List<object> data) {
+	public void LoadPlayer() {
+		object data = SaveLoad.LoadPlayerFile();
+		if (data != null && data is SPlayer) {
+			playerManager.Deserialize(data);
+		}
+	}
+
+	public void LoadScene(string scene) {
+		List<object> data = SaveLoad.LoadSceneFile(scene);
 		allGuidComponents = GetAllGuidComponents();
-		SceneSaver[] sSavers = GameObject.FindObjectsOfType<SceneSaver>();
+		SceneSaver[] sSavers = Object.FindObjectsOfType<SceneSaver>();
 
 		foreach (SceneSaver sSaver in sSavers) {
-			if (sSaver.gameObject.scene.name == ((SerializedScene)data[0]).id) {
-				sSaver.Deserialize(data[0]);
+			if (sSaver.gameObject.scene.name == ((SerializedScene)data[0]).id && App.saveVersion == ((SerializedScene)data[0]).version) { // pour la scène à charger (si la sauvegarde est de la version courante)
+				sSaver.Deserialize(data[0]);                                    // caractéristiques globales de la scène (heure, position et couleur du soleil,...)
+				data.RemoveAt(0);                                               // retirer les caractéristiques globales de la scène
 
-				data.RemoveAt(0);
-				foreach (SInteractable item in data) {
-					ILoad(item);
+				foreach (SInteractable item in data) {                          // pour tous les objets de la scène
+					ILoad(item);                                                //	restaurer les caractéristiques de l'objet
 				}
 				break;
 			}
@@ -98,7 +117,8 @@ public class Game
 	bool ISave<T>(GuidComponent item, List<object> sav) where T : ISave {
 		T iItem = item.GetComponent<T>();       // rechercher un composant de type T sur ce gameObject
 		if (iItem != null && iItem is T) {      // si cet item est bien de type T
-			iItem.Serialize(sav);               //		sauvegarder ses infos
+												//iItem.Serialize(sav);             //		sauvegarder ses infos
+			sav.Add(iItem.Serialize());         //		sauvegarder ses infos
 			return true;                        //		retourner 'vrai'
 		} else {                                // sinon
 			return false;                       //		retrouner 'faux'
@@ -110,8 +130,35 @@ public class Game
 	}
 
 	void ILoad(SInteractable serialized) {
-		var guid = new System.Guid(serialized.guid);
-		InteractableObject iItem = current.allGuidComponents[guid].GetComponent<InteractableObject>();      // retrouver l'objet dans la scène (même guid)
-		iItem.Deserialize(serialized);                                                                      // restaurer les valeurs sauvegardées
+		InteractableObject iItem = Find<InteractableObject>(serialized);     // retrouver l'objet dans la scène (même guid)
+		iItem.Deserialize(serialized);                                        // restaurer les valeurs sauvegardées
 	}
+
+	public static T Find<T>(SInteractable serialized) {
+		var i = GuidManager.ResolveGuid(new System.Guid(serialized.guid)).GetComponent<T>();
+		if (i==null) {
+			Debug.Log("Guid not found : " + serialized);
+		}
+		return GuidManager.ResolveGuid(new System.Guid(serialized.guid)).GetComponent<T>();
+		//var guid = new System.Guid(serialized.guid);
+		//return current.allGuidComponents[guid].GetComponent<T>();
+	}
+	public static T Find<T>(System.Guid guid) {
+		return GuidManager.ResolveGuid(guid).GetComponent<T>();
+		//return current.allGuidComponents[guid].GetComponent<T>();
+	}
+	public static T Find<T>(byte[] guid) {
+		return GuidManager.ResolveGuid(new System.Guid(guid)).GetComponent<T>();
+		//return current.allGuidComponents[new System.Guid(guid)].GetComponent<T>();
+	}
+}
+
+/// <summary>
+/// Classe pour la sauvegarde
+/// </summary>
+[System.Serializable]
+public class SHeader
+{
+	public string version;      // version de sauvegarde
+	public string scene;        // scène dans laquelle se trouve l'objet
 }

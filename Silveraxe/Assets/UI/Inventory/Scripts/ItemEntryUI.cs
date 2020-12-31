@@ -29,12 +29,12 @@ public class ItemEntryUI : EntryUI
 		this.entry = iEntry;
 		loot = iEntry.item;
 		loot.entry = iEntry;
-		iconeImage.sprite = loot.ItemSprite;
+		iconeImage.sprite = loot.itemSprite;
 
 		//GetCursor(iconeImage.sprite.texture);
 
 		count.text = "";
-		label.text = loot.ItemName;
+		label.text = loot.itemName;
 		//plus.enabled = item.combinable;
 		Show(true);
 	}
@@ -58,7 +58,7 @@ public class ItemEntryUI : EntryUI
 		InventoryEntry iEntry = entry as InventoryEntry;
 
 		if (isEnabled) {
-			iconeImage.sprite = iEntry?.item.ItemSprite;
+			iconeImage.sprite = iEntry?.item.itemSprite;
 
 			if (iEntry?.count > 1) {
 				count.gameObject.SetActive(true);

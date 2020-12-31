@@ -27,8 +27,6 @@ public class Horloge : MonoBehaviour
 
 	private void Start() {
 		skyAnimator.speed = 0f;
-
-
 		speedFactor.text = daySpeed.ToString();
 		sceneDateTime = sceneStartDateTime;
 	}
@@ -81,6 +79,17 @@ public class Horloge : MonoBehaviour
 		catch (Exception e) {
 			Debug.LogError(e.Message);
 			speedFactor.text = daySpeed.ToString();
+		}
+	}
+
+	float m_daySpeed;
+	public void Pause(bool pause) {
+		skyAnimator.GetComponentInChildren<SunLightController>().paused = pause;
+		if (pause) {
+			m_daySpeed = daySpeed;
+			daySpeed = 0;
+		} else {
+			daySpeed = m_daySpeed;
 		}
 	}
 }

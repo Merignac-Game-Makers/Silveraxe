@@ -60,9 +60,7 @@ public class Target : InteractableObject, ISave
 
 	private void Update() {
 		if (!IsPointerOverUIElement() && Input.GetButtonDown("Fire1")) {
-			//if (!interactableObjectsManager.MultipleSelection() || isMouseOver) {
 			Act();
-			//}
 		}
 	}
 
@@ -78,17 +76,14 @@ public class Target : InteractableObject, ISave
 
 	#region sauvegarde
 	/// <summary>
-	/// Ajouter la sérialisation des infos à sauvegarder pour cet objet à la sauvegarde générale 'sav'
+	/// Sérialiser infos à sauvegarder pour cet objet
 	/// </summary>
-	/// <param name="sav">la sauvegarde en cours d'élaboration</param>
-	public void Serialize(List<object> sav) {
-		sav.Add(new STarget() {
-			guid = guid.ToByteArray(),								// identifiant unique
-			position = transform.position.ToArray(),                // position
-			rotation = transform.rotation.ToArray(),                // rotation
-			target_ItemGuid = item ? item.guid.ToByteArray() : System.Guid.Empty.ToByteArray() // l'id de l'objet posé sur la cible (s'il existe)
-		});
+	public override SInteractable Serialize() {
+		var result = new STarget().Copy(base.Serialize());
+		result.target_ItemGuid = item && item.guid!=null ? ((System.Guid)item.guid).ToByteArray() : System.Guid.Empty.ToByteArray(); // l'id de l'objet posé sur la cible (s'il existe)
+		return result;
 	}
+
 
 	/// <summary>
 	/// Restaurer les valeurs précédement  sérialisées 
@@ -99,8 +94,13 @@ public class Target : InteractableObject, ISave
 		if (serialized is STarget) {
 			STarget s = serialized as STarget;
 			var id = new System.Guid(s.target_ItemGuid);
-			if (id!= System.Guid.Empty)
-				item = Game.current.allGuidComponents[id].GetComponent<Loot>();
+			if (id != System.Guid.Empty) {
+				//item = Game.current.allGuidComponents[id].GetComponent<Loot>();
+				item = Game.Find<Loot>(id);
+				item.transform.position = targetPos;
+			}
+			else 
+				item = null;
 		}
 	}
 	#endregion

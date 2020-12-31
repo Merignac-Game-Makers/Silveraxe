@@ -5,6 +5,7 @@ using UnityEngine;
 using static InteractableObject.Action;
 using static App;
 using UnityEngine.UI;
+using System.Reflection;
 
 /// <summary>
 /// Describes an InteractableObject that can be picked up and grants a specific item when interacted with.
@@ -18,32 +19,35 @@ public class Loot : InteractableObject, ISave
 {
 	protected static float AnimationTime = 0.1f;
 
-	public string ItemName;
-	public GameObject prefab;
-	public Sprite ItemSprite;
-	public string Description;
-	public bool animate = true;
-	public bool dropable = true;
-	public LootCategory lootCategory;
-	public bool usable = false;
-	public List<UsageEffect> UsageEffects;
+	public ItemBase itemBase;
 
+	public string itemName => itemBase.itemName;
+	public GameObject prefab => itemBase.prefab;
+	public Sprite itemSprite => itemBase.itemSprite;
+	public string description => itemBase.description;
+	public bool animate => itemBase.animate;
+	public bool dropable => itemBase.dropable;
+	public LootCategory lootCategory => itemBase.lootCategory;
+	public bool usable => itemBase.usable;
+	public List<UsageEffect> usageEffects => itemBase.usageEffects;
 
-	public Entry entry { get; set; } = null;										// L'entrée d'inventaire lorsque l'objet a été ramassé
+	public Target target;
+
+	public Entry entry { get; set; } = null;                                        // L'entrée d'inventaire lorsque l'objet a été ramassé
 
 	public override bool IsInteractable() {                                         // l'objet est intéractif si
-		if (animate && m_AnimationTimer < AnimationTime) return false;				// l'animation de mise en place est terminée
-		return base.IsInteractable();												//  
+		if (animate && m_AnimationTimer < AnimationTime) return false;              // l'animation de mise en place est terminée
+		return base.IsInteractable();                                               //  
 	}
 
 	protected Vector3 m_OriginalPosition;
 	protected Vector3 m_TargetPoint;
 	protected float m_AnimationTimer = 0.0f;
 
-	protected Target target;
 
 	void Awake() {
 		StartAnimation();
+		target = itemBase.target;
 	}
 
 
@@ -95,13 +99,13 @@ public class Loot : InteractableObject, ISave
 
 	protected virtual void Take() {
 		// on ramasse l'objet
-		playerManager.StopAgent();
-		if (!playerManager.characterData.inventory.isFull) {
-			playerManager.characterData.inventory.AddItem(this);
-			isInPlayerCollider = false;
-			SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });
-			targetsManager.OnTake();
-			if (target) {
+		playerManager.StopAgent();																							// interrompre le déplacement du joueur
+		if (!playerManager.characterData.inventory.isFull) {																// si l'inventaire n'est pas plein
+			playerManager.characterData.inventory.AddItem(this);															//		ajouter l'objet à l'inventaire
+			isInPlayerCollider = false;																						//		l'objet n'est plus dans le collider du joueur (=> non intéractible)
+			SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });		//		son
+			targetsManager.OnTake();																						//		extinction de toutes les cibles
+			if (target) {																									//		mise à jour de la cible (s'il était sur une cible)
 				target.item = null;
 				target = null;
 			}
@@ -114,9 +118,9 @@ public class Loot : InteractableObject, ISave
 	/// </summary>
 	/// <param name="target">le lieu</param>
 	/// <param name="entry">l'entrée d'inventaire </param>
-	public void Drop(Target target) {
+	public virtual void Drop(Target target) {
 		this.target = target;
-		animate = true;
+		itemBase.animate = true;
 		transform.position = target.targetPos;
 		StartAnimation();
 		playerManager.characterData.inventory.RemoveItem(entry as InventoryEntry);       // retirer l'objet déposé de l'inventaire
@@ -129,13 +133,14 @@ public class Loot : InteractableObject, ISave
 	/// <summary>
 	/// Ajouter la sérialisation des infos à sauvegarder pour cet objet à la sauvegarde générale 'sav'
 	/// </summary>
-	/// <param name="sav">la sauvegarde en cours d'élaboration</param>
-	public void Serialize(List<object> sav) {
-		sav.Add(new SLoot() {
-			guid = guid.ToByteArray(),
-			position = transform.position.ToArray(),                 // position
-			rotation = transform.rotation.ToArray(),                 // rotation
-		});
+	public override SInteractable Serialize() {
+		var result = new SLoot().Copy(base.Serialize());
+		result.itemBase = itemBase.name;
+		if (target && target.guid != null)
+			result.target = ((System.Guid)target.guid).ToByteArray();
+		else
+			result.target = System.Guid.Empty.ToByteArray();
+		return result;
 	}
 
 	/// <summary>
@@ -144,17 +149,23 @@ public class Loot : InteractableObject, ISave
 	/// <param name="serialized"></param>
 	public override void Deserialize(object serialized) {
 		base.Deserialize(serialized);
+		SLoot sLoot = (SLoot)serialized;
+		itemBase = ResourcesManager.GetItemBase(sLoot.itemBase);
+		if (new System.Guid(sLoot.target) != System.Guid.Empty)
+			target = Game.Find<Target>(sLoot.target);
 	}
+
 	#endregion
 }
 
 /// <summary>
 /// Classe pour la sauvegarde
 /// 
-/// Pour Loot : rien de plus que pour les objets intéractibles de base
+/// Pour Loot : l'id de la 'target' sur laquelle il est posé
 /// </summary>
 [System.Serializable]
 public class SLoot : SInteractable
 {
-
+	public byte[] target;
+	public string itemBase;
 }

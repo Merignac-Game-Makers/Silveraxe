@@ -12,29 +12,44 @@ public class SceneLoader : MonoBehaviour
 
 	bool testing = false;
 
-	public int currentLevelIndex { get; set; } = 0;
-	public string currentSceneName { get; set; } = "";
-
 	private void Awake() {
 		App.sceneLoader = this;
 	}
 
 	private void Start() {
 		testing = SceneManager.sceneCount > 1;
-		LoadScene(defaultScene);
+		ResourcesManager.Init();
+		GetDefaultScene();
+	}
+
+	void GetDefaultScene() {
+		if (playerNavMesh.enabled) {
+			App.playerManager.StopAgent();
+			App.playerManager.navAgent.enabled = false;
+		}
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(defaultScene, LoadSceneMode.Additive);
+		App.currentSceneName = defaultScene;
+		StartCoroutine(Callback());
+
+		IEnumerator Callback() {
+			while (!asyncLoad.isDone) {
+				yield return null;
+			}
+			playerNavMesh.enabled = true;
+		}
 	}
 
 	public void LoadScene(string scene) {
-		if (!testing && !SceneManager.GetSceneByName(scene).isLoaded) {
-			App.sceneCrossing = true;
+		if (scene != null && scene != "" && !SceneManager.GetSceneByName(scene).isLoaded) { //!testing && 
 			if (playerNavMesh.enabled) {
 				App.playerManager.StopAgent();
 				App.playerManager.navAgent.enabled = false;
 			}
 			StartCoroutine(LoadAsyncScene(scene));
-
 		} else {
 			playerNavMesh.enabled = true;
+			Game.current.LoadScene(scene);
+			Game.current.LoadPlayer();
 		}
 	}
 
@@ -42,7 +57,12 @@ public class SceneLoader : MonoBehaviour
 		StartCoroutine(Unload());
 		IEnumerator Unload() {
 			yield return new WaitForEndOfFrame();
-			SceneManager.UnloadSceneAsync(scene);
+			AsyncOperation asyncUnload = SceneManager.UnloadSceneAsync(scene);
+			// Wait until the asynchronous scene fully unloads
+			while (!asyncUnload.isDone) {
+				yield return null;
+			}
+			// ??? on fait quoi après ???
 		}
 	}
 
@@ -55,16 +75,20 @@ public class SceneLoader : MonoBehaviour
 		}
 
 		SceneSaver[] sSavers = FindObjectsOfType<SceneSaver>();
-		foreach (SceneSaver sSaver in sSavers) {					// décharger toutes les scènes autres que celle qu'on vient de charger
+		foreach (SceneSaver sSaver in sSavers) {                    // décharger toutes les scènes autres que celle qu'on vient de charger
 			if (sSaver.gameObject.scene.name != scene) {
 				UnloadScene(sSaver.gameObject.scene.name);
 			}
 		}
 
-		currentSceneName = scene; 
-		playerNavMesh.enabled = true;
-		SaveLoad.LoadSceneData(scene);
-		Game.current.SavePlayer();
+		if (!App.sceneCrossing) {
+			App.currentSceneName = scene;
+			playerNavMesh.enabled = true;
+			Game.current.LoadScene(scene);
+			Game.current.LoadPlayer();
+			//Game.current.SavePlayer();
+		}
+
 	}
 
 }

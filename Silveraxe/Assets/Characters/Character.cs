@@ -9,12 +9,10 @@ public abstract class Character : InteractableObject, ISave
 {
 
 	// CharacterData
-	[HideInInspector]
-	public CharacterData characterData;                           // caractéristiques du personnage (santé, force..., inventaire, ...)
+	public CharacterData characterData { get; private set; }                          // caractéristiques du personnage (santé, force..., inventaire, ...)
 
 	// navigation
-	[HideInInspector]
-	public NavMeshAgent navAgent;                                   // agent de navigation
+	public NavMeshAgent navAgent { get; private set; }                                  // agent de navigation
 	protected bool MoveAcrossNavMeshesStarted = false;              // flag : est-on sur un nav mesh link ? (pour gérer la vitesse)
 
 	// animation
@@ -28,6 +26,9 @@ public abstract class Character : InteractableObject, ISave
 
 	public Patrol patrol { get; private set; }
 
+
+	private void Awake() {
+	}
 
 	protected override void Start() {
 		base.Start();
@@ -51,6 +52,7 @@ public abstract class Character : InteractableObject, ISave
 
 		// pour les patrouilleurs
 		patrol = GetComponentInChildren<Patrol>();
+
 	}
 
 	public abstract void Act();
@@ -103,20 +105,15 @@ public abstract class Character : InteractableObject, ISave
 
 	#region sauvegarde
 	/// <summary>
-	/// Ajouter la sérialisation des infos à sauvegarder pour cet objet à la sauvegarde générale 'sav'
+	/// Sérialiser les infos à sauvegarder pour cet objet
 	/// </summary>
-	/// <param name="sav">la sauvegarde en cours d'élaboration</param>
-	public virtual void Serialize(List<object> sav) {
-		sav.Add(new SCharacter() {
-			guid = guid.ToByteArray(),													// identifiant unique
-			position = transform.position.ToArray(),									// position
-			rotation = transform.rotation.ToArray(),                                    // rotation
-			stats0 = characterData.stats.baseStats,                                     // statistiques de base
-			stats1 = characterData.stats.stats,											// statistiques de base
-			currentHealth = characterData.stats.CurrentHealth,							// points de vie courants						
-			inventory = new InventoryData(characterData.inventory),						// inventaire
-			navAgentDestination = navAgent ? navAgent.destination.ToArray() : null		// destination de navigation
-		}); ;
+	public override SInteractable Serialize() {
+		var result = new SCharacter().Copy(base.Serialize());
+		result.stats0 = characterData.stats.baseStats; ;									// statistiques de base
+		result.stats1 = characterData.stats.stats;                                          // statistiques de base
+		result.currentHealth = characterData.stats.CurrentHealth;                           // points de vie courants						
+		result.inventory = new InventoryData(characterData.inventory);						// inventaire
+		return result;
 	}
 
 	/// <summary>
@@ -131,8 +128,15 @@ public abstract class Character : InteractableObject, ISave
 			characterData.stats.stats.Copy(s.stats1);                           // statistiques courantes
 			characterData.stats.LoadCurrentHealth(s.currentHealth);				// points de vie courants
 			s.inventory.CopyTo(characterData.inventory);                        // inventaire
-			if (navAgent)
-				navAgent.destination = s.navAgentDestination.ToVector();        // destination de navigation
+
+			foreach (InventoryEntry iEntry in characterData.inventory.entries) {
+				if (iEntry.item.guid != null) {
+					Object o = Game.Find<Object>((System.Guid)iEntry.item.guid);
+					if (o != null) {
+						Destroy(o);
+					}
+				}
+			}
 
 			if (!isAlive)
 				animatorController.anim.SetBool("IsDead", true);

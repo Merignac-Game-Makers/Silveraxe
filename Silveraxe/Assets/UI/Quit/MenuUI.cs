@@ -12,18 +12,15 @@ public class MenuUI : UIBase
 	}
 
 	public void ContinueButton() {
-		ChangeScene[] cScenes = FindObjectsOfType<ChangeScene>();
-		foreach(ChangeScene cs in cScenes) {
-			cs.Temporize();
+		Portail[] cScenes = FindObjectsOfType<Portail>();
+		foreach(Portail cs in cScenes) {
+			cs.Temporize();						// temporisation pur éviter un transport immédiat si la reprise de sauvegarde est sur un portail
 		}
 
-		var cScene = FindObjectOfType<SceneSaver>().gameObject.scene.name;
-		SaveLoad.LoadPlayerData();
-		if (cScene != sceneLoader.currentSceneName) {
-			sceneLoader.LoadScene(sceneLoader.currentSceneName);
-		} else {
-			SaveLoad.LoadSceneData(sceneLoader.currentSceneName);
-		}
+		Game.current.LoadHeader();							// charger le nom de la scène courante
+
+		sceneLoader.LoadScene(App.currentSceneName);								// charger la scène dans laquelle doit se trouver le joueur ... puis charger le joueur
+
 		Toggle();
 	}
 

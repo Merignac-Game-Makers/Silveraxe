@@ -23,15 +23,28 @@ public class Equipment : Loot
 
 	protected override void Take() {
 		// on ramasse l'objet
-		playerManager.StopAgent();
-		playerManager.characterData.equipment.AddItem(this);
-		isInPlayerCollider = false;
-		SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });
-		targetsManager.OnTake();
-		if (target) {
+		playerManager.StopAgent();                                                                                      // interrompre le déplacement du joueur
+		playerManager.characterData.equipment.AddItem(this);															//		ajouter l'objet à l'équipement du joueur
+		isInPlayerCollider = false;                                                                                     //		l'objet n'est plus dans le collider du joueur (=> non intéractible)
+		SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });      //		son
+		targetsManager.OnTake();                                                                                        //		extinction de toutes les cibles
+		if (target) {                                                                                                   //		mise à jour de la cible (s'il était sur une cible)
 			target.item = null;
 			target = null;
 		}
+	}
+
+	/// <summary>
+	/// Déposer un objet d'inventaire
+	/// </summary>
+	/// <param name="target">le lieu</param>
+	/// <param name="entry">l'entrée d'inventaire </param>
+	public override void Drop(Target target) {
+		this.target = target;
+		itemBase.animate = true;
+		transform.position = target.targetPos;
+		StartAnimation();
+		playerManager.characterData.equipment.RemoveItem(entry as EquipmentEntry);			// retirer l'objet déposé de l'équipement du joueur
 	}
 
 

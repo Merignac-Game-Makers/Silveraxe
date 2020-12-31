@@ -75,7 +75,7 @@ public class MovementInput : MonoBehaviour
 
 	private void FixedUpdate() {
 		if (SceneModeManager.sceneMode != SceneMode.dialogue) {     // rotation en fonction de la direction de la souris
-			if (fTranslation > .1 || Input.GetAxis("Fire3") > 0) {
+			if (fTranslation > .1 || Input.GetButton("Fire3")) {
 				transform.Rotate(Vector3.up, screenDirection.normalized.x * rotationSensitivity);
 			}
 		}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class AddHealthUsageEffect : UsageEffect
 {
     public int Percentage = 20;

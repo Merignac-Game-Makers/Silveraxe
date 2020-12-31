@@ -10,9 +10,11 @@ public abstract class SceneSaver : MonoBehaviour
 	/// <summary>
 	/// Ajouter la sérialisation des infos à sauvegarder pour cet objet à la sauvegarde générale 'sav'
 	/// </summary>
-	/// <param name="sav">la sauvegarde en cours d'élaboration</param>
-	public virtual void Serialize(List<object> sav) {
-
+	public virtual SerializedScene Serialize() {
+		return new SerializedScene() {
+			version = App.saveVersion,                      // version de sauvegarde
+			id = App.currentSceneName,                      // nom de scene
+		};
 	}
 
 
@@ -25,13 +27,17 @@ public abstract class SceneSaver : MonoBehaviour
 			SerializedScene s = serialized as SerializedScene;
 		}
 	}
+
+	public virtual void Pause(bool pause) { 
+	}
 }
 
 /// <summary>
 /// Classe pour la sauvegarde
 /// </summary>
 [System.Serializable]
-public abstract class SerializedScene
+public class SerializedScene
 {
+	public string version = "";
 	public string id;         // nom de la scène
 }

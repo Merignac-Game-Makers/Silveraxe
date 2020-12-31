@@ -2,43 +2,52 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-using static App;
+using UnityEngine.SceneManagement;
 
 public class InteractableObjectsManager : MonoBehaviour
 {
 
-	public Texture2D dialogueIcon;
-	public Texture2D takeIcon;
-	public Texture2D dropIcon;
-	public Texture2D fightIcon;
+	public InteractableObject closest { get; private set; }
 
 	List<InteractableObject> objects;
-
+	float dist;
+	float d;
 
 	private void Awake() {
-		interactableObjectsManager = this;
-		objects = new List<InteractableObject>(FindObjectsOfType<InteractableObject>());
-		objects.Remove(playerManager);
+		App.itemsManager = this;
 	}
 
-	void Start() {
+	private void Start() {
+		GetSceneObjects();
+	}
+
+	/// <summary>
+	/// récupérer tous les InteractableObject de la scène dans la listes 'objects'
+	/// </summary>
+	public void GetSceneObjects() {
+		objects = new List<InteractableObject>(FindObjectsOfType<InteractableObject>());
+		for (int i = objects.Count - 1; i > -1; i--) {
+			if (objects[i].gameObject.scene.name != gameObject.scene.name) // && objects[i].gameObject.scene.name != "NeverUnload"
+				objects.Remove(objects[i]);
+		}
+		objects.Remove(App.playerManager);
 	}
 
 	private void Update() {
 		Closest();
 	}
 
-	float dist;
-	float d;
-	public InteractableObject closest { get; private set; }
+	/// <summary>
+	/// trouver l'objet intéractible le plus proche du joueur
+	/// </summary>
+	/// <returns></returns>
 	public InteractableObject Closest() {
 		dist = 999999;
 		closest = null;
 		foreach (InteractableObject obj in objects) {
 			if (!obj.IsHighlightable())
 				continue;
-			d = (obj.transform.position - playerManager.transform.position).sqrMagnitude;
+			d = (obj.transform.position - App.playerManager.transform.position).sqrMagnitude;
 			if (d < dist) {
 				closest = obj;
 				dist = d;
@@ -47,7 +56,10 @@ public class InteractableObjectsManager : MonoBehaviour
 		return closest;
 	}
 
-
+	/// <summary>
+	/// Allumer ou éteindre tous les objets qui sont dans le collider du joueur
+	/// </summary>
+	/// <param name="on"></param>
 	public void SelectAll(bool on) {
 		foreach (InteractableObject obj in objects) {
 			obj.selectionMuted = !on;
