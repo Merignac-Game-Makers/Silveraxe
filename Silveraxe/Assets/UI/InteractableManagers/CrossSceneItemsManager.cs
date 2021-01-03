@@ -11,7 +11,6 @@ public class CrossSceneItemsManager : MonoBehaviour
 		for (int i=0; i<transform.childCount; i++) {
 			children.Add(transform.GetChild(i));
 		}
-		//children.Remove(transform);
 	}
 
 	public static void SetActiveScene(string scene) {

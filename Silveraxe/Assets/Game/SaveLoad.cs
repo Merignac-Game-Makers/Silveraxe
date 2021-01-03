@@ -51,25 +51,18 @@ public static class SaveLoad
 				List<object> data = (List<object>)bf.Deserialize(file);
 				file.Close();
 				return data;
-			} catch (SerializationException e) {
+			}
+			catch (SerializationException e) {
 				return null;
 			}
 		}
 		return null;
 	}
 
-	public static object LoadPlayerFile() {
-		var fullPath = Application.persistentDataPath + "/player.data";
+	public static void DeleteSceneFile(string scene) {
+		var fullPath = Application.persistentDataPath + "/" + scene + ".data";
 		if (File.Exists(fullPath)) {
-			BinaryFormatter bf = new BinaryFormatter();
-			FileStream file = File.Open(fullPath, FileMode.Open);
-			object data = bf.Deserialize(file);
-			file.Close();
-			return data;
-			//Game.current.LoadPlayer(data);
+			File.Delete(fullPath);
 		}
-		return null;
 	}
-
-
 }

@@ -11,46 +11,27 @@ public class Game
 {
 
 	public static Game current;
+	public static List<string> buildScenes;
 
 	System.Guid guid = System.Guid.NewGuid();
 	List<object> sav = new List<object>();
-	//List<string> buildScenes;
 
-	//Dictionary<string, byte[]> savedScenesID;
-
-	///// <summary>
-	///// Liste des noms des scenes du build
-	///// </summary>
-	///// <returns></returns>
-	//public static List<string> BuildScenes() {
-	//	List<string> scenes = new List<string>();
-	//	foreach (EditorBuildSettingsScene scene in EditorBuildSettings.scenes) {
-	//		if (scene.enabled)
-	//			scenes.Add(Path.GetFileNameWithoutExtension(scene.path));
-	//	}
-	//	return scenes;
-	//}
-
-	///// <summary>
-	///// Créer un ID unique pour chaque scène du build
-	///// </summary>
-	///// <returns></returns>
-	//private static Dictionary<string, byte[]> NewIDs() {
-	//	if (current == null)
-	//		current = new Game();
-
-	//	Dictionary<string, byte[]> iDs = new Dictionary<string, byte[]>();
-	//	foreach (string scene in current.buildScenes) {
-	//		iDs.Add(scene, System.Guid.NewGuid().ToByteArray());
-	//	}
-
-	//	return iDs;
-	//}
+	/// <summary>
+	/// Liste des noms des scenes du build
+	/// </summary>
+	/// <returns></returns>
+	public static List<string> BuildScenes() {
+		List<string> scenes = new List<string>();
+		foreach (EditorBuildSettingsScene scene in EditorBuildSettings.scenes) {
+			if (scene.enabled)
+				scenes.Add(Path.GetFileNameWithoutExtension(scene.path));
+		}
+		return scenes;
+	}
 
 	public Game() {
 		current = this;
-		//buildScenes = BuildScenes();
-		//savedScenesID = NewIDs();
+		buildScenes = BuildScenes();
 	}
 
 	#region API

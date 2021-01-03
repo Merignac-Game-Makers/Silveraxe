@@ -36,6 +36,9 @@ public class SceneLoader : MonoBehaviour
 				Game.current.LoadSceneData(App.dontDestroyScene, true); //		réinitialiser la scène 'NeverUnload'  (true => dans son état de départ)
 				LoadScene(defaultScene, false);							//		charger la scène de départ du jeu  (false => sans restaurer de sauvegarde)
 				Game.NewGame();											//		créer un nouvel identifiant de sauvegarde pour la nouvelle partie
+				foreach (string scene in Game.buildScenes) {
+					SaveLoad.DeleteSceneFile(scene);
+				}
 			});
 		}
 	}
