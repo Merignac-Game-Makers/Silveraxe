@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Classe vraisemblablement devenue inutile
+/// </summary>
 public static class ResourcesManager 
 {
 	public static Object[] allItemBases;
 	public static Object[] allSprites;
 
 	public static void Init() {
-		allItemBases = Resources.LoadAll("", typeof(ItemBase)) ;
-		allSprites = Resources.LoadAll("", typeof(Sprite));
+		allItemBases = Resources.LoadAll("", typeof(ItemBase)) ;	// lister les Loot et Equipment
+		allSprites = Resources.LoadAll("", typeof(Sprite));			// lister les Sprite
 	}
 
 	public static Sprite GetSprite(string name) {

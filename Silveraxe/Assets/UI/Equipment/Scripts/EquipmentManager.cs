@@ -68,7 +68,6 @@ public class EquipmentManager
 			}
 		}
 
-		item.transform.parent = App.playerManager.luggageRack;				// attacher l'objet au joueur
 		item.transform.position = new Vector3(0, -50, 0);
 
 		if (IsSetComplete() && GetSetLevel() != null) {						// si l'équipement est complet et homogène en niveau
@@ -93,7 +92,7 @@ public class EquipmentManager
 	public bool UseItem(Entry entry) {
 		if (entry is EquipmentEntry) {
 			var eEntry = entry as EquipmentEntry;
-			if (eEntry.item.usable) {														// si l'objet est utilisable
+			if (eEntry.item.itemBase.usable) {														// si l'objet est utilisable
 				SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() {	// jouer le son associé
 					Clip = SFXManager.ItemUsedSound
 				});

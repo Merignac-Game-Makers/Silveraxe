@@ -4,7 +4,6 @@ using UnityEngine;
 
 public interface ISave 
 {
-	//void Serialize(List<object> sav);
-	SInteractable Serialize();
+	SSavable Serialize();
 	void Deserialize(object serialized);
 }

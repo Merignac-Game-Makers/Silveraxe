@@ -18,8 +18,6 @@ using System.Reflection;
 public abstract class InteractableObject : HighlightableObject
 {
 
-	public Guid? guid { get; set; }
-
 	public enum Action { take, drop, talk }
 
 	public enum Mode { onClick, onTheFly, onTheFlyOnce }    // modes d'intéraction possibles
@@ -38,8 +36,6 @@ public abstract class InteractableObject : HighlightableObject
 
 	protected override void Start() {
 		base.Start();
-
-		guid = GetComponent<GuidComponent>()?.GetGuid();
 
 		// ajouter des MeshColliders si nécessaire
 		var meshes = GetComponentsInChildren<MeshFilter>();
@@ -81,40 +77,27 @@ public abstract class InteractableObject : HighlightableObject
 	}
 
 
-	public virtual SInteractable Serialize() {
-		return new SInteractable() {
-			version = App.saveVersion,
-			guid = guid!=null ? ((Guid)guid).ToByteArray() : null,
-			scene = gameObject.scene.name,
-			position = transform.position.ToArray(),                 // position
-			rotation = transform.rotation.ToArray(),                 // rotation
-		};
-	}
+	//public virtual SSavable Serialize() {
+	//	return new SSavable() {
+	//		version = App.saveVersion,
+	//		guid = guid!=null ? ((Guid)guid).ToByteArray() : null,
+	//		scene = gameObject.scene.name,
+	//		position = transform.position.ToArray(),                 // position
+	//		rotation = transform.rotation.ToArray(),                 // rotation
+	//	};
+	//}
 
-	/// <summary>
-	/// Restaurer les valeurs précédement sérialisées
-	/// </summary>
-	/// <param name="serialized">les valeurs sérialisées</param>
-	public virtual void Deserialize(object serialized) {
-		if (serialized is SInteractable) {
-			SInteractable s = serialized as SInteractable;
-			transform.position = s.position.ToVector();                     // position
-			transform.rotation = s.rotation.ToQuaternion();                 // rotation
-		}
-	}
-
-}
-
-/// <summary>
-/// Classe pour la sauvegarde
-/// </summary>
-[Serializable]
-public class SInteractable
-{
-	public string version;      // version de sauvegarde
-	public byte[] guid;         // identifiant unique
-	public string scene;        // scène dans laquelle se trouve l'objet
-	public float[] position;    // position
-	public float[] rotation;    // rotation
+	///// <summary>
+	///// Restaurer les valeurs précédement sérialisées
+	///// </summary>
+	///// <param name="serialized">les valeurs sérialisées</param>
+	//public virtual void Deserialize(object serialized) {
+	//	if (serialized is SSavable) {
+	//		SSavable s = serialized as SSavable;
+	//		transform.position = s.position.ToVector();                     // position
+	//		transform.rotation = s.rotation.ToQuaternion();                 // rotation
+	//	}
+	//}
 
 }
+

@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 2810895221613605852}
   - component: {fileID: 4774055741898338542}
   - component: {fileID: 4774055741898338541}
+  - component: {fileID: 5015795573374427984}
   m_Layer: 10
   m_Name: Door
   m_TagString: Untagged
@@ -160,9 +161,23 @@ MonoBehaviour:
   doorAnim: {fileID: 4774055741898338542}
   doorOrc: {fileID: 5135189226961151233}
   sensor: {fileID: 8168561783278598535}
+  loot: {fileID: 0}
   safePoint: {fileID: 2952525170942419121}
   actionPoint: {fileID: 3825181224054936426}
   freezeRotation: 0
+--- !u!114 &5015795573374427984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1497774035073561871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98bbc2c1e63e98543830eec78d976795, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializedGuid: 
 --- !u!1 &2181375598166401863
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,24 +484,6 @@ MonoBehaviour:
   useLight: 1
   useOutline: 1
   mode: 0
-  characterData: {fileID: 0}
-  navAgent: {fileID: 0}
-  serialized:
-    guid: 
-    position: []
-    rotation: []
-    stats:
-      health: 0
-      strength: 0
-      defense: 0
-      agility: 0
-      elementalProtection: 00000000000000000000000000000000
-      elementalBoosts: 00000000000000000000000000000000
-    inventory:
-      entries: []
-    equipment:
-      entries: []
-    navAgentDestination: []
   PNJName: Grunt
   onTheFlyRadius: 1
   alignment: 2
@@ -607,8 +604,6 @@ MonoBehaviour:
       agility: 0
       elementalProtection: 00000000000000000000000000000000
       elementalBoosts: 00000000000000000000000000000000
-  inventory:
-    entries: []
   HitClip: []
 --- !u!114 &7493807043629988509
 MonoBehaviour:
@@ -2768,12 +2763,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd667057055f4f04f87907d7f4469972, type: 3}
---- !u!4 &5634913203319229805 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5194640791191878161, guid: dd667057055f4f04f87907d7f4469972,
-    type: 3}
-  m_PrefabInstance: {fileID: 442524786619234172}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5634913203319229806 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5194640791191878162, guid: dd667057055f4f04f87907d7f4469972,
@@ -2786,6 +2775,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 742ca7df225bac641bb1b265f54123b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &5634913203319229805 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5194640791191878161, guid: dd667057055f4f04f87907d7f4469972,
+    type: 3}
+  m_PrefabInstance: {fileID: 442524786619234172}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6325257420204573015
 PrefabInstance:
   m_ObjectHideFlags: 0

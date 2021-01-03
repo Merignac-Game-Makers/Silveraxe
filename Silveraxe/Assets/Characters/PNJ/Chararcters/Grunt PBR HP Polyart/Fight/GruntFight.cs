@@ -10,8 +10,8 @@ public class GruntFight : FightController
 
 	float timer;
 
-	public GameObject polyartSkin;      // apparence basic = plyart
-	public GameObject rockSkin;           // apparence medium = hand painted +> rock
+	public GameObject polyartSkin;			// apparence basic = plyart
+	public GameObject rockSkin;				// apparence medium = hand painted +> rock
 
 	public AudioClip[] petrified;
 

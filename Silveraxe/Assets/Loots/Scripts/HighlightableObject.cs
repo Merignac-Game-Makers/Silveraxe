@@ -10,7 +10,7 @@ using static App;
 /// of setting the material parameters for it when it gets highlighted.
 /// If the object use another material, it will just ignore all the changes.
 /// </summary>
-public abstract class HighlightableObject : MonoBehaviour
+public abstract class HighlightableObject : Savable
 {
 
 	public bool isHighlightable = true;
@@ -32,7 +32,8 @@ public abstract class HighlightableObject : MonoBehaviour
 
 	Outline outline;
 
-	protected virtual void Start() {
+	protected override void Start() {
+		base.Start();
 		// pour les projecteurs
 		projector = GetComponentInChildren<ProjectorDriver>();
 		// pour les systèmes de particules

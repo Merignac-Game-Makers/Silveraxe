@@ -7,34 +7,30 @@ public class MenuUI : UIBase
 {
 
 	private void Start() {
-		Game.current = new Game();
 		Show(false);
 	}
 
 	public void ContinueButton() {
-		Portail[] cScenes = FindObjectsOfType<Portail>();
-		foreach(Portail cs in cScenes) {
-			cs.Temporize();						// temporisation pur éviter un transport immédiat si la reprise de sauvegarde est sur un portail
+		Portail[] portals = FindObjectsOfType<Portail>();
+		foreach(Portail portal in portals) {
+			portal.Temporize();					// temporisation pur éviter un transport immédiat si la reprise de sauvegarde est sur un portail
 		}
-
-		Game.current.LoadHeader();							// charger le nom de la scène courante
-
-		sceneLoader.LoadScene(App.currentSceneName);								// charger la scène dans laquelle doit se trouver le joueur ... puis charger le joueur
-
+		Game.Load();							// charger la sauvegarde courante
 		Toggle();
 	}
 
 	public void NewGameButton() {
+		App.sceneLoader.Restart();
 		Toggle();
 	}
 
 	public void SaveContinueButton() {
-		Game.current.Save();
+		Game.Save();
 		Toggle();
 	}
 
 	public void SaveQuitButton() {
-		Game.current.Save();
+		Game.Save();
 		Application.Quit();
 	}
 

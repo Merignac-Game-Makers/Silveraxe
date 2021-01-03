@@ -5,7 +5,7 @@ using UnityEngine.Animations;
 
 using static App;
 
-public abstract class Character : InteractableObject, ISave
+public abstract class Character : InteractableObject
 {
 
 	// CharacterData
@@ -27,7 +27,8 @@ public abstract class Character : InteractableObject, ISave
 	public Patrol patrol { get; private set; }
 
 
-	private void Awake() {
+	protected override void Awake() {
+		base.Awake();
 	}
 
 	protected override void Start() {
@@ -107,7 +108,7 @@ public abstract class Character : InteractableObject, ISave
 	/// <summary>
 	/// Sérialiser les infos à sauvegarder pour cet objet
 	/// </summary>
-	public override SInteractable Serialize() {
+	public override SSavable Serialize() {
 		var result = new SCharacter().Copy(base.Serialize());
 		result.stats0 = characterData.stats.baseStats; ;									// statistiques de base
 		result.stats1 = characterData.stats.stats;                                          // statistiques de base
@@ -121,6 +122,12 @@ public abstract class Character : InteractableObject, ISave
 	/// </summary>
 	/// <param name="serialized"></param>
 	public override void Deserialize(object serialized) {
+
+		if (navAgent &  navAgent.enabled) {
+			navAgent.ResetPath();                    // annulation de la navigation en cours
+			navAgent.velocity = Vector3.zero;        // vitesse nulle
+		}
+
 		base.Deserialize(serialized);
 		if (serialized is SCharacter) {
 			SCharacter s = serialized as SCharacter;
@@ -128,15 +135,6 @@ public abstract class Character : InteractableObject, ISave
 			characterData.stats.stats.Copy(s.stats1);                           // statistiques courantes
 			characterData.stats.LoadCurrentHealth(s.currentHealth);				// points de vie courants
 			s.inventory.CopyTo(characterData.inventory);                        // inventaire
-
-			foreach (InventoryEntry iEntry in characterData.inventory.entries) {
-				if (iEntry.item.guid != null) {
-					Object o = Game.Find<Object>((System.Guid)iEntry.item.guid);
-					if (o != null) {
-						Destroy(o);
-					}
-				}
-			}
 
 			if (!isAlive)
 				animatorController.anim.SetBool("IsDead", true);
@@ -151,7 +149,7 @@ public abstract class Character : InteractableObject, ISave
 /// Classe pour la sauvegarde
 /// </summary>
 [System.Serializable]
-public class SCharacter : SInteractable
+public class SCharacter : SSavable
 {
 	public StatSystem.Stats stats0;             // statistiques de base
 	public StatSystem.Stats stats1;             // statistiques courantes

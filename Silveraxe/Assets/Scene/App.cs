@@ -40,7 +40,8 @@ public static class App
 	// strings
 	public const string DIALOGUE = "Dialogue";
 	public const string FIGHT = "Fight";
-	public const string saveVersion = "0.2";
+	public const string saveVersion = "0.8";
+	public const string dontDestroyScene = "NeverUnload";
 
 	//--------------------
 	// Texture <=> fichier
@@ -152,7 +153,7 @@ public static class App
 
 	//----------------------------------------------------------------------------------------------
 	// Extension pour permettre la sérialisation / désérialisation des objets intéractibles
-	public static T Copy<T>(this T sI, SInteractable other) {
+	public static T Copy<T>(this T sI, SSavable other) {
 		foreach (FieldInfo fi in other.GetType().GetFields()) {
 			fi.SetValue(sI, fi.GetValue(other));
 		}

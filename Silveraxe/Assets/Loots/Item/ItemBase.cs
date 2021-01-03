@@ -17,7 +17,6 @@ public class ItemBase : ScriptableObject
 	public Sprite itemSprite;
 	public string description;
 	public GameObject prefab;
-	public Target target;
 	public bool animate = true;
 	public bool dropable = true;
 	public LootCategory lootCategory;

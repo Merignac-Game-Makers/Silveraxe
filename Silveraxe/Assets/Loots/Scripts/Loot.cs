@@ -15,56 +15,50 @@ using System.Reflection;
 ///
 /// Finally it will notify the LootUI that a new loot is available in the world so the UI displays the name.
 /// </summary>
-public class Loot : InteractableObject, ISave
+public class Loot : InteractableObject
 {
 	protected static float AnimationTime = 0.1f;
 
 	public ItemBase itemBase;
 
-	public string itemName => itemBase.itemName;
-	public GameObject prefab => itemBase.prefab;
-	public Sprite itemSprite => itemBase.itemSprite;
-	public string description => itemBase.description;
-	public bool animate => itemBase.animate;
-	public bool dropable => itemBase.dropable;
-	public LootCategory lootCategory => itemBase.lootCategory;
-	public bool usable => itemBase.usable;
-	public List<UsageEffect> usageEffects => itemBase.usageEffects;
-
-	public Target target;
+	public Target target { get; set; }												// la cible sur laquelle l'objet est posé
 
 	public Entry entry { get; set; } = null;                                        // L'entrée d'inventaire lorsque l'objet a été ramassé
 
 	public override bool IsInteractable() {                                         // l'objet est intéractif si
-		if (animate && m_AnimationTimer < AnimationTime) return false;              // l'animation de mise en place est terminée
+		if (itemBase.animate && m_AnimationTimer < AnimationTime) return false;              // l'animation de mise en place est terminée
 		return base.IsInteractable();                                               //  
 	}
 
-	protected Vector3 m_OriginalPosition;
-	protected Vector3 m_TargetPoint;
-	protected float m_AnimationTimer = 0.0f;
+	Vector3 m_OriginalPosition;
+	Vector3 m_TargetPoint;
+	float m_AnimationTimer = 0.0f;
 
 
-	void Awake() {
-		StartAnimation();
-		target = itemBase.target;
+	protected override void Start() {
+		base.Start();
+		m_OriginalPosition = transform.position;                    // préparation de l'animation
 	}
 
+	private void OnEnable() {
+		itemBase.animate = false;
+		//if (itemBase.animate)
+		//	StartAnimation();
+	}
 
 	void Update() {
-		// animation de mise en place
-		if (animate && m_AnimationTimer < AnimationTime) {
-			m_AnimationTimer += Time.deltaTime;
-			float ratio = Mathf.Clamp01(m_AnimationTimer / AnimationTime);
-			Vector3 currentPos = Vector3.Lerp(m_OriginalPosition, m_TargetPoint, ratio);
-			currentPos.y = currentPos.y + Mathf.Sin(ratio * Mathf.PI) * 2.0f;
-			transform.position = currentPos;
-		}
+		//// animation de mise en place
+		//if (itemBase.animate && m_AnimationTimer < AnimationTime) {
+		//	m_AnimationTimer += Time.deltaTime * Time.timeScale;
+		//	float ratio = Mathf.Clamp01(m_AnimationTimer / AnimationTime);
+		//	Vector3 currentPos = Vector3.Lerp(m_OriginalPosition, m_TargetPoint, ratio);
+		//	currentPos.y = currentPos.y + Mathf.Sin(ratio * Mathf.PI) * 2.0f;
+		//	transform.position = currentPos;
+		//}
 
 		// bouton d'action
 		if (Input.GetButtonDown("Fire1") && !uiManager.isClicOnUI) {
 			Act();
-
 		}
 	}
 
@@ -74,20 +68,19 @@ public class Loot : InteractableObject, ISave
 	}
 
 	public bool Equals(Loot other) {
-		return prefab == other.prefab;
+		return itemBase.prefab == other.itemBase.prefab;
 	}
 
 	public void StartAnimation() {
-		StartCoroutine("CreateAnimation");
+		StartCoroutine(CreateAnimation());
 	}
 
 	IEnumerator CreateAnimation() {
 		float ratio;
-		m_OriginalPosition = transform.position;                    // préparation
 		m_TargetPoint = transform.position;                         // de l'animation
 		m_AnimationTimer = AnimationTime - 0.1f;                    // de mise en place
-		while (animate && m_AnimationTimer < AnimationTime) {
-			m_AnimationTimer += Time.deltaTime;
+		while (itemBase.animate && m_AnimationTimer < AnimationTime) {
+			m_AnimationTimer += Time.deltaTime * Time.timeScale;
 			ratio = Mathf.Clamp01(m_AnimationTimer / AnimationTime);
 			Vector3 currentPos = Vector3.Lerp(m_OriginalPosition, m_TargetPoint, ratio);
 			currentPos.y += Mathf.Sin(ratio * Mathf.PI) * 2.0f;
@@ -133,7 +126,7 @@ public class Loot : InteractableObject, ISave
 	/// <summary>
 	/// Ajouter la sérialisation des infos à sauvegarder pour cet objet à la sauvegarde générale 'sav'
 	/// </summary>
-	public override SInteractable Serialize() {
+	public override SSavable Serialize() {
 		var result = new SLoot().Copy(base.Serialize());
 		result.itemBase = itemBase.name;
 		if (target && target.guid != null)
@@ -164,7 +157,7 @@ public class Loot : InteractableObject, ISave
 /// Pour Loot : l'id de la 'target' sur laquelle il est posé
 /// </summary>
 [System.Serializable]
-public class SLoot : SInteractable
+public class SLoot : SSavable
 {
 	public byte[] target;
 	public string itemBase;

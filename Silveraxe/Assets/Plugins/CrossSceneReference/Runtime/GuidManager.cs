@@ -90,7 +90,29 @@ public class GuidManager
         }
         return Instance.ResolveGuidInternal(guid, null, null);
     }
-        
+
+    public static List<GameObject> GetAll() {
+        if (Instance == null) {
+            Instance = new GuidManager();
+        }
+        List<GameObject> result = new List<GameObject>();
+        foreach (GuidInfo gi in Instance.guidToObjectMap.Values) {
+            result.Add(gi.go);
+		}
+        return result;
+    }
+    public static List<GameObject> GetAll(string scene) {
+        if (Instance == null) {
+            Instance = new GuidManager();
+        }
+        List<GameObject> result = new List<GameObject>();
+        foreach (GuidInfo gi in Instance.guidToObjectMap.Values) {
+            if (gi.go.scene.name == scene)
+                result.Add(gi.go);
+        }
+        return result;
+    }
+
     // instance data
     private Dictionary<System.Guid, GuidInfo> guidToObjectMap;
 

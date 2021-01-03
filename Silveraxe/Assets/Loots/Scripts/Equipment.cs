@@ -21,6 +21,7 @@ public class Equipment : Loot
 	public EquipmentCategory equipmentCategory;
 	public EquipmentLevel equipmentLevel;
 
+
 	protected override void Take() {
 		// on ramasse l'objet
 		playerManager.StopAgent();                                                                                      // interrompre le déplacement du joueur

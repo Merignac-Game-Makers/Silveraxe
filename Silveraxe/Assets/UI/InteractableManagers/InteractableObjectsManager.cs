@@ -9,7 +9,7 @@ public class InteractableObjectsManager : MonoBehaviour
 
 	public InteractableObject closest { get; private set; }
 
-	List<InteractableObject> objects;
+	List<InteractableObject> objects = new List<InteractableObject>();
 	float dist;
 	float d;
 
@@ -17,9 +17,9 @@ public class InteractableObjectsManager : MonoBehaviour
 		App.itemsManager = this;
 	}
 
-	private void Start() {
-		GetSceneObjects();
-	}
+	//private void Start() {
+	//	GetSceneObjects();
+	//}
 
 	/// <summary>
 	/// récupérer tous les InteractableObject de la scène dans la listes 'objects'
@@ -27,13 +27,13 @@ public class InteractableObjectsManager : MonoBehaviour
 	public void GetSceneObjects() {
 		objects = new List<InteractableObject>(FindObjectsOfType<InteractableObject>());
 		for (int i = objects.Count - 1; i > -1; i--) {
-			if (objects[i].gameObject.scene.name != gameObject.scene.name) // && objects[i].gameObject.scene.name != "NeverUnload"
+			if (objects[i].gameObject.scene.name != App.currentSceneName && objects[i].gameObject.scene.name != App.dontDestroyScene) // 
 				objects.Remove(objects[i]);
 		}
 		objects.Remove(App.playerManager);
 	}
 
-	private void Update() {
+	private void FixedUpdate() {
 		Closest();
 	}
 

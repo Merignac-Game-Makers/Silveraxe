@@ -12,7 +12,7 @@ public class LootEditor : Editor
 
 	SerializedProperty pItemBase;
 	SerializedProperty pInteractionMode;
-	SerializedProperty pTarget;
+	//SerializedProperty pTarget;
 
 	List<string> m_AvailableUsageType;
 
@@ -28,7 +28,7 @@ public class LootEditor : Editor
 
 		pItemBase = serializedObject.FindProperty(nameof(Loot.itemBase));
 		pInteractionMode = serializedObject.FindProperty(nameof(Loot.mode));
-		pTarget = serializedObject.FindProperty(nameof(Loot.target));
+		//pTarget = serializedObject.FindProperty(nameof(Loot.target));
 
 		//var lookup = typeof(UsageEffect);
 		//m_AvailableUsageType = System.AppDomain.CurrentDomain.GetAssemblies()
@@ -44,7 +44,7 @@ public class LootEditor : Editor
 
 		EditorGUILayout.PropertyField(pItemBase);
 		EditorGUILayout.PropertyField(pInteractionMode);
-		EditorGUILayout.PropertyField(pTarget);
+		//EditorGUILayout.PropertyField(pTarget);
 
 
 		m_HighlightableEditor.GUI(target as Loot);

@@ -1847,36 +1847,6 @@ Transform:
   m_Father: {fileID: 3065234720594903603}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2964181208500768967
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2942194065516146200}
-  m_Layer: 0
-  m_Name: luggageRack
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2942194065516146200
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2964181208500768967}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 2432836381384688571}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3122418174012831427
 GameObject:
   m_ObjectHideFlags: 0
@@ -7108,7 +7078,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5640396202300948056}
-  - {fileID: 2942194065516146200}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7128,7 +7097,7 @@ MonoBehaviour:
   useLight: 1
   useOutline: 1
   mode: 0
-  luggageRack: {fileID: 2942194065516146200}
+  luggageRack: {fileID: 0}
   polyartSkin: {fileID: 8489495972835417913}
   hpSkin: {fileID: 7932419878997173024}
   pbrSkin: {fileID: 4515140745820154307}
@@ -7155,8 +7124,6 @@ MonoBehaviour:
       agility: 10
       elementalProtection: 00000000000000000000000000000000
       elementalBoosts: 00000000000000000000000000000000
-  inventory:
-    entries: []
   HitClip: []
 --- !u!195 &6448459497844213723
 NavMeshAgent:

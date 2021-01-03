@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class DoorOrc : MonoBehaviour
+public class DoorOrc : Savable
 {
 	public Animator doorAnim;
 	public Character doorOrc;
@@ -20,7 +20,8 @@ public class DoorOrc : MonoBehaviour
 	Quaternion initialRotation;
 
 
-	private void Start() {
+	protected override void Start() {
+		base.Start();
 		orcAgent = doorOrc.GetComponent<NavMeshAgent>();
 		initialRotation = orcAgent.transform.rotation;
 		orcAgent.updateRotation = !freezeRotation;

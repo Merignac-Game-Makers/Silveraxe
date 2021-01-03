@@ -11,8 +11,6 @@ using static App;
 /// </summary>
 public class PlayerManager : Character
 {
-	public Transform luggageRack;		// porte-bagages
-
 	public GameObject polyartSkin;      // apparence basic = plyart
 	public GameObject hpSkin;           // apparence medium = hand painted
 	public GameObject pbrSkin;          // apparence high =	PBR
@@ -29,7 +27,8 @@ public class PlayerManager : Character
 	public override bool IsInteractable() { return true; }          // le joueur peut toujours intéragir avec son environnement
 
 	#region Initialisation
-	void Awake() {
+	protected override void Awake() {
+		base.Awake();
 		playerManager = this;                                       // création de l'instance statique
 	}
 
@@ -122,7 +121,7 @@ public class PlayerManager : Character
 	/// Sérialiser les infos à sauvegarder
 	/// </summary>
 	/// <returns></returns>
-	public override SInteractable Serialize() {
+	public override SSavable Serialize() {
 		var result = new SPlayer().Copy(base.Serialize());
 		//result.scene = FindObjectOfType<SceneSaver>().gameObject.scene.name;
 		result.equipment = new EquipmentData(characterData.equipment);                     // équipement
@@ -135,7 +134,7 @@ public class PlayerManager : Character
 	/// </summary>
 	/// <param name="serialized"></param>
 	public override void Deserialize(object serialized) {
-		if (((SInteractable)serialized).version == App.saveVersion) {
+		if (((SSavable)serialized).version == App.saveVersion) {
 			base.Deserialize(serialized);
 			if (serialized is SPlayer) {
 				SPlayer s = serialized as SPlayer;
@@ -157,6 +156,5 @@ public class PlayerManager : Character
 [System.Serializable]
 public class SPlayer : SCharacter
 {
-	public string scene;                // nom de la scène dans laquelle se trouve la joueur
 	public EquipmentData equipment;             // équipement
 }
