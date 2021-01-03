@@ -12,11 +12,11 @@ public class PurpleCrystalMineSceneSaver : SceneSaver
 	/// Ajouter la sérialisation des infos à sauvegarder pour cet objet à la sauvegarde générale 'sav'
 	/// </summary>
 	/// <param name="sav">la sauvegarde en cours d'élaboration</param>
-	public override void Serialize(List<object> sav) {
-		sav.Add(new PurpleCrystalMineScene() {
-			id = App.sceneLoader.currentSceneName,         // nom de scene
-		});
-	}
+	//public override void Serialize(List<object> sav) {
+	//	sav.Add(new PurpleCrystalMineScene() {
+	//		id = App.sceneLoader.currentSceneName,         // nom de scene
+	//	});
+	//}
 
 
 	/// <summary>

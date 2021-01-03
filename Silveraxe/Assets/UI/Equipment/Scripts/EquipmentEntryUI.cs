@@ -32,9 +32,9 @@ public class EquipmentEntryUI : EntryUI
 		this.entry = eEntry;
 		item = eEntry.item;
 		item.entry = eEntry;
-		iconeImage.sprite = item.ItemSprite;
+		iconeImage.sprite = item.itemBase.itemSprite;
 
-		label.text = item.ItemName;
+		label.text = item.itemBase.itemName;
 		background.enabled = false;
 
 		Show(true);
@@ -48,7 +48,7 @@ public class EquipmentEntryUI : EntryUI
 		EquipmentEntry eEntry = entry as EquipmentEntry;
 
 		if (isEnabled) {
-			iconeImage.sprite = eEntry?.item.ItemSprite;
+			iconeImage.sprite = eEntry?.item.itemBase.itemSprite;
 			background.enabled = false;
 			Show(true);
 		} else {

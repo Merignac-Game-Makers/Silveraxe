@@ -9,6 +9,7 @@ using static InteractableObject.Action;
 using static App;
 using UnityEngine.UI;
 using UnityEngine.Animations;
+using System.Reflection;
 
 /// <summary>
 /// Base class for interactable object, inherit from this class and override InteractWith to handle what happen when
@@ -16,8 +17,6 @@ using UnityEngine.Animations;
 /// </summary>
 public abstract class InteractableObject : HighlightableObject
 {
-
-	public System.Guid guid { get; set; }
 
 	public enum Action { take, drop, talk }
 
@@ -29,7 +28,7 @@ public abstract class InteractableObject : HighlightableObject
 		return IsHighlightable() && isInPlayerCollider && isClosest;
 	}
 
-	public bool isClosest => this == App.interactableObjectsManager.closest;
+	public bool isClosest => this == App.itemsManager.closest;
 
 	public Image actionSprite { get; protected set; }
 	public bool selectionMuted { get; set; } = false;
@@ -37,8 +36,6 @@ public abstract class InteractableObject : HighlightableObject
 
 	protected override void Start() {
 		base.Start();
-
-		guid = GetComponent<GuidComponent>().GetGuid();
 
 		// ajouter des MeshColliders si nécessaire
 		var meshes = GetComponentsInChildren<MeshFilter>();
@@ -80,27 +77,27 @@ public abstract class InteractableObject : HighlightableObject
 	}
 
 
-	/// <summary>
-	/// Restaurer les valeurs précédement sérialisées
-	/// </summary>
-	/// <param name="serialized">les valeurs sérialisées</param>
-	public virtual void Deserialize(object serialized) {
-		if (serialized is SInteractable) {
-			SInteractable s = serialized as SInteractable;
-			transform.position = s.position.ToVector();                     // position
-			transform.rotation = s.rotation.ToQuaternion();                 // rotation
-		}
-	}
+	//public virtual SSavable Serialize() {
+	//	return new SSavable() {
+	//		version = App.saveVersion,
+	//		guid = guid!=null ? ((Guid)guid).ToByteArray() : null,
+	//		scene = gameObject.scene.name,
+	//		position = transform.position.ToArray(),                 // position
+	//		rotation = transform.rotation.ToArray(),                 // rotation
+	//	};
+	//}
+
+	///// <summary>
+	///// Restaurer les valeurs précédement sérialisées
+	///// </summary>
+	///// <param name="serialized">les valeurs sérialisées</param>
+	//public virtual void Deserialize(object serialized) {
+	//	if (serialized is SSavable) {
+	//		SSavable s = serialized as SSavable;
+	//		transform.position = s.position.ToVector();                     // position
+	//		transform.rotation = s.rotation.ToQuaternion();                 // rotation
+	//	}
+	//}
 
 }
 
-/// <summary>
-/// Classe pour la sauvegarde
-/// </summary>
-[Serializable]
-public abstract class SInteractable
-{
-	public byte[] guid;			// identifiant unique
-	public float[] position;	// position
-	public float[] rotation;	// rotation
-}

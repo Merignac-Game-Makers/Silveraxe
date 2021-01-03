@@ -16,7 +16,12 @@ public class UIManager : MonoBehaviour
 	public State state { get; private set; }    // l'état actuel de l'UI
 	private State prevState;                    // l'état précédent de l'UI
 
-	public MenuUI menuUI;								// interface Menu principal	
+	public MenuUI menuUI;                               // interface Menu principal	
+
+	public Texture2D dialogueIcon;
+	public Texture2D takeIcon;
+	public Texture2D dropIcon;
+	public Texture2D fightIcon;
 
 	public int defaultCursorSize = 64;
 

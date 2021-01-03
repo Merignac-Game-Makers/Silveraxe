@@ -11,23 +11,24 @@ using static App;
 /// </summary>
 public class PlayerManager : Character
 {
-	public GameObject polyartSkin;		// apparence basic = plyart
-	public GameObject hpSkin;			// apparence medium = hand painted
+	public GameObject polyartSkin;      // apparence basic = plyart
+	public GameObject hpSkin;           // apparence medium = hand painted
 	public GameObject pbrSkin;          // apparence high =	PBR
 
-	public GameObject shieldHand;		// 
-	public GameObject swordHand;		// 
+	public GameObject shieldHand;       // 
+	public GameObject swordHand;        // 
 
 
-	public MovementInput movementInput { get; private set; }		// gestionnaire de déplacements
+	public MovementInput movementInput { get; private set; }        // gestionnaire de déplacements
 
 	// Interactions
 	InteractableObject interactable = null;                         // objet avec lequel le joueur intéragit
 
-	public override bool IsInteractable() { return true; }			// le joueur peut toujours intéragir avec son environnement
+	public override bool IsInteractable() { return true; }          // le joueur peut toujours intéragir avec son environnement
 
 	#region Initialisation
-	void Awake() {
+	protected override void Awake() {
+		base.Awake();
 		playerManager = this;                                       // création de l'instance statique
 	}
 
@@ -35,8 +36,8 @@ public class PlayerManager : Character
 	protected override void Start() {
 		base.Start();
 
-		movementInput = GetComponentInChildren<MovementInput>();	// gestion des déplacements
-		ShowSkin(characterData.equipment.GetSetLevel());			// apparence initiale
+		movementInput = GetComponentInChildren<MovementInput>();    // gestion des déplacements
+		ShowSkin(characterData.equipment.GetSetLevel());            // apparence initiale
 	}
 	#endregion
 
@@ -48,7 +49,7 @@ public class PlayerManager : Character
 			interactable = other.gameObject.GetComponent<InteractableObject>();
 			if (interactable != null) {                         // si l'objet rencontré est un 'intéractible'
 				interactable.isInPlayerCollider = true;
-				interactable.Highlight(true);					//			montrer le sprite d'action
+				interactable.Highlight(true);                   //			montrer le sprite d'action
 			}
 		}
 	}
@@ -56,13 +57,13 @@ public class PlayerManager : Character
 	public void OnTriggerExit(Collider other) {
 		if (other.gameObject != gameObject) {
 			interactable = other.gameObject.GetComponent<InteractableObject>();
-			if (interactable != null) {												// si l'objet rencontré est un 'intéractible'
-				interactable.Highlight(false);										// éteindre l'objet
+			if (interactable != null) {                                             // si l'objet rencontré est un 'intéractible'
+				interactable.Highlight(false);                                      // éteindre l'objet
 				interactable.isInPlayerCollider = false;
 			}
-			var character = other.GetComponent<Character>();						// si c'est un PNJ
-			if (character && character.isInFightMode) {								// en mode combat
-				SceneModeManager.SetSceneMode(SceneMode.fight, false, character);	// repasser la scène en mode normal (on a pris la fuite)
+			var character = other.GetComponent<Character>();                        // si c'est un PNJ
+			if (character && character.isInFightMode) {                             // en mode combat
+				SceneModeManager.SetSceneMode(SceneMode.fight, false, character);   // repasser la scène en mode normal (on a pris la fuite)
 			}
 		}
 	}
@@ -88,9 +89,9 @@ public class PlayerManager : Character
 		StartCoroutine(Ipromote(level));
 	}
 	IEnumerator Ipromote(Equipment.EquipmentLevel level) {
-		animatorController.anim.SetBool("Promote", true);	// lancer l'animation
-		yield return new WaitForSeconds(1.3f);				// attendre
-		ShowSkin(level);									// changer l'apparence
+		animatorController.anim.SetBool("Promote", true);   // lancer l'animation
+		yield return new WaitForSeconds(1.3f);              // attendre
+		ShowSkin(level);                                    // changer l'apparence
 	}
 
 	void ShowSkin(Equipment.EquipmentLevel? level) {
@@ -117,40 +118,32 @@ public class PlayerManager : Character
 
 	#region sauvegarde
 	/// <summary>
-	/// Ajouter la sérialisation des infos à sauvegarder pour cet objet à la sauvegarde générale 'sav'
+	/// Sérialiser les infos à sauvegarder
 	/// </summary>
-	/// <param name="sav">la sauvegarde en cours d'élaboration</param>
-	//public new SPlayer serialized;
-	public SPlayer Serialize() {
-		if (sceneLoader.currentSceneName == "") {
-			var cScene = FindObjectOfType<SceneSaver>().gameObject.scene.name;
-			sceneLoader.currentSceneName = cScene;
-		}
-		return new SPlayer() {
-			guid = guid.ToByteArray(),                                                  // identifiant unique
-			currentSceneName = sceneLoader.currentSceneName,							// index de la scène actuelle
-			position = transform.position.ToArray(),                                    // position
-			rotation = transform.rotation.ToArray(),                                    // rotation
-			stats0 = characterData.stats.baseStats,                                     // statistiques de base
-			stats1 = characterData.stats.stats,                                         // statistiques de base
-			currentHealth = characterData.stats.CurrentHealth,                          // points de vie courants						
-			inventory = new InventoryData(characterData.inventory),                     // inventaire
-			equipment = new EquipmentData(characterData.equipment),                     // équipement
-			navAgentDestination = navAgent ? navAgent.destination.ToArray() : null      // destination de navigation
-		};	
+	/// <returns></returns>
+	public override SSavable Serialize() {
+		var result = new SPlayer().Copy(base.Serialize());
+		//result.scene = FindObjectOfType<SceneSaver>().gameObject.scene.name;
+		result.equipment = new EquipmentData(characterData.equipment);                     // équipement
+		return result;
 	}
+
 
 	/// <summary>
 	/// Restaurer les valeurs précédement  sérialisées 
 	/// </summary>
 	/// <param name="serialized"></param>
 	public override void Deserialize(object serialized) {
-		base.Deserialize(serialized);
-		if (serialized is SPlayer) {
-			SPlayer s = serialized as SPlayer;
-			sceneLoader.currentSceneName = s.currentSceneName;
-			if (s.equipment != null)
-				s.equipment.CopyTo(characterData.equipment);                    // équipement
+		if (((SSavable)serialized).version == App.saveVersion) {
+			base.Deserialize(serialized);
+			if (serialized is SPlayer) {
+				SPlayer s = serialized as SPlayer;
+				//App.currentSceneName = s.scene;
+				if (s.equipment != null) {
+					s.equipment.CopyTo(characterData.equipment);                    // équipement
+				}
+			}
+
 		}
 	}
 	#endregion
@@ -163,6 +156,5 @@ public class PlayerManager : Character
 [System.Serializable]
 public class SPlayer : SCharacter
 {
-	public string currentSceneName;				// nom de la scène dans laquelle se trouve la joueur
 	public EquipmentData equipment;             // équipement
 }

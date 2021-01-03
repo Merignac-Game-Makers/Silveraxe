@@ -2,9 +2,6 @@
 using UnityEngine;
 using System.Collections;
 
-using static InteractableObject.Action;
-using static App;
-
 /// <summary>
 /// Classe générique pour les PNJ
 /// => Intéraction par défaut = interrompre le déplacement + lancer le dialogue
@@ -24,10 +21,12 @@ public class PNJ : Character
 
 	DialogueTrigger dialogueTrigger;
 
+	PlayerManager player => App.playerManager;
+
 
 	public override bool IsInteractable() {
 		if (!enabled) return false;
-		if (!playerManager.isAlive) return false;
+		if (!player.isAlive) return false;
 		if (!isClosest) return false;
 		switch (SceneModeManager.sceneMode) {
 			case SceneMode.normal:
@@ -60,7 +59,7 @@ public class PNJ : Character
 
 	void Update() {
 		// bouton d'action
-		if (Input.GetButtonDown("Fire1") && !uiManager.isClicOnUI) {
+		if (Input.GetButtonDown("Fire1") && !App.uiManager.isClicOnUI) {
 			Act();
 		}
 	}
@@ -75,12 +74,12 @@ public class PNJ : Character
 					Talk();
 					break;
 				case Alignment.ennemy:
-					if (!isInFightMode && playerManager.isAlive) {
-						playerManager.navAgent.SetDestination(ActPosition(playerManager, SceneMode.fight), () => {
+					if (!isInFightMode && player.isAlive) {
+						player.navAgent.SetDestination(ActPosition(player, SceneMode.fight), () => {
 							SceneModeManager.SetSceneMode(SceneMode.fight, true, this);
 						});
 					}  else {
-						playerManager.fightController.Fight_Attack();
+						player.fightController.Fight_Attack();
 					}
 					break;
 			}
@@ -91,15 +90,15 @@ public class PNJ : Character
 		switch (alignment) {
 			case Alignment.friend:
 				SetColor(Color.green);
-				SetActionSprite(interactableObjectsManager.dialogueIcon);
+				SetActionSprite(App.uiManager.dialogueIcon);
 				break;
 			case Alignment.neutral:
 				SetColor(Color.white);
-				SetActionSprite(interactableObjectsManager.dialogueIcon);
+				SetActionSprite(App.uiManager.dialogueIcon);
 				break;
 			case Alignment.ennemy:
 				SetColor(Color.red);
-				SetActionSprite(interactableObjectsManager.fightIcon);
+				SetActionSprite(App.uiManager.fightIcon);
 				break;
 		}
 	}

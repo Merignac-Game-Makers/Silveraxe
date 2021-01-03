@@ -27,15 +27,16 @@ public class EEntryData
 	public byte[] itemGuid;
 	public int count;
 	public EEntryData(EquipmentEntry entry) {
-		if (entry.item)
-			itemGuid = entry.item.guid.ToByteArray();
+		if (entry.item && entry.item.guid != null)
+			itemGuid = ((System.Guid)entry.item.guid).ToByteArray();
 		else
 			itemGuid = System.Guid.Empty.ToByteArray();
 	}
 
 	public void CopyTo(EquipmentManager equipment) {
 		if (new System.Guid(itemGuid) != System.Guid.Empty) {
-			equipment.AddItem(Game.current.allGuidComponents[new System.Guid(itemGuid)].GetComponent<Equipment>());    // retrouver l'item dans la scène
+			equipment.AddItem(Game.Find<Equipment>(itemGuid));
+			//equipment.AddItem(Game.current.allGuidComponents[new System.Guid(itemGuid)].GetComponent<Equipment>());    // retrouver l'item dans la scène
 		}
 	}
 }

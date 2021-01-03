@@ -70,19 +70,24 @@ public class InventoryManager
 	/// <returns></returns>
 	public bool UseItem(Entry entry) {
 		if (entry is InventoryEntry) {
-			//entry = entry as InventoryEntry;
-			//if ((entry as InventoryEntry).item.Used(owner)) {							 // si l'objet est utilisable
-			//	SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { // jouer le son associé
-			//		Clip = (entry as InventoryEntry).item is EquipmentItem ? SFXManager.ItemEquippedSound : SFXManager.ItemUsedSound 
-			//	});
-			//	(entry as InventoryEntry).count -= 1;                                   // retirer 1 à la quantité
-			//	entry.ui.UpdateEntry();													// mettre l'ui à jour
-			//	return true;
-			//}
+			var iEntry = entry as InventoryEntry;
+			if (iEntry.item.itemBase.usable) {														// si l'objet est utilisable
+				SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() {	// jouer le son associé
+					Clip = SFXManager.ItemUsedSound
+				});
+				iEntry.ChangeQuantity(-1);													// retirer 1 à la quantité
+				return true;
+			}
 		}
 		return false;
 	}
 
+	public void Clear() {
+		for (int i = entries.Count - 1; i > -1; i--) {
+			entries[i].Clear();
+		}
+		entries.Clear();
+	}
 
 	public void RemoveItem(InventoryEntry entry) {
 		entry.ChangeQuantity(-1);               // retirer 1 à la quantité

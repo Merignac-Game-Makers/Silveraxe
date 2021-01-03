@@ -6,24 +6,20 @@ using UnityEngine.SceneManagement;
 
 public class OutdoorSceneSaver : SceneSaver
 {
-
 	public Horloge horloge;
 	public Light sunLight;
 
 	/// <summary>
-	/// Ajouter la sérialisation des infos à sauvegarder pour cet objet à la sauvegarde générale 'sav'
+	/// Sérialiser les infos à sauvegarder 
 	/// </summary>
-	/// <param name="sav">la sauvegarde en cours d'élaboration</param>
-	public override void Serialize(List<object> sav) {
-		int idx = App.sceneLoader.currentLevelIndex;
-		sav.Add(new OutdoorScene() {
-			id = App.sceneLoader.currentSceneName,          // nom de scene
-			sunTime = horloge.GetSunTime() ,				// heure
-			sunIntensity = sunLight.intensity,				// intensité de la lumière solaire
-			sunColor = sunLight.color.ToArray()				// couleur de la lumière solaire
-		});
+	public override SerializedScene Serialize() {
+		var result = new OutdoorScene().Copy(base.Serialize());
+		result.daySpeed = horloge.daySpeed;					// vitesse d'horloge
+		result.sunTime = horloge.GetSunTime();              // heure
+		result.sunIntensity = sunLight.intensity;           // intensité de la lumière solaire
+		result.sunColor = sunLight.color.ToArray();         // couleur de la lumière solaire
+		return result;
 	}
-
 
 	/// <summary>
 	/// Restaurer les valeurs précédement  sérialisées 
@@ -32,6 +28,7 @@ public class OutdoorSceneSaver : SceneSaver
 	public override void Deserialize(object serialized) {
 		if (serialized is OutdoorScene) {
 			OutdoorScene s = serialized as OutdoorScene;
+			horloge.SetDaySpeed(s.daySpeed);
 			horloge.SetDateTime(s.sunTime);
 			sunLight.intensity = s.sunIntensity;
 			sunLight.color = s.sunColor.ToColor();
@@ -45,6 +42,7 @@ public class OutdoorSceneSaver : SceneSaver
 [System.Serializable]
 public class OutdoorScene : SerializedScene
 {
+	public float daySpeed;
 	public float sunTime;
 	public float sunIntensity;
 	public float[] sunColor;

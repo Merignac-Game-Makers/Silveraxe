@@ -7,37 +7,30 @@ public class MenuUI : UIBase
 {
 
 	private void Start() {
-		Game.current = new Game();
 		Show(false);
 	}
 
 	public void ContinueButton() {
-		ChangeScene[] cScenes = FindObjectsOfType<ChangeScene>();
-		foreach(ChangeScene cs in cScenes) {
-			cs.Temporize();
+		Portail[] portals = FindObjectsOfType<Portail>();
+		foreach(Portail portal in portals) {
+			portal.Temporize();					// temporisation pur éviter un transport immédiat si la reprise de sauvegarde est sur un portail
 		}
-
-		var cScene = FindObjectOfType<SceneSaver>().gameObject.scene.name;
-		SaveLoad.LoadPlayerData();
-		if (cScene != sceneLoader.currentSceneName) {
-			sceneLoader.LoadScene(sceneLoader.currentSceneName);
-		} else {
-			SaveLoad.LoadSceneData(sceneLoader.currentSceneName);
-		}
+		Game.Load();							// charger la sauvegarde courante
 		Toggle();
 	}
 
 	public void NewGameButton() {
+		App.sceneLoader.Restart();
 		Toggle();
 	}
 
 	public void SaveContinueButton() {
-		Game.current.Save();
+		Game.Save();
 		Toggle();
 	}
 
 	public void SaveQuitButton() {
-		Game.current.Save();
+		Game.Save();
 		Application.Quit();
 	}
 

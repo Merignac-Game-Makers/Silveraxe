@@ -16,16 +16,13 @@ using UnityEditor;
 [CreateAssetMenu(fileName = "UsableItem", menuName = "Custom/Usable Item", order = -999)]
 public class UsableItem : ItemBase
 {
-	public List<UsageEffect> UsageEffects;
-
 	public override bool Used(CharacterData user) {
 		bool wasUsed = false;
-		foreach (var effect in UsageEffects) {
+		foreach (var effect in usageEffects) {
 			wasUsed |= effect.Use(user);
 		}
 
 		return wasUsed;
-		//return true;
 	}
 
 	public override string GetDescription() {
@@ -37,7 +34,7 @@ public class UsableItem : ItemBase
 			description = "";
 
 
-		foreach (var effect in UsageEffects) {
+		foreach (var effect in usageEffects) {
 			description += effect.Description + "\n";
 		}
 
@@ -59,7 +56,7 @@ public class UsableItemEditor : Editor
 
 	void OnEnable() {
 		m_Target = target as UsableItem;
-		m_UsageEffectListProperty = serializedObject.FindProperty(nameof(UsableItem.UsageEffects));
+		m_UsageEffectListProperty = serializedObject.FindProperty(nameof(UsableItem.usageEffects));
 
 		m_ItemEditor = CreateInstance<ItemBaseEditor>(); //new ItemBaseEditor();
 		m_ItemEditor.Init(serializedObject);

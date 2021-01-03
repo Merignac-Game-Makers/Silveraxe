@@ -1,32 +1,29 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
+[CreateAssetMenu(fileName = "ItemBase", menuName = "Custom/Item base", order = -999)]
 /// <summary>
 /// Base clase of all items in the game. This is an abstract class and need to be inherited to specify behaviour.
 /// The project offer 3 type of items : UsableItem, Equipment and Weapon
 /// </summary>
-public abstract class ItemBase : ScriptableObject
+public class ItemBase : ScriptableObject
 {
-	public string ItemName;
-	public Sprite ItemSprite;
-	public string Description;
-	public GameObject WorldObjectPrefab;
+	public string itemName;
+	public Sprite itemSprite;
+	public string description;
+	public GameObject prefab;
 	public bool animate = true;
-
-	//public bool combinable = false;
-	//public Item combineWith;
-	//public Item obtain;
-
 	public bool dropable = true;
+	public LootCategory lootCategory;
+	public bool usable = false;
+	public List<UsageEffect> usageEffects;
 
-	//public Chapter chapter;                                         // chapitre du journal
-
-
-	public InventoryEntry entry = null;								// L'entrée d'inventaire lorsque l'objet a été ramassé
+	public Entry entry = null;								// L'entrée d'inventaire lorsque l'objet a été ramassé
 
 	/// <summary>
 	/// Called by the inventory system when the object is "used" (double clicked)
@@ -38,7 +35,7 @@ public abstract class ItemBase : ScriptableObject
 	}
 
 	public virtual string GetDescription() {
-		return Description;
+		return description;
 	}
 
 	/// <summary>
@@ -54,6 +51,7 @@ public abstract class ItemBase : ScriptableObject
 	//}
 }
 
+
 #if UNITY_EDITOR
 [CustomEditor(typeof(ItemBase))]
 public class ItemBaseEditor : Editor
@@ -67,16 +65,16 @@ public class ItemBaseEditor : Editor
 	//SerializedProperty pCombineWith;
 	//SerializedProperty pObtain;
 	SerializedProperty pDropable;
-	SerializedProperty pChapter;
+	//SerializedProperty pChapter;
 
 
 
 	public void Init(SerializedObject target) {
 
-		pNameProperty = target.FindProperty(nameof(ItemBase.ItemName));
-		pIconProperty = target.FindProperty(nameof(ItemBase.ItemSprite));
-		pDescriptionProperty = target.FindProperty(nameof(ItemBase.Description));
-		pPrefab = target.FindProperty(nameof(ItemBase.WorldObjectPrefab));
+		pNameProperty = target.FindProperty(nameof(ItemBase.itemName));
+		pIconProperty = target.FindProperty(nameof(ItemBase.itemSprite));
+		pDescriptionProperty = target.FindProperty(nameof(ItemBase.description));
+		pPrefab = target.FindProperty(nameof(ItemBase.prefab));
 		pAnimate = target.FindProperty(nameof(ItemBase.animate));
 		//pCombinable = target.FindProperty(nameof(Item.combinable));
 		//pCombineWith = target.FindProperty(nameof(Item.combineWith));

@@ -49,7 +49,7 @@ public class Patrol : MonoBehaviour
 	}
 
 
-	void Update() {
+	void FixedUpdate() {
 
 		switch (guardMode) {
 			case GuardMode.idle:                                                        // si la sentinelle est en poste fixe

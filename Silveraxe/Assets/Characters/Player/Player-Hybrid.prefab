@@ -7097,24 +7097,7 @@ MonoBehaviour:
   useLight: 1
   useOutline: 1
   mode: 0
-  characterData: {fileID: 0}
-  navAgent: {fileID: 0}
-  serialized:
-    guid: 
-    position: []
-    rotation: []
-    stats:
-      health: 0
-      strength: 0
-      defense: 0
-      agility: 0
-      elementalProtection: 00000000000000000000000000000000
-      elementalBoosts: 00000000000000000000000000000000
-    inventory:
-      entries: []
-    equipment:
-      entries: []
-    navAgentDestination: []
+  luggageRack: {fileID: 0}
   polyartSkin: {fileID: 8489495972835417913}
   hpSkin: {fileID: 7932419878997173024}
   pbrSkin: {fileID: 4515140745820154307}
@@ -7141,8 +7124,6 @@ MonoBehaviour:
       agility: 10
       elementalProtection: 00000000000000000000000000000000
       elementalBoosts: 00000000000000000000000000000000
-  inventory:
-    entries: []
   HitClip: []
 --- !u!195 &6448459497844213723
 NavMeshAgent:

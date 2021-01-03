@@ -27,14 +27,11 @@ public class Horloge : MonoBehaviour
 
 	private void Start() {
 		skyAnimator.speed = 0f;
-
-
 		speedFactor.text = daySpeed.ToString();
 		sceneDateTime = sceneStartDateTime;
 	}
 
 	void Update() {
-		//skyAnimator.speed = daySpeed;
 		sunTime += Time.deltaTime * daySpeed / 100;
 		skyAnimator.SetFloat("SunTime", sunTime);
 		skyAnimator.SetFloat("MoonTime", sunTime*1.05f);
@@ -74,6 +71,10 @@ public class Horloge : MonoBehaviour
 		return sunTime;
 	}
 
+	public void SetDaySpeed(float speed) {
+		daySpeed = speed;
+		speedFactor.text = daySpeed.ToString();
+	}
 	public void SetDaySpeed(string speed) {
 		try {
 			daySpeed = float.Parse(speed);
@@ -83,4 +84,15 @@ public class Horloge : MonoBehaviour
 			speedFactor.text = daySpeed.ToString();
 		}
 	}
+
+	//float m_daySpeed;
+	//public void Pause(bool pause) {
+	//	skyAnimator.GetComponentInChildren<SunLightController>().paused = pause;
+	//	if (pause) {
+	//		m_daySpeed = daySpeed;
+	//		daySpeed = 0;
+	//	} else {
+	//		daySpeed = m_daySpeed;
+	//	}
+	//}
 }

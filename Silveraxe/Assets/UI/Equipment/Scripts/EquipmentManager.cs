@@ -70,8 +70,8 @@ public class EquipmentManager
 
 		item.transform.position = new Vector3(0, -50, 0);
 
-		if (IsSetComplete() && GetSetLevel() != null) {
-			playerManager.Promote((Equipment.EquipmentLevel)GetSetLevel());
+		if (IsSetComplete() && GetSetLevel() != null) {						// si l'équipement est complet et homogène en niveau
+			playerManager.Promote((Equipment.EquipmentLevel)GetSetLevel());	// transformation de l'apparence du joueur
 		}
 	}
 
@@ -90,16 +90,15 @@ public class EquipmentManager
 	/// <param name="entry"></param>
 	/// <returns></returns>
 	public bool UseItem(Entry entry) {
-		if (entry is InventoryEntry) {
-			//entry = entry as InventoryEntry;
-			//if ((entry as InventoryEntry).item.Used(owner)) {							 // si l'objet est utilisable
-			//	SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { // jouer le son associé
-			//		Clip = (entry as InventoryEntry).item is EquipmentItem ? SFXManager.ItemEquippedSound : SFXManager.ItemUsedSound 
-			//	});
-			//	(entry as InventoryEntry).count -= 1;                                   // retirer 1 à la quantité
-			//	entry.ui.UpdateEntry();													// mettre l'ui à jour
-			//	return true;
-			//}
+		if (entry is EquipmentEntry) {
+			var eEntry = entry as EquipmentEntry;
+			if (eEntry.item.itemBase.usable) {														// si l'objet est utilisable
+				SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() {	// jouer le son associé
+					Clip = SFXManager.ItemUsedSound
+				});
+				RemoveItem(eEntry);															// retirer l'objet de l'équipement
+				return true;
+			}
 		}
 		return false;
 	}
@@ -131,6 +130,7 @@ public class EquipmentManager
 	}
 
 	public void RemoveItem(EquipmentEntry entry) {
+		entry.item.transform.parent = App.itemsManager.transform;
 		entry.item = null;
 		entry.ui.UpdateEntry();
 	}

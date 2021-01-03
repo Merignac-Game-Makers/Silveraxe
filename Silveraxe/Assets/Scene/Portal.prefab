@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1401182051833780733}
   - component: {fileID: 1401182051833780734}
   - component: {fileID: 1401182051833780735}
-  - component: {fileID: 1401182051833780728}
+  - component: {fileID: 8574420321262955}
   m_Layer: 0
   m_Name: Return Outdoor
   m_TagString: Untagged
@@ -94,7 +94,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1401182051833780728
+--- !u!114 &8574420321262955
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -103,10 +103,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1401182051833780730}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7607a74d944ecbd45ae3330a5cf9af11, type: 3}
+  m_Script: {fileID: 11500000, guid: 464e2976e33d4f44480b0829628790ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LevelToLoad: 1
+  LevelToLoad: Outdoor
+  pos: {x: 0, y: 0, z: 0}
 --- !u!1 &1401182051994010672
 GameObject:
   m_ObjectHideFlags: 0

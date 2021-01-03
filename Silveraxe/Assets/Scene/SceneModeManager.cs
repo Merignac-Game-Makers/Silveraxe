@@ -12,7 +12,7 @@ public static class SceneModeManager
 		switch (mode) {
 			case SceneMode.normal:
 				cameraController.SetCamera(cameraController.vCamFollow);                    // activer la caméra 'follow'
-				interactableObjectsManager.SelectAll(true);                                 // resélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
+				App.itemsManager.SelectAll(true);                                 // resélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
 				break;
 
 			case SceneMode.dialogue:
@@ -20,7 +20,7 @@ public static class SceneModeManager
 				if (on && sceneMode == SceneMode.normal) {
 					playerManager.navAgent.SetDestination(other.ActPosition(playerManager, SceneMode.dialogue), () => {
 						cameraController.SetCamera(cameraController.vCamLateral);           // activer la caméra latérale
-						interactableObjectsManager.SelectAll(false);                        // désélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
+						App.itemsManager.SelectAll(false);                        // désélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
 
 						// player
 						playerManager.FaceTo(on, other.gameObject);                         // orienter le joueur vers le PNJ
@@ -50,7 +50,7 @@ public static class SceneModeManager
 			case SceneMode.fight:
 				if (on && sceneMode == SceneMode.normal) {
 					cameraController.SetCamera(cameraController.vCamLateral);           // activer la caméra latérale
-					interactableObjectsManager.SelectAll(false);                        // masquer tous les actionsSprites pendant le combat
+					App.itemsManager.SelectAll(false);                        // masquer tous les actionsSprites pendant le combat
 
 					// player
 					playerManager.StopAgent();

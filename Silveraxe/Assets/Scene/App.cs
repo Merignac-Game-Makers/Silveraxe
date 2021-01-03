@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
@@ -11,6 +12,7 @@ using UnityEngine.EventSystems;
 /// </summary>
 public static class App
 {
+	public static SceneSaver sceneSaver;
 	public static SceneLoader sceneLoader;
 	public static CameraController cameraController;
 
@@ -18,7 +20,7 @@ public static class App
 	public static SFXManager sfxManager;
 	public static PlayerManager playerManager;
 	public static MessageManager messageManager;
-	public static InteractableObjectsManager interactableObjectsManager;
+	public static InteractableObjectsManager itemsManager;
 	public static TargetsManager targetsManager;
 
 	public static DialoguesUI dialogueUI;
@@ -26,7 +28,10 @@ public static class App
 	public static EquipmentUI equipmentUI;
 	public static StatsUI statsUI;
 
+	//--------------------
+	// changement de scène
 	public static Vector3 crossScenePosition;
+	public static string currentSceneName;
 	public static bool sceneCrossing;
 	public static bool isLoadingData;
 
@@ -35,7 +40,8 @@ public static class App
 	// strings
 	public const string DIALOGUE = "Dialogue";
 	public const string FIGHT = "Fight";
-
+	public const string saveVersion = "0.8";
+	public const string dontDestroyScene = "NeverUnload";
 
 	//--------------------
 	// Texture <=> fichier
@@ -142,5 +148,21 @@ public static class App
 	}
 	public static Color ToColor(this float[] array) {
 		return new Color(array[0], array[1], array[2], array[3]);
+	}
+
+
+	//----------------------------------------------------------------------------------------------
+	// Extension pour permettre la sérialisation / désérialisation des objets intéractibles
+	public static T Copy<T>(this T sI, SSavable other) {
+		foreach (FieldInfo fi in other.GetType().GetFields()) {
+			fi.SetValue(sI, fi.GetValue(other));
+		}
+		return sI;
+	}
+	public static T Copy<T>(this T sI, SerializedScene other) {
+		foreach (FieldInfo fi in other.GetType().GetFields()) {
+			fi.SetValue(sI, fi.GetValue(other));
+		}
+		return sI;
 	}
 }

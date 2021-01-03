@@ -20,8 +20,8 @@ public class CombineUI : MonoBehaviour
         Clear();
         this.entry = entry;
         item = entry.item;
-        GameObject obj = Instantiate(item.prefab, objectHolder, false);
-        item.animate = false;
+        GameObject obj = Instantiate(item.itemBase.prefab, objectHolder, false);
+        item.itemBase.animate = false;
         SetObjLayer(obj);
         obj.transform.localPosition = Vector3.zero;
         objectHolder.GetComponent<RotateObject>().objectTransform = obj.transform;

@@ -7,18 +7,6 @@ using UnityEngine.SceneManagement;
 public class CastleSceneSaver : SceneSaver
 {
 
-
-	/// <summary>
-	/// Ajouter la sérialisation des infos à sauvegarder pour cet objet à la sauvegarde générale 'sav'
-	/// </summary>
-	/// <param name="sav">la sauvegarde en cours d'élaboration</param>
-	public override void Serialize(List<object> sav) {
-		sav.Add(new CastleScene() {
-			id = App.sceneLoader.currentSceneName,         // nom de scene
-		});
-	}
-
-
 	/// <summary>
 	/// Restaurer les valeurs précédement  sérialisées 
 	/// </summary>

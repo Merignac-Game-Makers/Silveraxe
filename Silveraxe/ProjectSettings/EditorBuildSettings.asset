@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/NeverUnload.unity
     guid: a90ce2f1c3321b5488eacd20772e0593
   - enabled: 1
-    path: Assets/Scenes/OutDoor.unity
+    path: Assets/Scenes/Outdoor.unity
     guid: 683594098e2ad684c852d0ea47dd4522
   - enabled: 1
     path: Assets/Scenes/Castle.unity

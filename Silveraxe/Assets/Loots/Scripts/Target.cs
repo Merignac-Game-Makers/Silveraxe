@@ -7,7 +7,7 @@ using static App;
 /// <summary>
 /// Objet intéractible sur lequel on peut déposer un objet d'inventaire (loot)
 /// </summary>
-public class Target : InteractableObject, ISave
+public class Target : InteractableObject
 {
 	public enum FilterMode { allow, refuse }
 
@@ -35,9 +35,9 @@ public class Target : InteractableObject, ISave
 	}
 
 	public bool CompatibleWith(Loot testItem) {
-		if (!testItem.dropable) return false;                                                                   // l'objet sélectionné doit être déposable
-		if (filterMode == FilterMode.allow && !filterItems.Contains(testItem.lootCategory)) return false;       // si on est en mode 'autorise' => il doit être autorisé sur cette cible
-		if (filterMode == FilterMode.refuse && filterItems.Contains(testItem.lootCategory)) return false;       // si on est en mode 'refuse'   => il ne doit pas être interdit sur cette cible
+		if (!testItem.itemBase.dropable) return false;                                                                   // l'objet sélectionné doit être déposable
+		if (filterMode == FilterMode.allow && !filterItems.Contains(testItem.itemBase.lootCategory)) return false;       // si on est en mode 'autorise' => il doit être autorisé sur cette cible
+		if (filterMode == FilterMode.refuse && filterItems.Contains(testItem.itemBase.lootCategory)) return false;       // si on est en mode 'refuse'   => il ne doit pas être interdit sur cette cible
 		return true;
 	}
 
@@ -58,11 +58,9 @@ public class Target : InteractableObject, ISave
 		}
 	}
 
-	private void Update() {
+	private void FixedUpdate() {
 		if (!IsPointerOverUIElement() && Input.GetButtonDown("Fire1")) {
-			//if (!interactableObjectsManager.MultipleSelection() || isMouseOver) {
 			Act();
-			//}
 		}
 	}
 
@@ -78,17 +76,14 @@ public class Target : InteractableObject, ISave
 
 	#region sauvegarde
 	/// <summary>
-	/// Ajouter la sérialisation des infos à sauvegarder pour cet objet à la sauvegarde générale 'sav'
+	/// Sérialiser infos à sauvegarder pour cet objet
 	/// </summary>
-	/// <param name="sav">la sauvegarde en cours d'élaboration</param>
-	public void Serialize(List<object> sav) {
-		sav.Add(new STarget() {
-			guid = guid.ToByteArray(),								// identifiant unique
-			position = transform.position.ToArray(),                // position
-			rotation = transform.rotation.ToArray(),                // rotation
-			target_ItemGuid = item ? item.guid.ToByteArray() : System.Guid.Empty.ToByteArray() // l'id de l'objet posé sur la cible (s'il existe)
-		});
+	public override SSavable Serialize() {
+		var result = new STarget().Copy(base.Serialize());
+		result.target_ItemGuid = item && item.guid!=null ? ((System.Guid)item.guid).ToByteArray() : System.Guid.Empty.ToByteArray(); // l'id de l'objet posé sur la cible (s'il existe)
+		return result;
 	}
+
 
 	/// <summary>
 	/// Restaurer les valeurs précédement  sérialisées 
@@ -99,8 +94,13 @@ public class Target : InteractableObject, ISave
 		if (serialized is STarget) {
 			STarget s = serialized as STarget;
 			var id = new System.Guid(s.target_ItemGuid);
-			if (id!= System.Guid.Empty)
-				item = Game.current.allGuidComponents[id].GetComponent<Loot>();
+			if (id != System.Guid.Empty) {
+				//item = Game.current.allGuidComponents[id].GetComponent<Loot>();
+				item = Game.Find<Loot>(id);
+				item.transform.position = targetPos;
+			}
+			else 
+				item = null;
 		}
 	}
 	#endregion
@@ -110,7 +110,7 @@ public class Target : InteractableObject, ISave
 /// Classe pour la sauvegarde
 /// </summary>
 [System.Serializable]
-public class STarget : SInteractable
+public class STarget : SSavable
 {
 	public byte[] target_ItemGuid = System.Guid.Empty.ToByteArray();		// identifiant du Loot posé sur la cible (s'il existe) -> valeur par défaut = 'Empty' = pas de Loot
 }
