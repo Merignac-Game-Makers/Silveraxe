@@ -19,9 +19,10 @@ public class SceneLoader : MonoBehaviour
 	/// </summary>
 	private void Start() {
 		ResourcesManager.Init();										// sans doute devenu inutile
-		CrossSceneItemsManager.SetActiveScene(defaultScene);			// activer les objets trans-scènes de la scène par défaut 
+		//CrossSceneItemsManager.SetActiveScene(defaultScene);			// activer les objets trans-scènes de la scène par défaut 
 		Game.NewGame();													// créer un nouvel identifiant de sauvegarde pour une nouvelle partie
-		Game.current.SaveSceneData(App.dontDestroyScene, true);			// sauvegarder l'état initial de la scène "NeverUnload" (true = flag "etat initial" => nom de fichier spécifique)
+		Game.current.SaveSceneData(App.dontDestroyScene, true);         // sauvegarder l'état initial de la scène "NeverUnload" (true = flag "etat initial" => nom de fichier spécifique)
+		App.currentSceneName = defaultScene;		                    // la scène courante devient la scène chargée
 		LoadScene(defaultScene, false);									// charger la scène de départ du jeu  (false => sans restaurer de sauvegarde)
 	}
 
@@ -34,6 +35,7 @@ public class SceneLoader : MonoBehaviour
 			Game.PauseGame();											// mettre le jeu en pause (pour éviter l'exécution des 'FixedUpdate' qui pourraient requérir des objets supprimés par la réinitialisation)
 			UnloadScene(SceneManager.GetSceneAt(1).name, () => {		// décharger la scène courante, puis :
 				Game.current.LoadSceneData(App.dontDestroyScene, true); //		réinitialiser la scène 'NeverUnload'  (true => dans son état de départ)
+				App.currentSceneName = defaultScene;					//		la scène courante devient la scène chargée
 				LoadScene(defaultScene, false);							//		charger la scène de départ du jeu  (false => sans restaurer de sauvegarde)
 				Game.NewGame();											//		créer un nouvel identifiant de sauvegarde pour la nouvelle partie
 				foreach (string scene in Game.buildScenes) {

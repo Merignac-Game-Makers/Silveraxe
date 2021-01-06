@@ -21,9 +21,9 @@ public class Target : InteractableObject
 	public Loot item { get; set; }
 
 	public override bool IsHighlightable() {
-		if (item != null) return false;                                                                     // ne peut contenir qu'un seul objet d'inventaire
-		if (!playerManager) return false; // (attente d'initialisation de la scène)
-		if (!playerManager.characterData.inventory.HasCompatibleItem(this)) return false;                   // l'inventaire doit contenir un objet compatible		
+		if (item != null) return false;																			// ne peut contenir qu'un seul objet d'inventaire
+		if (!App.playerManager || !App.playerManager.characterData) return false;								// (attente d'initialisation de la scène)
+		if (!App.playerManager.characterData.inventory.HasCompatibleItem(this)) return false;                   // l'inventaire doit contenir un objet compatible		
 		return true;
 	}
 

@@ -1451,15 +1451,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8574420321262955, guid: 3800514ddc0b0d64588c89e8ce2c0eff, type: 3}
       propertyPath: pos.x
-      value: 18.042
+      value: -117.56
       objectReference: {fileID: 0}
     - target: {fileID: 8574420321262955, guid: 3800514ddc0b0d64588c89e8ce2c0eff, type: 3}
       propertyPath: pos.y
-      value: 0.42
+      value: -0.75
       objectReference: {fileID: 0}
     - target: {fileID: 8574420321262955, guid: 3800514ddc0b0d64588c89e8ce2c0eff, type: 3}
       propertyPath: pos.z
-      value: -12.73
+      value: 33.95
       objectReference: {fileID: 0}
     - target: {fileID: 1401182051833780728, guid: 3800514ddc0b0d64588c89e8ce2c0eff,
         type: 3}

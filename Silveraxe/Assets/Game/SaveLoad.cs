@@ -53,6 +53,7 @@ public static class SaveLoad
 				return data;
 			}
 			catch (SerializationException e) {
+				Debug.Log(e.Message);
 				return null;
 			}
 		}
