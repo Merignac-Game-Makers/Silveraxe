@@ -108,10 +108,7 @@ public class Game
 	/// mise en pause
 	/// </summary>
 	public static void PauseGame() {
-		if (App.playerManager.navAgent && App.playerManager.navAgent.enabled) {
-			App.playerManager.StopAgent();
-			App.playerManager.navAgent.enabled = false;
-		}
+		App.playerManager.StopAgent(true);
 		Time.timeScale = 0;
 	}
 
@@ -123,10 +120,9 @@ public class Game
 		App.itemsManager.GetSceneObjects();                                 // régénérer la liste des objets intéractibles
 		App.targetsManager.GetSceneTargets();                               // régénérer la liste des cibles de dépôt d'objets intéractibles
 
-		Time.timeScale = 1;													// fin de pause
-		if (App.playerManager.navAgent) {									// redémarrer la navigation du joueur
-			App.playerManager.navAgent.enabled = true;
-		}
+		Time.timeScale = 1;                                                 // fin de pause
+		App.playerManager.StopAgent(false);									// redémarrer la navigation du joueur
+
 		App.isLoadingData = false;											// flag 'fin de chargement de sauvegarde'
 
 	}

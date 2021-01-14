@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 2613203912977792234}
   - component: {fileID: 6999833189914298010}
   - component: {fileID: 4953142599269721415}
-  m_Layer: 0
+  - component: {fileID: 5115265604991409523}
+  m_Layer: 10
   m_Name: Grave_Tip_D_LP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,13 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8653665169865680394}
-  m_LocalRotation: {x: 1.3332806e-14, y: 1, z: -0.000000021855694, w: 0.00000028212997}
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0.00000028088027}
   m_LocalPosition: {x: 3.9539037, y: 0, z: 1.7654312}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -179.99998, z: 0}
 --- !u!33 &6999833189914298010
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -79,3 +80,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &5115265604991409523
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8653665169865680394}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -6492091583908934852, guid: 75bbf014731d5a14f8aef29014f28322, type: 3}

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3575025004416922180}
   - component: {fileID: 3094827294393788081}
   - component: {fileID: 1215406716462715453}
+  - component: {fileID: 6413686814400264514}
   m_Layer: 10
   m_Name: LanterneSorciere
   m_TagString: Untagged
@@ -81,6 +82,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &6413686814400264514
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1899601335520820712}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -8312160030997485683, guid: 363125e2770604a4989be6c760624eb0, type: 3}
 --- !u!1 &3270196621557781907
 GameObject:
   m_ObjectHideFlags: 0

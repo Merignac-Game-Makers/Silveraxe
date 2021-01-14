@@ -92,7 +92,6 @@ public class Loot : InteractableObject
 
 	protected virtual void Take() {
 		// on ramasse l'objet
-		playerManager.StopAgent();																							// interrompre le déplacement du joueur
 		if (!playerManager.characterData.inventory.isFull) {																// si l'inventaire n'est pas plein
 			playerManager.characterData.inventory.AddItem(this);															//		ajouter l'objet à l'inventaire
 			isInPlayerCollider = false;																						//		l'objet n'est plus dans le collider du joueur (=> non intéractible)

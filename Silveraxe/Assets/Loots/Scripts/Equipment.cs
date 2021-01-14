@@ -24,7 +24,6 @@ public class Equipment : Loot
 
 	protected override void Take() {
 		// on ramasse l'objet
-		playerManager.StopAgent();                                                                                      // interrompre le déplacement du joueur
 		playerManager.characterData.equipment.AddItem(this);															//		ajouter l'objet à l'équipement du joueur
 		isInPlayerCollider = false;                                                                                     //		l'objet n'est plus dans le collider du joueur (=> non intéractible)
 		SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });      //		son

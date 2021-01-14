@@ -19,6 +19,9 @@ public abstract class Character : InteractableObject
 	public NavAnimController animatorController { get; private set; }
 	LookAtConstraint lookAt;
 
+	// pour les intéractions (combats / dialogues)
+	public float interactionDistance = 1.5f;
+
 	// pour les combats
 	public bool isInFightMode => fightController?.isInFightMode ?? false;
 	public FightController fightController { get; private set; }
@@ -68,7 +71,7 @@ public abstract class Character : InteractableObject
 	// à quelle distance doit se placer un autre personnage pour intéragir avec moi ?
 	public Vector3 ActPosition(Character other, SceneMode mode) {
 		var dir = other.transform.position - transform.position;
-		var dist = (navAgent.radius + other.navAgent.radius);
+		var dist = (interactionDistance + other.interactionDistance);
 		float k = 1f;
 		switch (mode) {
 			case SceneMode.normal:
@@ -123,7 +126,7 @@ public abstract class Character : InteractableObject
 	/// <param name="serialized"></param>
 	public override void Deserialize(object serialized) {
 
-		if (navAgent &  navAgent.enabled) {
+		if (navAgent!=null && navAgent.enabled) {
 			navAgent.ResetPath();                    // annulation de la navigation en cours
 			navAgent.velocity = Vector3.zero;        // vitesse nulle
 		}

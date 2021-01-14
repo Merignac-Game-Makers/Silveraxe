@@ -34,7 +34,7 @@ public class Portail : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other) {
 		if (timer <= 0) {									// le portail n'est actif qu'après la teporisation
-			if (other == App.playerManager.GetComponent<CharacterController>()) {
+			if (other.gameObject == App.playerManager.gameObject) {
 
 				//Game.current.SaveScene(App.currentSceneName); 					// sauvegarder la scène qu'on quitte
 				Game.Save(); 										// sauvegarder la scène qu'on quitte

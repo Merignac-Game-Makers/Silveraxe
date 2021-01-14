@@ -74,9 +74,8 @@ public class PlayerManager : Character
 	/// <summary>
 	/// interrompre la navigation
 	/// </summary>
-	public void StopAgent() {
-		navAgent.ResetPath();                    // annulation de la navigation en cours
-		navAgent.velocity = Vector3.zero;        // vitesse nulle
+	public void StopAgent(bool on) {
+		movementInput.canMove = !on;
 	}
 	#endregion
 

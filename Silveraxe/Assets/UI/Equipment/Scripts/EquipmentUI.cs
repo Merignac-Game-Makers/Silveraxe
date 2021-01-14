@@ -25,7 +25,7 @@ public class EquipmentUI : UIBase
 	}
 
 	void Start() {
-		entries = GetComponentsInChildren<EquipmentEntryUI>();
+		entries = GetComponentsInChildren<EquipmentEntryUI>(true);
 		capacity = 4;
 	}
 

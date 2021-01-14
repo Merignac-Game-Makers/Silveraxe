@@ -7,7 +7,6 @@ using System;
 
 public class SceneLoader : MonoBehaviour
 {
-	public NavMeshAgent playerNavMesh;
 	public string defaultScene;
 
 	private void Awake() {
@@ -54,10 +53,6 @@ public class SceneLoader : MonoBehaviour
 	public void LoadScene(string scene, bool restore) {
 		App.isLoadingData = true;																// flag : chargement en cours
 		if (scene != null && scene != "" && !SceneManager.GetSceneByName(scene).isLoaded) {		// si la scène n'est pas déjà chargée
-			if (playerNavMesh.enabled) {														//		interrompre la navigation du joueur
-				App.playerManager.StopAgent();													//
-				App.playerManager.navAgent.enabled = false;										//	
-			}																					//
 			StartCoroutine(LoadAsyncScene(scene, restore));										//		lancer le chargement asynchrone
 		} else {																				// si la scène est déjà chargée
 			if (restore)																		//		si la restauration d'une sauvegarde est demandée

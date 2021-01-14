@@ -7,9 +7,9 @@ using static App;
 
 //This script requires you to have setup your animator with 3 parameters, "InputMagnitude", "InputX", "InputZ"
 //With a blend tree to control the inputmagnitude and allow blending between animations.
-[RequireComponent(typeof(CharacterController))]
+//[RequireComponent(typeof(CharacterController))]
 //[RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(NavMeshAgent))]
+//[RequireComponent(typeof(NavMeshAgent))]
 public class NavAnimController : MonoBehaviour
 {
 	#region Variables
@@ -35,20 +35,17 @@ public class NavAnimController : MonoBehaviour
 	[Range(0, 1)] [SerializeField] private float pelvisUpAndDownSpeed = 0.28f;
 	[Range(0, 1)] [SerializeField] private float feetToIkPositionSpeed = 0.5f;
 
+	public bool showSolverDebug = true;
+
 	//public string leftFootAnimVariableName = "LeftFootCurve";
 	//public string rightFootAnimVariableName = "RightFootCurve";
-
 	//public bool useProIkFeature = false;
-	public bool showSolverDebug = true;
+
 
 
 	[Header("Animation Smoothing")]
 	[Range(0, 1f)]
 	public float animSmoothTime = 0.2f; //velocity dampening
-
-	public LayerMask EnvironmentLayer { get => EnvironmentLayer2; set => EnvironmentLayer2 = value; }
-	public LayerMask EnvironmentLayer1 { get => EnvironmentLayer2; set => EnvironmentLayer2 = value; }
-	public LayerMask EnvironmentLayer2 { get => environmentLayer; set => environmentLayer = value; }
 
 	Animator[] anims;
 	#endregion
@@ -57,18 +54,14 @@ public class NavAnimController : MonoBehaviour
 
 	// Initialization of variables
 	void Start() {
-		//timeScale = 1f;
-
 		anims = GetComponentsInChildren<Animator>(true);
 
 		anim = GetComponentInChildren<Animator>();
 		agent = GetComponent<NavMeshAgent>();
-		movementInput = GetComponent<MovementInput>();
+		movementInput = GetComponentInParent<MovementInput>();
 
 		if (anim == null)
 			Debug.LogError("We require " + transform.name + " game object to have at least an animator. This will allow for Foot IK to function");
-		if (agent == null)
-			Debug.LogError("We require " + transform.name + " game object to have at least a Nav Mesh Agent. This will allow for Foot IK to function");
 	}
 	#endregion
 
@@ -76,11 +69,15 @@ public class NavAnimController : MonoBehaviour
 	#region PlayerMovement
 	Vector3 tmp;
 	void InputMagnitude() {
-		tmp = transform.InverseTransformVector(agent.velocity);
+		if (agent) {
+			tmp = transform.InverseTransformVector(agent.velocity);
+		} else {
+			tmp = movementInput.velocity;
+		}
 
 		//Calculate Input Vectors
 		inputX = tmp.x;         // latéral
-		inputZ = tmp.z;         // avant/arrière
+		inputZ = tmp.z*10;         // avant/arrière
 
 		//var v = Mathf.Abs(anim.GetFloat("InputX") + anim.GetFloat("InputZ"));
 		foreach (Animator anim in anims) {
@@ -88,24 +85,16 @@ public class NavAnimController : MonoBehaviour
 				anim.SetFloat("InputX", inputX, animSmoothTime, Time.deltaTime);
 				anim.SetFloat("InputZ", inputZ, animSmoothTime, Time.deltaTime);
 				//anim.SetFloat("velocity", v, animSmoothTime, Time.deltaTime);
-
 			}
 		}
-
-
 	}
 
 	#endregion
 
 
 	#region FeetGrounding
-
-	// Update is called once per frame
 	void Update() {
-		//if (movementInput)
-			InputMagnitude();
-		//Time.timeScale = timeScale;
-
+		InputMagnitude();
 
 		if (enableFeetIk == false) { return; }
 		if (anim == null) { return; }
@@ -124,22 +113,10 @@ public class NavAnimController : MonoBehaviour
 
 		//MovePelvisHeight();
 
-		//right foot ik position and rotation -- utilise the pro features in here
-		anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1);
-
-		//if (useProIkFeature) {
-		//	anim.SetIKRotationWeight(AvatarIKGoal.RightFoot, anim.GetFloat(rightFootAnimVariableName));
-		//}
-
+		anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1);		//right foot ik position 
 		MoveFeetToIkPoint(AvatarIKGoal.RightFoot, rightFootIkPosition, rightFootIkRotation, ref lastRightFootPositionY);
 
-		//left foot ik position and rotation -- utilise the pro features in here
-		anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1);
-
-		//if (useProIkFeature) {
-		//	anim.SetIKRotationWeight(AvatarIKGoal.LeftFoot, anim.GetFloat(leftFootAnimVariableName));
-		//}
-
+		anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1);			//left foot ik position 
 		MoveFeetToIkPoint(AvatarIKGoal.LeftFoot, leftFootIkPosition, leftFootIkRotation, ref lastLeftFootPositionY);
 	}
 
@@ -213,7 +190,7 @@ public class NavAnimController : MonoBehaviour
 		if (showSolverDebug)
 			Debug.DrawLine(fromSkyPosition, fromSkyPosition + Vector3.down * raycastDownDistance, Color.yellow);
 
-		if (Physics.Raycast(fromSkyPosition, Vector3.down, out feetOutHit, raycastDownDistance + heightFromGroundRaycast, EnvironmentLayer2)) {
+		if (Physics.Raycast(fromSkyPosition, Vector3.down, out feetOutHit, raycastDownDistance + heightFromGroundRaycast, environmentLayer)) {
 			//finding our feet ik positions from the sky position
 			feetIkPositions = fromSkyPosition;
 			feetIkPositions.y = feetOutHit.point.y + pelvisOffset;
@@ -232,17 +209,10 @@ public class NavAnimController : MonoBehaviour
 	/// <param name="foot">Foot.</param>
 	private void AdjustFeetTarget(ref Vector3 feetPositions, HumanBodyBones foot) {
 		feetPositions = anim.GetBoneTransform(foot).position;               // récupérer la postion du pied
-		feetPositions.y = transform.position.y + heightFromGroundRaycast;   // repmonter la position pour la source du raycast
-
+		feetPositions.y = transform.position.y + heightFromGroundRaycast;   // remonter la position pour la source du raycast
 	}
 
 	#endregion
-
-	//public void SendAnims(Action<Animator> action) {
-	//	foreach (Animator anim in anims) {
-	//		action(anim);
-	//	}
-	//}
 }
 
 

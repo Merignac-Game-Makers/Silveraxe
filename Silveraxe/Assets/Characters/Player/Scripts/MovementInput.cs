@@ -4,39 +4,34 @@ using Cinemachine;
 
 using static App;
 
-public class MovementInput : MonoBehaviour
-{
-	public NavMeshAgent navAgent { get; private set; }
+public class MovementInput : MonoBehaviour {
+	public float maxSpeed = .5f;
+	public float maxRotationSpeed = 15;
+	public float accelerationTime = 0.5f;
 
-	// rotation
-	public float rotationSensitivity = 2f;   // How sensitive it with mouse
+	public float trnSpeed { get; set; } = 0;
+	public float rotSpeed { get; set; } = 0;
 
-	// déplacements
-	public Texture2D cursor;
-	public Vector2 screenDirection { get; private set; }
-	public float fTranslation { get; set; }
-	public float sTranslation { get; set; }
+	public LayerMask environmentLayer;
 
+	public bool canMove { get; set; } = true;
 
-	private void Awake() {
-		navAgent = GetComponent<NavMeshAgent>();
-	}
-
-	private void Start() {
-		cursor = uiManager.Resize(cursor, uiManager.defaultCursorSize / 2);
-	}
+	public Vector3 velocity { get; set; } = Vector3.zero;
 
 
-	Vector3 move;
-	Vector3 dest;
+	float k;
+	float vTimer = 0;
+	float hTimer = 0;
+
+	private float vAxis = 0;
+	private float hAxis = 0;
 	void LateUpdate() {
 		//------------------------
 		// déplacements au clavier
 		//------------------------
-		screenDirection = ((Vector2)Input.mousePosition - (Vector2)Camera.main.WorldToScreenPoint(playerManager.transform.position));//.normalized;
-
 		if (!playerManager.isAlive) return;                             // quand on est mort, on ne bouge plus !
 
+		// reprise de déplacement après un portail
 		if (sceneCrossing && !isLoadingData) {
 			if (Input.GetAxis("Vertical") == 0 && Input.GetAxis("Horizontal") == 0) {
 				sceneCrossing = false;
@@ -45,21 +40,37 @@ public class MovementInput : MonoBehaviour
 			}
 		}
 
-		if (!playerManager.navAgent.enabled) return;                    // si le navAgent est désactivé, on ne bouge plus ! (transitions entre les scènees)
+		if (!canMove) return;                                           // si les déplacements sont désactivés, on ne bouge plus ! (transitions entre les scènees)
 
 		if (SceneModeManager.sceneMode != SceneMode.dialogue) {         // en mode dialogue on ne bouge pas non plus
-			if ((Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)) {
-				fTranslation = Input.GetAxis("Vertical") * navAgent.speed * 30;
-				sTranslation = Input.GetAxis("Horizontal") * navAgent.speed * 5;
-				fTranslation *= Time.deltaTime;
-				sTranslation *= Time.deltaTime;
-				move = new Vector3(sTranslation, 0, fTranslation);
-				dest = transform.TransformPoint(move.normalized * navAgent.radius);
-				navAgent.updateRotation = fTranslation > .1;
-				navAgent.SetDestination(dest);
+
+			vAxis = Input.GetAxis("Vertical");
+			hAxis = Input.GetAxis("Horizontal");
+
+			// déplacement avant/arrière
+			if (vAxis != 0) {
+				vTimer += Time.deltaTime;
+				k = Mathf.Min(vTimer / accelerationTime, 1);
+				trnSpeed = Mathf.Lerp(0, maxSpeed, k);
+				Vector3 v = transform.forward * vAxis * trnSpeed;
+				if (HasGround(transform.position + v + Vector3.up))		// ne pas tomber hors du monde !
+					transform.position += v;
+				velocity = Vector3.forward * vAxis * trnSpeed;
+				//Debug.Log(v + " - " + velocity);
 			} else {
-				fTranslation = 0;
-				sTranslation = 0;
+				vTimer = 0;
+				trnSpeed = 0;
+				velocity = Vector3.zero;
+			}
+
+			// rotation
+			if (hAxis != 0) {
+				hTimer += Time.deltaTime;
+				k = Mathf.Min(hTimer / accelerationTime, 1);
+				rotSpeed = Mathf.Lerp(0, maxRotationSpeed, k);
+				transform.Rotate(Vector3.up, hAxis * rotSpeed);
+			} else {
+				hTimer = 0;
 			}
 		}
 
@@ -73,11 +84,11 @@ public class MovementInput : MonoBehaviour
 		}
 	}
 
-	private void FixedUpdate() {
-		if (SceneModeManager.sceneMode != SceneMode.dialogue) {     // rotation en fonction de la direction de la souris
-			if (fTranslation > .1 || Input.GetButton("Fire3")) {
-				transform.Rotate(Vector3.up, screenDirection.normalized.x * rotationSensitivity);
-			}
+	private bool HasGround(Vector3 fromSkyPosition) {
+		RaycastHit feetOutHit;
+		if (Physics.Raycast(fromSkyPosition, Vector3.down * 2f, out feetOutHit, 2f, environmentLayer)) {
+			return true;
 		}
+		return false;
 	}
 }

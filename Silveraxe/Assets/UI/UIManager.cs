@@ -98,17 +98,17 @@ public class UIManager : MonoBehaviour
 
 
 	public void DefineCursor() {
-		if (IsMouseInActiveArea()) {
-			if (cursor != playerManager.movementInput.cursor) {
-				cursor = playerManager.movementInput.cursor;
-				Cursor.SetCursor(cursor, new Vector2(defaultCursorSize / 3, defaultCursorSize / 3), CursorMode.ForceSoftware);
-			}
-		} else {
+		//if (IsMouseInActiveArea()) {
+		//	if (cursor != playerManager.movementInput.cursor) {
+		//		cursor = playerManager.movementInput.cursor;
+		//		Cursor.SetCursor(cursor, new Vector2(defaultCursorSize / 3, defaultCursorSize / 3), CursorMode.ForceSoftware);
+		//	}
+		//} else {
 			if (cursor) {
 				cursor = null;
 				Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
 			}
-		}
+		//}
 	}
 
 	bool IsMouseInActiveArea() {

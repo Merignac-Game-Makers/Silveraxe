@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3871279204391537000}
   - component: {fileID: 741569486556140540}
   - component: {fileID: 3821873485669275409}
-  - component: {fileID: 6069647737646408973}
+  - component: {fileID: 5617789088797743061}
   m_Layer: 10
   m_Name: lanterne01
   m_TagString: Untagged
@@ -81,22 +81,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!208 &6069647737646408973
-NavMeshObstacle:
+--- !u!64 &5617789088797743061
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6085712312883755196}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.25, y: 0.25, z: 1.1}
-  m_MoveThreshold: 0.1
-  m_Carve: 0
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 1.1}
-  m_TimeToStationary: 0.5
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 601709842389932155, guid: 363125e2770604a4989be6c760624eb0, type: 3}
 --- !u!1 &7958490606957075923
 GameObject:
   m_ObjectHideFlags: 0
