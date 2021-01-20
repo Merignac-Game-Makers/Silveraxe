@@ -45,6 +45,9 @@ public class PlayerManager : Character
 	#region Intéractions
 
 	public void OnTriggerStay(Collider other) {
+		if (other.gameObject.layer != LayerMask.NameToLayer("Interactable"))
+			return;
+
 		if (other.gameObject != gameObject) {
 			interactable = other.gameObject.GetComponent<InteractableObject>();
 			if (interactable != null) {                         // si l'objet rencontré est un 'intéractible'

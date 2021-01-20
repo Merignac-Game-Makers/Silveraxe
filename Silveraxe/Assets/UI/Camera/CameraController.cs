@@ -14,7 +14,7 @@ public class CameraController : MonoBehaviour
 	public CinemachineVirtualCamera vCamFollow;
 	public CinemachineVirtualCamera vCamLateral;
 
-	CinemachineVirtualCamera activeCamera => cinemachineBrain?.ActiveVirtualCamera?.VirtualCameraGameObject.GetComponent<CinemachineVirtualCamera>();
+	public CinemachineVirtualCamera activeCamera => cinemachineBrain?.ActiveVirtualCamera?.VirtualCameraGameObject.GetComponent<CinemachineVirtualCamera>();
 
 	CinemachineBrain cinemachineBrain;
 

@@ -6,12 +6,11 @@ using static App;
 
 public class MovementInput : MonoBehaviour {
 	public float maxSpeed = .5f;
-	public float maxRotationSpeed = 15;
 	public float accelerationTime = 0.5f;
+	public float rotSpeed = 10;					// vitesse de rotation
 
-	public float trnSpeed { get; set; } = 0;		// vitesse avant/arrière
-	public float rotSpeed { get; set; } = 0;        // vitesse de rotation
-	public float sdeSpeed { get; set; } = 0;        // vitesse gauche/droite
+	public float vSpeed { get; set; } = 0;		// vitesse avant/arrière
+	public float hSpeed { get; set; } = 0;      // vitesse gauche/droite
 
 
 	public LayerMask environmentLayer;
@@ -24,13 +23,23 @@ public class MovementInput : MonoBehaviour {
 	float k;
 	float vTimer = 0;
 	float hTimer = 0;
-	float sTimer = 0;
 
 	private float vAxis = 0;
 	private float hAxis = 0;
-	private int sideMvt = 0;
-	private bool keyA = false;
-	private bool keyE = false;
+	private float vMouse = 0;
+	private float hMouse = 0;
+
+	public float yMin = 0;
+	public float yMax = 6;
+	private float yNeutral;
+
+	CinemachineComposer c;
+
+	private void Start() {
+		c = cameraController.vCamFollow.GetCinemachineComponent<CinemachineComposer>();
+		yNeutral = c.m_TrackedObjectOffset.y;
+	}
+
 	void LateUpdate() {
 		//------------------------
 		// déplacements au clavier
@@ -50,65 +59,72 @@ public class MovementInput : MonoBehaviour {
 
 		if (SceneModeManager.sceneMode != SceneMode.dialogue) {         // en mode dialogue on ne bouge pas non plus
 
-			vAxis = Input.GetAxis("Vertical");
-			hAxis = Input.GetAxis("Horizontal");
-			sideMvt = Input.GetKey(KeyCode.A) ? -1 : Input.GetKey(KeyCode.E) ? 1 : 0;
+			vAxis = Input.GetAxis("Vertical");			// déplacement avant/arrière
+			hAxis = Input.GetAxis("Horizontal");        // déplacement latéral
+
+			hMouse = (Input.mousePosition.x - Screen.width / 2) / Screen.width;
+			vMouse = (Input.mousePosition.y - Screen.height / 2) / Screen.height;
+
 			velocity = Vector3.zero;
 
 			// déplacement avant/arrière
 			if (vAxis != 0) {
 				vTimer += Time.deltaTime;
 				k = Mathf.Min(vTimer / accelerationTime, 1);
-				trnSpeed = Mathf.Lerp(0, maxSpeed, k);
-				Vector3 v = transform.forward * vAxis * trnSpeed;
+				vSpeed = Mathf.Lerp(0, maxSpeed, k);
+				Vector3 v = transform.forward * vAxis * vSpeed;
 				if (HasGround(transform.position + v + Vector3.up))		// ne pas tomber hors du monde !
 					transform.position += v;
-				velocity += Vector3.forward * vAxis * trnSpeed;
-
-				//Debug.Log(v + " - " + velocity);
+				velocity += Vector3.forward * vAxis * vSpeed;
 			} else {
 				vTimer = 0;
-				trnSpeed = 0;
+				vSpeed = 0;
 			}
 
 			// déplacement latéral
-			if (sideMvt != 0) {
-				sTimer += Time.deltaTime;
-				k = Mathf.Min(sTimer / accelerationTime, 1);
-				sdeSpeed = Mathf.Lerp(0, maxSpeed, k);
-				Vector3 v = transform.right * sideMvt * sdeSpeed;
-				if (HasGround(transform.position + v + Vector3.up))     // ne pas tomber hors du monde !
-					transform.position += v;
-				velocity += Vector3.right * sideMvt * sdeSpeed;
-			} else {
-				sTimer = 0;
-				sdeSpeed = 0;
-			}
-
-			// rotation
 			if (hAxis != 0) {
 				hTimer += Time.deltaTime;
 				k = Mathf.Min(hTimer / accelerationTime, 1);
-				rotSpeed = Mathf.Lerp(0, maxRotationSpeed, k);
-				transform.Rotate(Vector3.up, hAxis * rotSpeed);
+				hSpeed = Mathf.Lerp(0, maxSpeed, k);
+				Vector3 v = transform.right * hAxis * hSpeed;
+				if (HasGround(transform.position + v + Vector3.up))     // ne pas tomber hors du monde !
+					transform.position += v;
+				velocity += Vector3.right * hAxis * hSpeed;
 			} else {
 				hTimer = 0;
+				hSpeed = 0;
 			}
+
+			// rotation gauche/droite
+			if (hMouse != 0 && (vSpeed != 0 || hSpeed != 0 || Input.GetButton("Fire2"))) {
+				transform.Rotate(Vector3.up, hMouse * rotSpeed);
+			}
+
+			// rotation haut/bas
+			if (vMouse >.25f && Input.GetButton("Fire2")) {
+				c.m_TrackedObjectOffset.y = yMax;
+			} else if (vMouse < -.25f && Input.GetButton("Fire2")) {
+				c.m_TrackedObjectOffset.y = yMin;
+			} else {
+				c.m_TrackedObjectOffset.y = yNeutral;
+			}
+
+
 		}
 
 
 
 
 
-		// barre d'espace => regarder le ciel
-		if (Input.GetKeyDown(KeyCode.Space)) {
-			var c = cameraController.vCamFollow.GetCinemachineComponent<CinemachineComposer>();
-			c.m_TrackedObjectOffset.y = 6;
-		}
-		if (Input.GetKeyUp(KeyCode.Space)) {
-			var c = cameraController.vCamFollow.GetCinemachineComponent<CinemachineComposer>();
-			c.m_TrackedObjectOffset.y = 2;
-		}
+		//// A => regarder le ciel
+		//if (Input.GetKeyDown(KeyCode.A)) {
+		//	var c = cameraController.vCamFollow.GetCinemachineComponent<CinemachineComposer>();
+		//	c.m_TrackedObjectOffset.y = 6;
+		//}
+		//if (Input.GetKeyUp(KeyCode.A)) {
+		//	var c = cameraController.vCamFollow.GetCinemachineComponent<CinemachineComposer>();
+		//	c.m_TrackedObjectOffset.y = 2;
+		//}
 	}
 
 	private bool HasGround(Vector3 fromSkyPosition) {
