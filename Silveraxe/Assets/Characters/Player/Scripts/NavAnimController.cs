@@ -76,8 +76,8 @@ public class NavAnimController : MonoBehaviour
 		}
 
 		//Calculate Input Vectors
-		inputX = tmp.x;         // latéral
-		inputZ = tmp.z*10;         // avant/arrière
+		inputX = tmp.x*2;			// latéral
+		inputZ = tmp.z*10;			// avant/arrière
 
 		//var v = Mathf.Abs(anim.GetFloat("InputX") + anim.GetFloat("InputZ"));
 		foreach (Animator anim in anims) {

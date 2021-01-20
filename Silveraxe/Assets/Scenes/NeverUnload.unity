@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000002, guid: 66752a73d1fc5d4429246f1e2c07743f,
+  m_LightingDataAsset: {fileID: 112000002, guid: b4271900c585bd4428ae68e876ca765a,
     type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -2045,8 +2045,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 318689352}
-  m_LocalRotation: {x: 0.0976946, y: 0.12989101, z: -0.012861766, w: 0.98661983}
-  m_LocalPosition: {x: 1.0559045, y: 2.35, z: -3.7396288}
+  m_LocalRotation: {x: 0.09769461, y: 0.12989125, z: -0.012861807, w: 0.9866198}
+  m_LocalPosition: {x: 122.5559, y: 0.73, z: 112.32037}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1472256814}
@@ -2511,8 +2511,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 522811750}
-  m_LocalRotation: {x: 0.0976946, y: 0.12989101, z: -0.012861766, w: 0.98661983}
-  m_LocalPosition: {x: 1.0559044, y: 2.35, z: -3.7396288}
+  m_LocalRotation: {x: 0.09769461, y: 0.12989125, z: -0.012861807, w: 0.9866198}
+  m_LocalPosition: {x: 122.5559, y: 0.73, z: 112.32037}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1997865392}
@@ -2980,7 +2980,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 546.5, y: -494}
+  m_AnchoredPosition: {x: 546.5, y: -493}
   m_SizeDelta: {x: 1093, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &711244226
@@ -8322,17 +8322,17 @@ PrefabInstance:
     - target: {fileID: 2432836381384688571, guid: e82c2a30431136741941571f034ecf68,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.35
+      value: 123.85
       objectReference: {fileID: 0}
     - target: {fileID: 2432836381384688571, guid: e82c2a30431136741941571f034ecf68,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.65
+      value: -2.27
       objectReference: {fileID: 0}
     - target: {fileID: 2432836381384688571, guid: e82c2a30431136741941571f034ecf68,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.09
+      value: 117.15
       objectReference: {fileID: 0}
     - target: {fileID: 2432836381384688571, guid: e82c2a30431136741941571f034ecf68,
         type: 3}

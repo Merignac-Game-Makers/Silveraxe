@@ -21,8 +21,14 @@ public class SceneLoader : MonoBehaviour
 		//CrossSceneItemsManager.SetActiveScene(defaultScene);			// activer les objets trans-scènes de la scène par défaut 
 		Game.NewGame();													// créer un nouvel identifiant de sauvegarde pour une nouvelle partie
 		Game.current.SaveSceneData(App.dontDestroyScene, true);         // sauvegarder l'état initial de la scène "NeverUnload" (true = flag "etat initial" => nom de fichier spécifique)
-		App.currentSceneName = defaultScene;		                    // la scène courante devient la scène chargée
-		LoadScene(defaultScene, false);									// charger la scène de départ du jeu  (false => sans restaurer de sauvegarde)
+
+		if (SceneManager.sceneCount == 1) {								// si aucune scène visible n'est déjà chargée => chargement de la scène par défaut
+			App.currentSceneName = defaultScene;		                //		la scène courante devient la scène par défaut
+			LoadScene(defaultScene, false);								//		charger la scène de départ du jeu  (false => sans restaurer de sauvegarde)
+		} else {                                                        // si une scène est dèjà chargée (développement / test de scène ...)
+			App.currentSceneName = SceneManager.GetSceneAt(1).name;     //		la scène courante est la scène pré-chargée
+			Game.ResumeGame();                                          //			démarrer l'exécution du jeu (comme une fin de pause, ...)
+		}
 	}
 
 	/// <summary>

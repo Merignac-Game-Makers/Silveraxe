@@ -9,8 +9,10 @@ public class MovementInput : MonoBehaviour {
 	public float maxRotationSpeed = 15;
 	public float accelerationTime = 0.5f;
 
-	public float trnSpeed { get; set; } = 0;
-	public float rotSpeed { get; set; } = 0;
+	public float trnSpeed { get; set; } = 0;		// vitesse avant/arrière
+	public float rotSpeed { get; set; } = 0;        // vitesse de rotation
+	public float sdeSpeed { get; set; } = 0;        // vitesse gauche/droite
+
 
 	public LayerMask environmentLayer;
 
@@ -22,9 +24,13 @@ public class MovementInput : MonoBehaviour {
 	float k;
 	float vTimer = 0;
 	float hTimer = 0;
+	float sTimer = 0;
 
 	private float vAxis = 0;
 	private float hAxis = 0;
+	private int sideMvt = 0;
+	private bool keyA = false;
+	private bool keyE = false;
 	void LateUpdate() {
 		//------------------------
 		// déplacements au clavier
@@ -46,6 +52,8 @@ public class MovementInput : MonoBehaviour {
 
 			vAxis = Input.GetAxis("Vertical");
 			hAxis = Input.GetAxis("Horizontal");
+			sideMvt = Input.GetKey(KeyCode.A) ? -1 : Input.GetKey(KeyCode.E) ? 1 : 0;
+			velocity = Vector3.zero;
 
 			// déplacement avant/arrière
 			if (vAxis != 0) {
@@ -55,12 +63,26 @@ public class MovementInput : MonoBehaviour {
 				Vector3 v = transform.forward * vAxis * trnSpeed;
 				if (HasGround(transform.position + v + Vector3.up))		// ne pas tomber hors du monde !
 					transform.position += v;
-				velocity = Vector3.forward * vAxis * trnSpeed;
+				velocity += Vector3.forward * vAxis * trnSpeed;
+
 				//Debug.Log(v + " - " + velocity);
 			} else {
 				vTimer = 0;
 				trnSpeed = 0;
-				velocity = Vector3.zero;
+			}
+
+			// déplacement latéral
+			if (sideMvt != 0) {
+				sTimer += Time.deltaTime;
+				k = Mathf.Min(sTimer / accelerationTime, 1);
+				sdeSpeed = Mathf.Lerp(0, maxSpeed, k);
+				Vector3 v = transform.right * sideMvt * sdeSpeed;
+				if (HasGround(transform.position + v + Vector3.up))     // ne pas tomber hors du monde !
+					transform.position += v;
+				velocity += Vector3.right * sideMvt * sdeSpeed;
+			} else {
+				sTimer = 0;
+				sdeSpeed = 0;
 			}
 
 			// rotation
@@ -74,11 +96,16 @@ public class MovementInput : MonoBehaviour {
 			}
 		}
 
-		if (Input.GetKeyDown(KeyCode.A)) {
+
+
+
+
+		// barre d'espace => regarder le ciel
+		if (Input.GetKeyDown(KeyCode.Space)) {
 			var c = cameraController.vCamFollow.GetCinemachineComponent<CinemachineComposer>();
 			c.m_TrackedObjectOffset.y = 6;
 		}
-		if (Input.GetKeyUp(KeyCode.A)) {
+		if (Input.GetKeyUp(KeyCode.Space)) {
 			var c = cameraController.vCamFollow.GetCinemachineComponent<CinemachineComposer>();
 			c.m_TrackedObjectOffset.y = 2;
 		}
