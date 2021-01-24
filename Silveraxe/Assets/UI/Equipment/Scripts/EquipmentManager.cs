@@ -46,17 +46,17 @@ public class EquipmentManager
 		EquipmentCategory category = item.equipmentCategory;
 		int idx = 0;
 		switch (category) {
-			case EquipmentCategory.Armor:
-				idx = 2;
+			case EquipmentCategory.Weapon:
+				idx = 0;
 				break;
 			case EquipmentCategory.Helmet:
 				idx = 1;
 				break;
+			case EquipmentCategory.Armor:
+				idx = 2;
+				break;
 			case EquipmentCategory.Shield:
 				idx = 3;
-				break;
-			case EquipmentCategory.Weapon:
-				idx = 0;
 				break;
 		}
 

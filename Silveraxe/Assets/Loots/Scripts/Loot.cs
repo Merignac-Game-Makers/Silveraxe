@@ -142,7 +142,7 @@ public class Loot : InteractableObject
 	public override void Deserialize(object serialized) {
 		base.Deserialize(serialized);
 		SLoot sLoot = (SLoot)serialized;
-		itemBase = ResourcesManager.GetItemBase(sLoot.itemBase);
+		//itemBase = App.itemsManager.GetItemBase(sLoot.itemBase);
 		if (new System.Guid(sLoot.target) != System.Guid.Empty)
 			target = Game.Find<Target>(sLoot.target);
 	}

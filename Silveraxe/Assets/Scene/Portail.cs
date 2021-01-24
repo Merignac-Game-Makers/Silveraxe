@@ -32,19 +32,19 @@ public class Portail : MonoBehaviour
 	//	SceneManager.sceneLoaded -= OnLevelFinishedLoading;
 	//}
 
-	private void OnTriggerEnter(Collider other) {
-		if (timer <= 0) {									// le portail n'est actif qu'après la teporisation
-			if (other.gameObject == App.playerManager.gameObject) {
+	//private void OnTriggerEnter(Collider other) {
+	//	if (timer <= 0) {									// le portail n'est actif qu'après la teporisation
+	//		if (other.gameObject == App.playerManager.gameObject) {
 
-				//Game.current.SaveScene(App.currentSceneName); 					// sauvegarder la scène qu'on quitte
-				Game.Save(); 										// sauvegarder la scène qu'on quitte
+	//			//Game.current.SaveScene(App.currentSceneName); 					// sauvegarder la scène qu'on quitte
+	//			Game.Save(); 										// sauvegarder la scène qu'on quitte
 
-				App.crossScenePosition = pos;						// coordonnées d'arrivée dans la scène cible
-				App.sceneCrossing = true;							// flag : utilisation d'un portail
-				App.sceneLoader.LoadScene(LevelToLoad, true);		// charger la scène cible
-			}
-		}
-	}
+	//			App.crossScenePosition = pos;						// coordonnées d'arrivée dans la scène cible
+	//			App.sceneCrossing = true;							// flag : utilisation d'un portail
+	//			App.sceneLoader.LoadScene(LevelToLoad, true);		// charger la scène cible
+	//		}
+	//	}
+	//}
 
 	//void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) {
 	//	if (scene.name == LevelToLoad) {

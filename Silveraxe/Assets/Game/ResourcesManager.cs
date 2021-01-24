@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Classe vraisemblablement devenue inutile
+/// Utilitaire pour la désérialisation des objets Loots
 /// </summary>
 public static class ResourcesManager 
 {
 	public static Object[] allItemBases;
 	public static Object[] allSprites;
+
 
 	public static void Init() {
 		allItemBases = Resources.LoadAll("", typeof(ItemBase)) ;	// lister les Loot et Equipment

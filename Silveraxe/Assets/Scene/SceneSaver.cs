@@ -14,7 +14,7 @@ public abstract class SceneSaver : MonoBehaviour
 		return new SerializedScene() {
 			version = App.saveVersion,                          // version de sauvegarde
 			//uid = Game.GetSceneUID(App.currentSceneName),		// l'UID de la sauvegarde
-			name = App.currentSceneName,						// nom de scene
+			//name = App.currentSceneName,						// nom de scene
 		};
 	}
 
@@ -41,5 +41,5 @@ public class SerializedScene
 {
 	public string version = "";	// version de sauvegarde
 	//public byte[] uid;			// uid de la sauvegarde
-	public string name;         // nom de la scène
+	//public string name;         // nom de la scène
 }

@@ -12,8 +12,6 @@ using UnityEngine.EventSystems;
 /// </summary>
 public static class App
 {
-	public static SceneSaver sceneSaver;
-	public static SceneLoader sceneLoader;
 	public static CameraController cameraController;
 
 	public static UIManager uiManager;
@@ -27,14 +25,6 @@ public static class App
 	public static InventoryUI inventoryUI;
 	public static EquipmentUI equipmentUI;
 	public static StatsUI statsUI;
-
-	//--------------------
-	// changement de scène
-	public static Vector3 crossScenePosition;
-	public static string currentSceneName;
-	public static bool sceneCrossing;
-	public static bool isLoadingData;
-
 
 	//--------------------
 	// strings

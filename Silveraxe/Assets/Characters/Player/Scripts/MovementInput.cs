@@ -45,18 +45,7 @@ public class MovementInput : MonoBehaviour {
 		// déplacements au clavier
 		//------------------------
 		if (!playerManager.isAlive) return;                             // quand on est mort, on ne bouge plus !
-
-		// reprise de déplacement après un portail
-		if (sceneCrossing && !isLoadingData) {
-			if (Input.GetAxis("Vertical") == 0 && Input.GetAxis("Horizontal") == 0) {
-				sceneCrossing = false;
-			} else {
-				return;
-			}
-		}
-
 		if (!canMove) return;                                           // si les déplacements sont désactivés, on ne bouge plus ! (transitions entre les scènees)
-
 		if (SceneModeManager.sceneMode != SceneMode.dialogue) {         // en mode dialogue on ne bouge pas non plus
 
 			vAxis = Input.GetAxis("Vertical");			// déplacement avant/arrière

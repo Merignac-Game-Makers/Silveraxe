@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,20 +16,17 @@ public class InteractableObjectsManager : MonoBehaviour
 		App.itemsManager = this;
 	}
 
-	//private void Start() {
-	//	GetSceneObjects();
-	//}
+	private void Start() {
+		GetSceneObjects();
+	}
 
 	/// <summary>
 	/// récupérer tous les InteractableObject de la scène dans la listes 'objects'
 	/// </summary>
 	public void GetSceneObjects() {
 		objects = new List<InteractableObject>(FindObjectsOfType<InteractableObject>());
-		for (int i = objects.Count - 1; i > -1; i--) {
-			if (objects[i].gameObject.scene.name != App.currentSceneName && objects[i].gameObject.scene.name != App.dontDestroyScene) // 
-				objects.Remove(objects[i]);
-		}
 		objects.Remove(App.playerManager);
+		allItemBases = Resources.LoadAll("", typeof(ItemBase)); // lister les Loot et Equipment
 	}
 
 	private void FixedUpdate() {
@@ -65,5 +61,14 @@ public class InteractableObjectsManager : MonoBehaviour
 			obj.selectionMuted = !on;
 			obj.Highlight(on && obj.isInPlayerCollider);
 		}
+	}
+
+	public Object[] allItemBases;
+	public ItemBase GetItemBase(string name) {
+		foreach (ItemBase itemBase in allItemBases) {
+			if (itemBase.name == name)
+				return itemBase as ItemBase;
+		}
+		return null;
 	}
 }

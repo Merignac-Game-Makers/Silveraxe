@@ -10,12 +10,12 @@ public class TargetsManager : MonoBehaviour
 		App.targetsManager = this;
 	}
 
+	private void Start() {
+		GetSceneTargets();
+	}
+
 	public void GetSceneTargets() {
 		targets = new List<Target>(FindObjectsOfType<Target>());
-		for (int i = targets.Count - 1; i > -1; i--) {
-			if (targets[i].gameObject.scene.name != App.currentSceneName && targets[i].gameObject.scene.name != App.dontDestroyScene) // 
-				targets.Remove(targets[i]);
-		}
 	}
 
 	public void OnItemSelect() {

@@ -20,7 +20,7 @@ public class MenuUI : UIBase
 	}
 
 	public void NewGameButton() {
-		App.sceneLoader.Restart();
+		Game.NewGame();
 		Toggle();
 	}
 

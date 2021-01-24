@@ -20,8 +20,6 @@ public class EquipmentEntryUI : EntryUI
 
 	public bool isFree => entry == null;
 
-	Texture2D cursor;
-
 	private void Start() {
 		Show(false);
 	}
