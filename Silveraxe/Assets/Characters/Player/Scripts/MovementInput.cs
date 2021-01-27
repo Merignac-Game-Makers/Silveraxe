@@ -40,6 +40,16 @@ public class MovementInput : MonoBehaviour {
 		yNeutral = c.m_TrackedObjectOffset.y;
 	}
 
+
+	public NavMeshAgent navAgent { get; private set; }
+	Vector3 dest;
+
+	private void Awake() {
+		navAgent = GetComponent<NavMeshAgent>();
+		navAgent.updateRotation = false;
+	}
+
+
 	void LateUpdate() {
 		//------------------------
 		// déplacements au clavier
@@ -55,16 +65,18 @@ public class MovementInput : MonoBehaviour {
 			vMouse = (Input.mousePosition.y - Screen.height / 2) / Screen.height;
 
 			velocity = Vector3.zero;
+			dest = transform.position;
 
 			// déplacement avant/arrière
 			if (vAxis != 0) {
 				vTimer += Time.deltaTime;
 				k = Mathf.Min(vTimer / accelerationTime, 1);
 				vSpeed = Mathf.Lerp(0, maxSpeed, k);
-				Vector3 v = transform.forward * vAxis * vSpeed;
-				if (HasGround(transform.position + v + Vector3.up))		// ne pas tomber hors du monde !
-					transform.position += v;
-				velocity += Vector3.forward * vAxis * vSpeed;
+				//Vector3 v = transform.forward * vAxis * vSpeed;
+				//if (HasGround(transform.position + v + Vector3.up))		// ne pas tomber hors du monde !
+				//	transform.position += v;
+				//velocity += Vector3.forward * vAxis * vSpeed;
+				dest += transform.forward * vAxis * vSpeed;
 			} else {
 				vTimer = 0;
 				vSpeed = 0;
@@ -75,14 +87,18 @@ public class MovementInput : MonoBehaviour {
 				hTimer += Time.deltaTime;
 				k = Mathf.Min(hTimer / accelerationTime, 1);
 				hSpeed = Mathf.Lerp(0, maxSpeed, k);
-				Vector3 v = transform.right * hAxis * hSpeed;
-				if (HasGround(transform.position + 2*v + Vector3.up))     // ne pas tomber hors du monde !
-					transform.position += v;
-				velocity += Vector3.right * hAxis * hSpeed;
+				//Vector3 v = transform.right * hAxis * hSpeed;
+				//if (HasGround(transform.position + 2*v + Vector3.up))     // ne pas tomber hors du monde !
+				//	transform.position += v;
+				//velocity += Vector3.right * hAxis * hSpeed;
+				dest += transform.right * hAxis * hSpeed;
 			} else {
 				hTimer = 0;
 				hSpeed = 0;
 			}
+
+			navAgent.SetDestination(dest);
+			velocity = transform.InverseTransformVector( navAgent.velocity);
 
 			// rotation gauche/droite
 			if (hMouse != 0 && (vSpeed != 0 || hSpeed != 0 || Input.GetButton("Fire2"))) {
