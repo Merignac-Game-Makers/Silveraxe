@@ -96,7 +96,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Intensity
-    path: Point Light
+    path: Point light
     classID: 108
     script: {fileID: 0}
   m_PPtrCurves: []
@@ -108,7 +108,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 1963377571
+      path: 3033001127
       attribute: 898800009
       script: {fileID: 0}
       typeID: 108
@@ -215,7 +215,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Intensity
-    path: Point Light
+    path: Point light
     classID: 108
     script: {fileID: 0}
   m_EulerEditorCurves: []

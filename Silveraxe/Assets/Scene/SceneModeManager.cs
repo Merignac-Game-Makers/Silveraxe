@@ -11,14 +11,15 @@ public static class SceneModeManager {
 		switch (mode) {
 			case SceneMode.normal:
 				cameraController.SetCamera(cameraController.vCamFollow);                    // activer la caméra 'follow'
-				App.itemsManager.SelectAll(true);                                 // resélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
+				App.itemsManager.SelectAll(true);											// resélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
+				playerManager.StopAgent(false);												// redémarrer les déplacements
 				break;
 
 			case SceneMode.dialogue:
 				// scène
 				if (on && sceneMode == SceneMode.normal) {
 					cameraController.SetCamera(cameraController.vCamLateral);           // activer la caméra latérale
-					App.itemsManager.SelectAll(false);                        // désélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
+					App.itemsManager.SelectAll(false);									// désélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
 
 					// player
 					playerManager.FaceTo(on, other.gameObject);                         // orienter le joueur vers le PNJ

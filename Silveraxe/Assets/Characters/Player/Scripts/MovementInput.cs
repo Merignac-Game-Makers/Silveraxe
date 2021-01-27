@@ -76,7 +76,7 @@ public class MovementInput : MonoBehaviour {
 				k = Mathf.Min(hTimer / accelerationTime, 1);
 				hSpeed = Mathf.Lerp(0, maxSpeed, k);
 				Vector3 v = transform.right * hAxis * hSpeed;
-				if (HasGround(transform.position + v + Vector3.up))     // ne pas tomber hors du monde !
+				if (HasGround(transform.position + 2*v + Vector3.up))     // ne pas tomber hors du monde !
 					transform.position += v;
 				velocity += Vector3.right * hAxis * hSpeed;
 			} else {

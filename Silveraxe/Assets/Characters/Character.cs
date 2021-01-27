@@ -90,10 +90,10 @@ public abstract class Character : InteractableObject
 
 	// coordonnées des 8 sommets de la 'boundingBox' 
 	public Vector3[] GetBounds() {
-		CharacterController cc = GetComponent<CharacterController>();
+		BoxCollider bc = GetComponent<BoxCollider>();
 		Vector3[] corners = new Vector3[8];
-		Vector3 min = cc.bounds.min;
-		Vector3 max = cc.bounds.max;
+		Vector3 min = bc.bounds.min;
+		Vector3 max = bc.bounds.max;
 		corners[0] = new Vector3(min.x, min.y, min.z);
 		corners[1] = new Vector3(min.x, min.y, max.z);
 		corners[2] = new Vector3(max.x, min.y, min.z);
