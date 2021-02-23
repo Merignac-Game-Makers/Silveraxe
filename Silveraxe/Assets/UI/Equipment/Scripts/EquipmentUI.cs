@@ -22,6 +22,7 @@ public class EquipmentUI : UIBase
 
 	private void Awake() {
 		equipmentUI = this;
+		panel.SetActive(true);
 	}
 
 	void Start() {

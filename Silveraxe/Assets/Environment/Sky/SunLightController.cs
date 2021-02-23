@@ -37,14 +37,14 @@ public class SunLightController : MonoBehaviour {
 			for (int i = 0; i < sunStates.Length - 1; i++) {                    // pour chaque zone 'couleur/intensité' - 1
 				s0 = sunStates[i];                                              // zone courante
 				s1 = sunStates[i + 1];                                          // zone suivante
-				if (alt > s0.altitude || alt < s1.altitude) {                   // si le soleil est au dessous du point de passage de la zone 'couleur/intensité' courante
-					continue;                                                   //		passer à la zone suivante
+				if (alt < s0.altitude && alt > s1.altitude) {                   // si le soleil est au dessous du point de passage de la zone 'couleur/intensité' courante
+					break;                                                   //		passer à la zone suivante
 				}
+			}
 				var diff = s0.altitude - s1.altitude;                           // hauteur de la zone 'couleur/intensité' courante
 				var k = (s0.altitude - alt) / diff;                             // % d'avancement dans la zone
 				sun.intensity = Mathf.Lerp(s0.intensity, s1.intensity, k);      // intensité du soleil (plus intense au zénith, moins intense près de l'horizon)
 				sun.color = Color.Lerp(s0.color, s1.color, k);                  // couleur du soleil (orangé près de l'horizon, ...)
-			}
 			moonLighting.transform.rotation = transform.rotation;
 			Vector3 sunDir = sun.transform.position.normalized;             // direction du soleil
 			Vector3 moonDir = moon.transform.position.normalized;           // direction de la lune

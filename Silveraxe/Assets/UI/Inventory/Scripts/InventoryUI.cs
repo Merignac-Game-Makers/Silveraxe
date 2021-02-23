@@ -16,7 +16,7 @@ public class InventoryUI : UIBase
 	}
 
 	void Start() {
-		entries = GetComponentsInChildren<ItemEntryUI>();
+		entries = GetComponentsInChildren<ItemEntryUI>(true);
 		capacity = entries.Length;
 	}
 

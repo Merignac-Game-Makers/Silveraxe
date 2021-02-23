@@ -2,20 +2,18 @@
 using TMPro;
 using UnityEngine;
 
-using static App;
 public class MessageManager : MonoBehaviour
 {
-
-	TMP_Text messageLabel;
+	public GameObject messageLabel;
+	public TMP_Text textHolder;
+	public TMP_Text text;
 	Coroutine coroutine;
 
 	private void Awake() {
-		messageManager = this;
+		App.messageManager = this;
 	}
 
-	private void Start() {
-		messageLabel = GetComponentInChildren<TMP_Text>();
-	}
+
 	/// <summary>
 	/// afficher un message
 	/// </summary>
@@ -29,11 +27,12 @@ public class MessageManager : MonoBehaviour
 
 
 	IEnumerator IShow(string text, Vector2 position, float delay) {
-		messageLabel.GetComponentInChildren<TMP_Text>().text = text;
+		this.textHolder.text = text;
+		this.text.text = text;
 		messageLabel.transform.position = position;
-		gameObject.SetActive(true);
+		messageLabel.SetActive(true);
 		yield return new WaitForSeconds(delay);
-		gameObject.SetActive(false);
+		messageLabel.SetActive(false);
 		//uiManager.isClicOnUI = false;
 	}
 }

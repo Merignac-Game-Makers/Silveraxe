@@ -7,7 +7,7 @@ public class TargetEditor : Editor
 	Target m_Target;
 
 	SerializedProperty pPrefab;
-	SerializedProperty pCursor;
+	SerializedProperty pTargetEffect;
 	SerializedProperty pFilterMode;
 	SerializedProperty pFilterItems;
 
@@ -21,6 +21,7 @@ public class TargetEditor : Editor
 		pPrefab = serializedObject.FindProperty(nameof(Target.prefab));
 		pFilterMode = serializedObject.FindProperty(nameof(Target.filterMode));
 		pFilterItems = serializedObject.FindProperty(nameof(Target.filterItems));
+		pTargetEffect = serializedObject.FindProperty(nameof(Target.targetEffect));
 
 	}
 
@@ -39,6 +40,7 @@ public class TargetEditor : Editor
 			obj.layer = holder.gameObject.layer;
 		}
 
+		EditorGUILayout.PropertyField(pTargetEffect);
 		EditorGUILayout.PropertyField(pFilterMode);
 		EditorGUILayout.PropertyField(pFilterItems);
 

@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 389350624753084575}
   - component: {fileID: 7725203392287908224}
   - component: {fileID: 8585547209112646376}
-  m_Layer: 10
+  m_Layer: 1
   m_Name: Box003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -186,6 +186,7 @@ GameObject:
   - component: {fileID: 3450915986266616883}
   - component: {fileID: 879050933166962348}
   - component: {fileID: 1159899693127181129}
+  - component: {fileID: 7071376982697272779}
   m_Layer: 10
   m_Name: Point Light
   m_TagString: Untagged
@@ -252,7 +253,7 @@ Light:
     m_UseCullingMatrixOverride: 0
   m_Cookie: {fileID: 0}
   m_DrawHalo: 0
-  m_Flare: {fileID: 12100000, guid: 78d956efc5831c8419bf128544663e6b, type: 2}
+  m_Flare: {fileID: 0}
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
@@ -280,3 +281,19 @@ Halo:
     serializedVersion: 2
     rgba: 4281932621
   m_Size: 1
+--- !u!123 &7071376982697272779
+LensFlare:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4206254371887996001}
+  m_Enabled: 1
+  m_Flare: {fileID: 12100000, guid: 54fbbf098d116effa00081aba8ad6659, type: 2}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Brightness: 0.4
+  m_FadeSpeed: 3
+  m_IgnoreLayers:
+    serializedVersion: 2
+    m_Bits: 6
+  m_Directional: 0

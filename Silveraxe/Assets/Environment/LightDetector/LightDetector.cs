@@ -40,6 +40,12 @@ public class LightDetector : MonoBehaviour
 		cam.targetTexture = rt;
 		T2D = new Texture2D(rt.width, rt.height);
 
+		//if (isOn) {
+		//	OnTriggerOn();      // jour
+		//} else {
+		//	OnTriggerOff();     // nuit
+		//}
+
 	}
 	private void Update() {
 		tmp = RenderTexture.GetTemporary(rt.width, rt.height, 0, RenderTextureFormat.Default, RenderTextureReadWrite.Linear);

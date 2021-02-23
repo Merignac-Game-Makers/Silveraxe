@@ -6,6 +6,7 @@ using static App;
 
 public class MinimapController : MonoBehaviour
 {
+
 	public Camera minimapCamera;
 
 	public GameObject smallView;
@@ -63,7 +64,7 @@ public class MinimapController : MonoBehaviour
 	
 			}
 		}
-		// orientation de la flèche
+
 		if (mode == 1) {
 			//minimapCamera.transform.position = new Vector3(player.position.x, 100, player.position.z);
 			smallContent.transform.localPosition = new Vector2(

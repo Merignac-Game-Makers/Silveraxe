@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
 using static App;
 
 
@@ -20,6 +20,9 @@ public class Target : InteractableObject
 	Transform target;
 	public Loot item { get; set; }
 
+	public TargetEffect targetEffect;
+	public TargetAction targetAction { get; private set; }
+
 	public override bool IsHighlightable() {
 		if (item != null) return false;																			// ne peut contenir qu'un seul objet d'inventaire
 		if (!App.playerManager || !App.playerManager.characterData) return false;								// (attente d'initialisation de la scène)
@@ -29,8 +32,8 @@ public class Target : InteractableObject
 
 	public override bool IsInteractable() {
 		if (!isHighlightable) return false;
-		if (inventoryUI.selectedEntry == null) return false;                                                        // un objet d'inventaire doit être sélectionné	
-		if (!CompatibleWith(inventoryUI.selectedEntry.loot)) return false;                                          // l'objet sélectionné doit être compatible
+		if (App.inventoryUI.selectedEntry == null) return false;                                                        // un objet d'inventaire doit être sélectionné	
+		if (!CompatibleWith(App.inventoryUI.selectedEntry.loot)) return false;                                          // l'objet sélectionné doit être compatible
 		return base.IsInteractable();
 	}
 
@@ -56,6 +59,8 @@ public class Target : InteractableObject
 			if (obj != null)
 				obj.gameObject.AddComponent<UnityEngine.AI.NavMeshObstacle>();
 		}
+		// action
+		targetAction = GetComponent<TargetAction>();
 	}
 
 	private void FixedUpdate() {
@@ -66,10 +71,14 @@ public class Target : InteractableObject
 
 	void Act() {
 		if (IsInteractable()) {
+			EventSystem.current.SetSelectedGameObject(null);        // éviter les actions multiples en 1 seul clic
 			Highlight(false);
 			item = inventoryUI.selectedEntry.loot;
 			inventoryUI.selectedEntry?.Select(false);
 			item.Drop(this);
+			if (targetAction) {
+				targetAction.Act(item);
+			}
 		}
 	}
 
@@ -114,3 +123,5 @@ public class STarget : SSavable
 {
 	public byte[] target_ItemGuid = System.Guid.Empty.ToByteArray();		// identifiant du Loot posé sur la cible (s'il existe) -> valeur par défaut = 'Empty' = pas de Loot
 }
+
+public enum TargetEffect { none, fill }

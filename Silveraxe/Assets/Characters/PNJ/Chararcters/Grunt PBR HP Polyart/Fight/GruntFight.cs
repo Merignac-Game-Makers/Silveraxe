@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GruntFight : FightController
 {
+	public DoorOrc door;
+
 	[Header("Other")]
 	public float attackRate;
 	public LightDetector lightDetector;
@@ -46,6 +48,8 @@ public class GruntFight : FightController
 
 	public override void Die() {
 		if (lightDetector && lightDetector.isOn) {
+			if (!door.isOpen)
+				return;
 			animatorController?.anim?.SetTrigger(DIE);                 // animation "mort"
 			PlaySound(petrified);                                      // son "pétrifié"
 			polyartSkin.SetActive(false);

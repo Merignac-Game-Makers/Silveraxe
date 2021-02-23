@@ -24,7 +24,12 @@ public class InteractableObjectsManager : MonoBehaviour
 	/// récupérer tous les InteractableObject de la scène dans la listes 'objects'
 	/// </summary>
 	public void GetSceneObjects() {
-		objects = new List<InteractableObject>(FindObjectsOfType<InteractableObject>());
+		//objects = new List<InteractableObject>(FindObjectsOfType<InteractableObject>());
+		objects = new List<InteractableObject>();
+
+		new List<GameObject>(SceneManager.GetActiveScene().GetRootGameObjects())
+			.ForEach(g => objects.AddRange(g.GetComponentsInChildren<InteractableObject>(true)));
+
 		objects.Remove(App.playerManager);
 		allItemBases = Resources.LoadAll("", typeof(ItemBase)); // lister les Loot et Equipment
 	}
@@ -41,7 +46,11 @@ public class InteractableObjectsManager : MonoBehaviour
 		dist = 999999;
 		closest = null;
 		foreach (InteractableObject obj in objects) {
+			if (!obj.isInPlayerCollider)
+				continue;
 			if (!obj.IsHighlightable())
+				continue;
+			if (!obj.isActiveAndEnabled)
 				continue;
 			d = (obj.transform.position - App.playerManager.transform.position).sqrMagnitude;
 			if (d < dist) {

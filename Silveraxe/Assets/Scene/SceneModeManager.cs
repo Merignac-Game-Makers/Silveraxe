@@ -2,81 +2,78 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using static App;
 
 public static class SceneModeManager {
 	public static SceneMode sceneMode => GetSceneMode();
 
 	public static void SetSceneMode(SceneMode mode, bool on, Character other = null) {
 		switch (mode) {
-			case SceneMode.normal:
-				cameraController.SetCamera(cameraController.vCamFollow);                    // activer la caméra 'follow'
-				App.itemsManager.SelectAll(true);											// resélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
-				playerManager.StopAgent(false);												// redémarrer les déplacements
+			case SceneMode.normal:									// passage en mode Normal
+				App.cameraController.SetFollowCamera();											// activer la caméra 'follow'
+				App.itemsManager.SelectAll(true);												// resélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
+				App.playerManager.StopAgent(false);												// redémarrer les déplacements
 				break;
 
 			case SceneMode.dialogue:
 				// scène
-				if (on && sceneMode == SceneMode.normal) {
-					cameraController.SetCamera(cameraController.vCamLateral);           // activer la caméra latérale
-					App.itemsManager.SelectAll(false);									// désélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
+				if (on && sceneMode == SceneMode.normal) {			// passage en mode Dialogue depuis le mode Normal
+					App.cameraController.SetLateralCamera(other.transform);						// activer la caméra latérale
+					App.itemsManager.SelectAll(false);											// désélectionner tous les objets intéractibles de la scène quand on commence un dialogue... 
 
 					// player
-					playerManager.FaceTo(on, other.gameObject);                         // orienter le joueur vers le PNJ
-																						//playerManager.animatorController.SendAnims((Animator anim) => { anim.SetBool(Dialogue, true); });
-					playerManager.animatorController?.anim.SetBool(DIALOGUE, true);     // activer l'animation 'dialogue' du joueur
+					App.playerManager.FaceTo(on, other.gameObject);								// orienter le joueur vers le PNJ
+					App.playerManager.animatorController?.anim.SetBool(App.DIALOGUE, true);     // activer l'animation 'dialogue' du joueur
 
 					// PNJ
-					other.FaceTo(on, playerManager.gameObject);                         // orienter le PNJ vers le joueur 						
-					other?.animatorController?.anim?.SetBool(DIALOGUE, true);           // activer l'animation 'dialogue' du pnj
-					other.GetComponentInChildren<DialogueTrigger>().Run();              // démarrer le dialogue	
-				} else {
+					other.FaceTo(on, App.playerManager.gameObject);								// orienter le PNJ vers le joueur 						
+					other?.animatorController?.anim?.SetBool(App.DIALOGUE, true);				// activer l'animation 'dialogue' du pnj
+					other.GetComponentInChildren<DialogueTrigger>().Run();						// démarrer le dialogue	
+				} else {											// sortie du mode Dialogue et retour au mode Normal
 					// player
-					playerManager.FaceTo(false);                                            // cesser d'orienter le joueur vers le PNJ
-																							//playerManager.animatorController.SendAnims((Animator anim) => { anim.SetBool(Dialogue, false); });
-					playerManager.animatorController?.anim.SetBool(DIALOGUE, false);        // désactiver l'animation 'dialogue' du joueur
+					App.playerManager.FaceTo(false);                                            // cesser d'orienter le joueur vers le PNJ
+					App.playerManager.animatorController?.anim.SetBool(App.DIALOGUE, false);    // désactiver l'animation 'dialogue' du joueur
 
 					// PNJ
-					other?.FaceTo(false);                                                   // cesser d'orienter le PNJ vers le joueur
-					other?.animatorController?.anim?.SetBool(DIALOGUE, false);              // désactiver l'animation 'dialogue' du pnj
+					other?.FaceTo(false);														// cesser d'orienter le PNJ vers le joueur
+					other?.animatorController?.anim?.SetBool(App.DIALOGUE, false);              // désactiver l'animation 'dialogue' du pnj
 
 					SetSceneMode(SceneMode.normal, true, other);
 				}
 				// personnages
 				break;
 
-			case SceneMode.fight:
+			case SceneMode.fight:									// passage en mode Combat depuis le mode Normal
 				if (on && sceneMode == SceneMode.normal) {
-					cameraController.SetCamera(cameraController.vCamLateral);           // activer la caméra latérale
-					App.itemsManager.SelectAll(false);                        // masquer tous les actionsSprites pendant le combat
+					App.cameraController.SetLateralCamera(other.transform);						// activer la caméra latérale
+					App.itemsManager.SelectAll(false);											// masquer tous les actionsSprites pendant le combat
 
 					// player
-					playerManager.StopAgent(true);
-					playerManager.fightController.SetOther(other);
-					playerManager.animatorController?.anim?.SetBool(FIGHT, true);       // animation 'Attack'
-					playerManager.FaceTo(on, other.gameObject);                         // orienter le joueur vers le PNJ
+					App.playerManager.StopAgent(true);
+					App.playerManager.fightController.SetOther(other);
+					App.playerManager.animatorController?.anim?.SetBool(App.FIGHT, true);       // animation 'Attack'
+					App.playerManager.FaceTo(on, other.gameObject);								// orienter le joueur vers le PNJ
 
 					// PNJ
-					other.navAgent.ResetPath();                    // annulation de la navigation en cours
-					other.navAgent.velocity = Vector3.zero;        // vitesse nulle
-					other.fightController.SetOther(playerManager);
-					other.animatorController?.anim?.SetBool(FIGHT, true);               // animation 'fight idle'
-					other.FaceTo(on, playerManager.gameObject);                         // orienter le PNJ vers le joueur 						
-					other.Highlight(true);                                              // PNJ outlined
+					other.navAgent.ResetPath();													// annulation de la navigation en cours
+					other.navAgent.velocity = Vector3.zero;										// vitesse nulle
+					other.fightController.SetOther(App.playerManager);
+					other.animatorController?.anim?.SetBool(App.FIGHT, true);					// animation 'fight idle'
+					other.FaceTo(on, App.playerManager.gameObject);								// orienter le PNJ vers le joueur 						
+					other.Highlight(true);														// PNJ outlined
 
-					statsUI.Show();                                                     // afficher les statistiques
-				} else {
-					statsUI.Hide();                                                         // masquer les statistiques
+					App.statsUI.Show();															// afficher les statistiques
+				} else {                                            // sortie du mode Combat et retour au mode Normal
+					App.statsUI.Hide();                                                         // masquer les statistiques
 
 					// PNJ
-					other?.patrol?.RestoreInitialMode();                                    // si c'est un patrouilleur, restaurer son mode initial
-					other?.animatorController?.anim?.SetBool(FIGHT, false);                 // animation 'idle'
-					other?.FaceTo(false);                                                   // cesser d'orienter le PNJ vers le joueur
+					other?.patrol?.RestoreInitialMode();										// si c'est un patrouilleur, restaurer son mode initial
+					other?.animatorController?.anim?.SetBool(App.FIGHT, false);                 // animation 'idle'
+					other?.FaceTo(false);														// cesser d'orienter le PNJ vers le joueur
 
 					// player
-					playerManager.animatorController?.anim?.SetBool(FIGHT, false);          // animation 'idle'
-					playerManager.FaceTo(false);                                            // cesser d'orienter le joueur vers le PNJ
-					playerManager.fightController.SetOther(null);
+					App.playerManager.animatorController?.anim?.SetBool(App.FIGHT, false);      // animation 'idle'
+					App.playerManager.FaceTo(false);                                            // cesser d'orienter le joueur vers le PNJ
+					App.playerManager.fightController.SetOther(null);
 
 					SetSceneMode(SceneMode.normal, true, other);
 				}
@@ -86,10 +83,10 @@ public static class SceneModeManager {
 	}
 
 	private static SceneMode GetSceneMode() {
-		if (playerManager.animatorController.anim.GetBool(DIALOGUE))
+		if (App.playerManager.animatorController.anim.GetBool(App.DIALOGUE))
 			return SceneMode.dialogue;
 
-		if (playerManager.animatorController.anim.GetBool(FIGHT))
+		if (App.playerManager.animatorController.anim.GetBool(App.FIGHT))
 			return SceneMode.fight;
 
 		return SceneMode.normal;

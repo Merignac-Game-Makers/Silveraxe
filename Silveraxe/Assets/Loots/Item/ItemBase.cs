@@ -16,7 +16,6 @@ public class ItemBase : ScriptableObject
 	public string itemName;
 	public Sprite itemSprite;
 	public string description;
-	public GameObject prefab;
 	public bool animate = true;
 	public bool dropable = true;
 	public LootCategory lootCategory;
@@ -38,17 +37,6 @@ public class ItemBase : ScriptableObject
 		return description;
 	}
 
-	/// <summary>
-	/// L'entrée d'inventaire lorsque l'objet a été ramassé
-	/// </summary>
-	/// <returns></returns>
-	//public virtual InventoryEntry GetEntry() {
-	//	return entry;
-	//}
-
-	//public Item Combine(Item other) {
-	//	return (other == combineWith) ? obtain : null;
-	//}
 }
 
 
@@ -59,47 +47,25 @@ public class ItemBaseEditor : Editor
 	SerializedProperty pNameProperty;
 	SerializedProperty pIconProperty;
 	SerializedProperty pDescriptionProperty;
-	SerializedProperty pPrefab;
 	SerializedProperty pAnimate;
-	//SerializedProperty pCombinable;
-	//SerializedProperty pCombineWith;
-	//SerializedProperty pObtain;
 	SerializedProperty pDropable;
-	//SerializedProperty pChapter;
 
 
 
 	public void Init(SerializedObject target) {
-
 		pNameProperty = target.FindProperty(nameof(ItemBase.itemName));
 		pIconProperty = target.FindProperty(nameof(ItemBase.itemSprite));
 		pDescriptionProperty = target.FindProperty(nameof(ItemBase.description));
-		pPrefab = target.FindProperty(nameof(ItemBase.prefab));
 		pAnimate = target.FindProperty(nameof(ItemBase.animate));
-		//pCombinable = target.FindProperty(nameof(Item.combinable));
-		//pCombineWith = target.FindProperty(nameof(Item.combineWith));
-		//pObtain = target.FindProperty(nameof(Item.obtain));
 		pDropable = target.FindProperty(nameof(ItemBase.dropable));
-		//pChapter = target.FindProperty(nameof(Item.chapter));
 	}
 
 	public void GUI(ItemBase item) {
-
 		EditorGUILayout.PropertyField(pIconProperty);
 		EditorGUILayout.PropertyField(pNameProperty);
 		EditorGUILayout.PropertyField(pDescriptionProperty, GUILayout.MinHeight(128));
-		EditorGUILayout.PropertyField(pPrefab);
-		//EditorGUILayout.PropertyField(pChapter);
 		EditorGUILayout.PropertyField(pAnimate);
-
-		//EditorGUI.BeginChangeCheck();
-		//item.combinable = EditorGUILayout.Toggle("Combinable", pCombinable.boolValue);
-		//if (item.combinable) {
-		//	EditorGUILayout.PropertyField(pCombineWith);
-		//	EditorGUILayout.PropertyField(pObtain);
-		//} else {
-			item.dropable = EditorGUILayout.Toggle("Dropable", pDropable.boolValue);
-		//}
+		item.dropable = EditorGUILayout.Toggle("Dropable", pDropable.boolValue);
 	}
 }
 #endif

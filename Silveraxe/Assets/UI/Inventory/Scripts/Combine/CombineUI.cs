@@ -18,15 +18,15 @@ public class CombineUI : MonoBehaviour
 
     public void SetObject(InventoryEntry entry) {
         Clear();
-        this.entry = entry;
-        item = entry.item;
-        GameObject obj = Instantiate(item.itemBase.prefab, objectHolder, false);
-        item.itemBase.animate = false;
-        SetObjLayer(obj);
-        obj.transform.localPosition = Vector3.zero;
-        objectHolder.GetComponent<RotateObject>().objectTransform = obj.transform;
-        gameObject.SetActive(true);                                                 // afficher le panneau
-        StartCoroutine(IScale(obj));                                                // taille
+        //this.entry = entry;
+        //item = entry.item;
+        //GameObject obj = Instantiate(item.itemBase.prefab, objectHolder, false);
+        //item.itemBase.animate = false;
+        //SetObjLayer(obj);
+        //obj.transform.localPosition = Vector3.zero;
+        //objectHolder.GetComponent<RotateObject>().objectTransform = obj.transform;
+        //gameObject.SetActive(true);                                                 // afficher le panneau
+        //StartCoroutine(IScale(obj));                                                // taille
     }
 
     public void Clear() {

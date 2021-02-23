@@ -32,6 +32,7 @@ public class Equipment : Loot
 			target.item = null;
 			target = null;
 		}
+		OnTake();
 	}
 
 	/// <summary>

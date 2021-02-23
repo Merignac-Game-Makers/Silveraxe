@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class DoorOrc : Savable
-{
+public class DoorOrc : Savable {
 	public Animator doorAnim;
 	public Character doorOrc;
 	public DoorSensor sensor;
@@ -15,6 +14,8 @@ public class DoorOrc : Savable
 	public Transform actionPoint;
 
 	public bool freezeRotation = false;
+
+	public bool isOpen { get; private set; }
 
 	NavMeshAgent orcAgent;
 	Quaternion initialRotation;
@@ -30,19 +31,23 @@ public class DoorOrc : Savable
 		actionPoint.gameObject.SetActive(false);
 	}
 
+	// Appelé par l'animateur
 	public void GotoActionPoint() {
 		if (doorOrc.isAlive)
 			doorOrc.navAgent.SetDestination(actionPoint.position);
 	}
 
+	// Appelé par l'animateur
 	public void GotoSafePoint() {
 		if (doorOrc.isAlive)
 			doorOrc.navAgent.SetDestination(safePoint.position);
 	}
 
 	public void OpenDoor() {
-		if (doorOrc.isAlive)
+		if (doorOrc.isAlive) {
 			doorAnim.SetTrigger("Open");
+			isOpen = true;
+		}
 	}
 
 	public void CloseDoor() {
@@ -50,26 +55,30 @@ public class DoorOrc : Savable
 			doorOrc.navAgent.SetDestination(safePoint.position);
 			StartCoroutine(Iin());
 		}
-	}
-	IEnumerator Iin() {
-		while (orcAgent.pathPending || orcAgent.remainingDistance > orcAgent.radius) {
-			yield return null;
+		IEnumerator Iin() {
+			while (orcAgent.pathPending || orcAgent.remainingDistance > orcAgent.radius) {
+				yield return null;
+			}
+			doorAnim.SetTrigger("Close");
+			isOpen = false;
 		}
-		doorAnim.SetTrigger("Close");
 	}
 
+	// Appelé par l'animateur
 	public void ReorientOrc() {
 		if (!freezeRotation)
 			doorOrc.transform.rotation = initialRotation;
 	}
 
+	// Appelé par l'animateur
 	public void ToggleDetectorThreshold() {
 		sensor.ToggleThreshold();
 	}
 
-	public void LootEnabled(int on){
-		loot.gameObject.SetActive(on==1);
-		doorOrc.enabled = on==1;
+	// Appelé par l'animateur
+	public void LootEnabled(int on) {
+		loot.gameObject.SetActive(on == 1);
+		doorOrc.enabled = on == 1;
 	}
 }
 

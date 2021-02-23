@@ -25,6 +25,8 @@ public static class App
 	public static InventoryUI inventoryUI;
 	public static EquipmentUI equipmentUI;
 	public static StatsUI statsUI;
+	public static ReadableUI readableUI;
+	public static InstructionsUI instructionsUI;
 
 	//--------------------
 	// strings

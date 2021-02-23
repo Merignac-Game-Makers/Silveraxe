@@ -6,6 +6,7 @@ using static InteractableObject.Action;
 using static App;
 using UnityEngine.UI;
 using System.Reflection;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// Describes an InteractableObject that can be picked up and grants a specific item when interacted with.
@@ -15,18 +16,18 @@ using System.Reflection;
 ///
 /// Finally it will notify the LootUI that a new loot is available in the world so the UI displays the name.
 /// </summary>
-public class Loot : InteractableObject
-{
+public class Loot : InteractableObject {
 	protected static float AnimationTime = 0.1f;
+	protected bool isAnimationRunning => itemBase.animate && m_AnimationTimer < AnimationTime;
 
 	public ItemBase itemBase;
 
-	public Target target { get; set; }												// la cible sur laquelle l'objet est posé
+	public Target target { get; set; }                                              // la cible sur laquelle l'objet est posé
 
 	public Entry entry { get; set; } = null;                                        // L'entrée d'inventaire lorsque l'objet a été ramassé
 
 	public override bool IsInteractable() {                                         // l'objet est intéractif si
-		if (itemBase.animate && m_AnimationTimer < AnimationTime) return false;              // l'animation de mise en place est terminée
+		if (isAnimationRunning) return false;										// l'animation de mise en place est terminée
 		return base.IsInteractable();                                               //  
 	}
 
@@ -34,28 +35,17 @@ public class Loot : InteractableObject
 	Vector3 m_TargetPoint;
 	float m_AnimationTimer = 0.0f;
 
-
 	protected override void Start() {
 		base.Start();
-		m_OriginalPosition = transform.position;                    // préparation de l'animation
+		if (isAnimationRunning)
+			StartAnimation();
 	}
 
 	private void OnEnable() {
-		itemBase.animate = false;
-		//if (itemBase.animate)
-		//	StartAnimation();
+		//itemBase.animate = false;
 	}
 
-	void Update() {
-		//// animation de mise en place
-		//if (itemBase.animate && m_AnimationTimer < AnimationTime) {
-		//	m_AnimationTimer += Time.deltaTime * Time.timeScale;
-		//	float ratio = Mathf.Clamp01(m_AnimationTimer / AnimationTime);
-		//	Vector3 currentPos = Vector3.Lerp(m_OriginalPosition, m_TargetPoint, ratio);
-		//	currentPos.y = currentPos.y + Mathf.Sin(ratio * Mathf.PI) * 2.0f;
-		//	transform.position = currentPos;
-		//}
-
+	protected virtual void Update() {
 		// bouton d'action
 		if (Input.GetButtonDown("Fire1") && !uiManager.isClicOnUI) {
 			Act();
@@ -68,7 +58,9 @@ public class Loot : InteractableObject
 	}
 
 	public bool Equals(Loot other) {
-		return itemBase.prefab == other.itemBase.prefab;
+		return itemBase == other.itemBase;
+		//return GetComponentInChildren<MeshFilter>().mesh.name == other.GetComponentInChildren<MeshFilter>().mesh.name;
+		//return itemBase.prefab == other.itemBase.prefab;
 	}
 
 	public void StartAnimation() {
@@ -77,32 +69,37 @@ public class Loot : InteractableObject
 
 	IEnumerator CreateAnimation() {
 		float ratio;
+		m_OriginalPosition = transform.position + transform.up;     // préparation de l'animation
 		m_TargetPoint = transform.position;                         // de l'animation
 		m_AnimationTimer = AnimationTime - 0.1f;                    // de mise en place
 		while (itemBase.animate && m_AnimationTimer < AnimationTime) {
 			m_AnimationTimer += Time.deltaTime * Time.timeScale;
 			ratio = Mathf.Clamp01(m_AnimationTimer / AnimationTime);
 			Vector3 currentPos = Vector3.Lerp(m_OriginalPosition, m_TargetPoint, ratio);
-			currentPos.y += Mathf.Sin(ratio * Mathf.PI) * 2.0f;
+			currentPos.y += Mathf.Sin(ratio * Mathf.PI) ;
 			transform.position = currentPos;
-			yield return new WaitForEndOfFrame();
+			yield return null;
 		}
 		Highlight(isInPlayerCollider);
 	}
 
 	protected virtual void Take() {
+		EventSystem.current.SetSelectedGameObject(null);		// éviter les actions multiples en 1 seul clic
 		// on ramasse l'objet
-		if (!playerManager.characterData.inventory.isFull) {																// si l'inventaire n'est pas plein
-			playerManager.characterData.inventory.AddItem(this);															//		ajouter l'objet à l'inventaire
-			isInPlayerCollider = false;																						//		l'objet n'est plus dans le collider du joueur (=> non intéractible)
-			SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });		//		son
-			targetsManager.OnTake();																						//		extinction de toutes les cibles
-			if (target) {																									//		mise à jour de la cible (s'il était sur une cible)
+		if (!isAnimationRunning && !playerManager.characterData.inventory.isFull) {                                                                // si l'inventaire n'est pas plein
+			playerManager.characterData.inventory.AddItem(this);                                                            //		ajouter l'objet à l'inventaire
+			isInPlayerCollider = false;                                                                                     //		l'objet n'est plus dans le collider du joueur (=> non intéractible)
+			SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });      //		son
+			targetsManager.OnTake();                                                                                        //		extinction de toutes les cibles
+			if (target) {                                                                                                   //		mise à jour de la cible (s'il était sur une cible)
 				target.item = null;
 				target = null;
 			}
+			OnTake();
 		}
 	}
+
+	protected virtual void OnTake() { }
 
 
 	/// <summary>
@@ -111,13 +108,16 @@ public class Loot : InteractableObject
 	/// <param name="target">le lieu</param>
 	/// <param name="entry">l'entrée d'inventaire </param>
 	public virtual void Drop(Target target) {
+		EventSystem.current.SetSelectedGameObject(null);        // éviter les actions multiples en 1 seul clic
 		this.target = target;
 		itemBase.animate = true;
 		transform.position = target.targetPos;
 		StartAnimation();
 		playerManager.characterData.inventory.RemoveItem(entry as InventoryEntry);       // retirer l'objet déposé de l'inventaire
+		OnDrop(target);
 	}
 
+	protected virtual void OnDrop(Target target) { }
 
 
 
@@ -156,8 +156,7 @@ public class Loot : InteractableObject
 /// Pour Loot : l'id de la 'target' sur laquelle il est posé
 /// </summary>
 [System.Serializable]
-public class SLoot : SSavable
-{
+public class SLoot : SSavable {
 	public byte[] target;
 	public string itemBase;
 }

@@ -9,23 +9,18 @@ using static App;
 /// TYPE of object, but those can be stacked without limit (e.g. 1 slot used by health potions, but contains 20
 /// health potions)
 /// </summary>
-[Serializable]
-public class EquipmentManager
-{
+public class EquipmentManager {
 
 	EquipmentEntry weaponEntry = new EquipmentEntry();
-	[System.NonSerialized]
 	EquipmentEntry helmetEntry = new EquipmentEntry();
-	[System.NonSerialized]
 	EquipmentEntry armorEntry = new EquipmentEntry();
-	[System.NonSerialized]
 	EquipmentEntry shieldEntry = new EquipmentEntry();
 
-	[System.NonSerialized]
 	public EquipmentEntry[] entries = new EquipmentEntry[4];
 
-	[System.NonSerialized]
 	CharacterData owner;
+
+	public bool hasCompass { get; set; } = false;
 
 	public void Init(CharacterData owner) {
 		this.owner = owner;
@@ -44,7 +39,7 @@ public class EquipmentManager
 	/// <param name="item">l'objet à ajouter</param>
 	public void AddItem(Equipment item) {
 		EquipmentCategory category = item.equipmentCategory;
-		int idx = 0;
+		int idx = -1;
 		switch (category) {
 			case EquipmentCategory.Weapon:
 				idx = 0;
@@ -59,24 +54,28 @@ public class EquipmentManager
 				idx = 3;
 				break;
 		}
-
-		entries[idx].Equip(item);
-		foreach (EquipmentEntryUI entryUI in equipmentUI.entries) {			// trouver un emplacement d'affichage correspondant (même catégorie)
-			if (entryUI.equipmentCategory == item.equipmentCategory) {
-				entryUI.Init(entries[idx]);                                 // équiper
-				break;
+		if (idx != -1) {
+			entries[idx].Equip(item);
+			foreach (EquipmentEntryUI entryUI in equipmentUI.entries) {         // trouver un emplacement d'affichage correspondant (même catégorie)
+				if (entryUI.equipmentCategory == item.equipmentCategory) {
+					entryUI.Init(entries[idx]);                                 // équiper
+					break;
+				}
 			}
+		} else if (category == EquipmentCategory.Compass) {
+			hasCompass = true;
+			App.uiManager.GetComponentInChildren<Compass>(true)?.Show(true);
 		}
 
 		item.transform.position = new Vector3(0, -50, 0);
 
-		if (IsSetComplete() && GetSetLevel() != null) {						// si l'équipement est complet et homogène en niveau
-			playerManager.Promote((Equipment.EquipmentLevel)GetSetLevel());	// transformation de l'apparence du joueur
+		if (IsSetComplete() && GetSetLevel() != null) {                     // si l'équipement est complet et homogène en niveau
+			playerManager.Promote((Equipment.EquipmentLevel)GetSetLevel()); // transformation de l'apparence du joueur
 		}
 	}
 
 	public void Clear() {
-		for (int i=0; i<entries.Length; i++) {
+		for (int i = 0; i < entries.Length; i++) {
 			entries[i].item = null;
 			equipmentUI.entries[i].Show(false);
 		}
@@ -92,11 +91,11 @@ public class EquipmentManager
 	public bool UseItem(Entry entry) {
 		if (entry is EquipmentEntry) {
 			var eEntry = entry as EquipmentEntry;
-			if (eEntry.item.itemBase.usable) {														// si l'objet est utilisable
-				SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() {	// jouer le son associé
+			if (eEntry.item.itemBase.usable) {                                                      // si l'objet est utilisable
+				SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() {    // jouer le son associé
 					Clip = SFXManager.ItemUsedSound
 				});
-				RemoveItem(eEntry);															// retirer l'objet de l'équipement
+				RemoveItem(eEntry);                                                         // retirer l'objet de l'équipement
 				return true;
 			}
 		}
@@ -124,7 +123,7 @@ public class EquipmentManager
 	}
 
 	public void RemoveAll() {
-		foreach( EquipmentEntry entry in entries) {
+		foreach (EquipmentEntry entry in entries) {
 			RemoveItem(entry);
 		}
 	}

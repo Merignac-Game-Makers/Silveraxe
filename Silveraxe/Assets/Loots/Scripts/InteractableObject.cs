@@ -46,7 +46,7 @@ public abstract class InteractableObject : HighlightableObject
 		}
 
 		// lier le sprite
-		actionSprite = GetComponentInChildren<Image>();
+		actionSprite = GetComponentInChildren<Image>(true);
 		if (actionSprite) {
 			actionSprite.enabled = false;
 			var lookAt = actionSprite.GetComponent<LookAtConstraint>();

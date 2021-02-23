@@ -46,13 +46,7 @@ public class Game {
 		if (current == null) new Game();
 
 		PauseGame();                                    // mise en pause
-
-
 		current.SaveGame();
-		//current.SaveHeader();							// sauvegarde du header
-		//current.SaveSceneData(App.dontDestroyScene);    // sauvegarde de la scène commune
-		//current.SaveSceneData(App.currentSceneName);	// sauvegarde de la scène courante
-
 		ResumeGame();                                   // fin de pause
 	}
 

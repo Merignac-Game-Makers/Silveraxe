@@ -1,0 +1,82 @@
+Edit the dialogue on the go.
+You can edit and add comments, edit the tags, and set node type.
+Do not attempt to add more nodes: the number of nodes must match when importing the text file.
+Do not modify the IDs.
+Do not add or remove empty lines.
+Do not restructure the data.
+
+Dialogue name: Fairy
+---------------------------------
+#NODEID#
+0
+#TAG#
+
+#ISPLAYER#
+False
+---
+#COMMENT#
+Bonjour Lancelot
+---------------------------------
+#NODEID#
+1
+#TAG#
+
+#ISPLAYER#
+True
+---
+#COMMENT#
+Qui ?... Moi ???
+---------------------------------
+#NODEID#
+2
+#TAG#
+
+#ISPLAYER#
+False
+---
+#COMMENT#
+Lancelot, La reine a été enlevée
+#COMMENT#
+Le dragon d'or l'a emmenée dans les montagnes
+#COMMENT#
+Lancelot, je t'ai choisi pour la secourir
+---------------------------------
+#NODEID#
+3
+#TAG#
+
+#ISPLAYER#
+True
+---
+#COMMENT#
+?! Mais j'en suis bien incapable !
+---------------------------------
+#NODEID#
+4
+#TAG#
+
+#ISPLAYER#
+True
+---
+#COMMENT#
+B...Bonjour mademoiselle...
+---------------------------------
+#NODEID#
+5
+#TAG#
+
+#ISPLAYER#
+False
+---
+#COMMENT#
+Aie confiance, je ne t'ai pas choisi par hasard
+#COMMENT#
+Va voir Hazel, la guérisseuse du village
+#COMMENT#
+Elle t'indiquera ta première quête
+#COMMENT#
+Lorsque tu auras réuni les 4 artefacts tu seras prêt
+#COMMENT#
+Maintenant va !Le temps presse
+---------------------------------
+#END#

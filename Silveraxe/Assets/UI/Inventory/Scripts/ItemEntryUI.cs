@@ -17,10 +17,8 @@ public class ItemEntryUI : EntryUI
 
 	public bool isFree => entry == null || (entry as InventoryEntry).count <= 0;
 
-	Texture2D cursor;
-
 	private void Start() {
-		Show(false);
+		Show(!isFree);
 	}
 
 	public override void Init(Entry entry) {
@@ -30,25 +28,10 @@ public class ItemEntryUI : EntryUI
 		loot = iEntry.item;
 		loot.entry = iEntry;
 		iconeImage.sprite = loot.itemBase.itemSprite;
-
-		//GetCursor(iconeImage.sprite.texture);
-
 		count.text = "";
 		label.text = loot.itemBase.itemName;
-		//plus.enabled = item.combinable;
 		Show(true);
 	}
-
-	//void GetCursor(Texture2D source) {
-	//	int targetX = (int)iconeImage.rectTransform.rect.width;
-	//	int targetY = (int)iconeImage.rectTransform.rect.height;
-	//	RenderTexture rt = new RenderTexture(targetX, targetY, 24);
-	//	RenderTexture.active = rt;
-	//	Graphics.Blit(source, rt);
-	//	cursor = new Texture2D(targetX, targetY, TextureFormat.RGBA32, false);
-	//	cursor.ReadPixels(new Rect(0, 0, targetX, targetY), 0, 0);
-	//	cursor.Apply();
-	//}
 
 	/// <summary>
 	/// mise à jour
@@ -101,11 +84,5 @@ public class ItemEntryUI : EntryUI
 		}
 		label.enabled = on;
 		selected = on;
-
-		//if (on) {
-		//	uiManager.SetCursor(cursor);
-		//} else {
-		//	uiManager.ResetCursor();
-		//}
 	}
 }

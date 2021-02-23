@@ -9,8 +9,7 @@ using static App;
 /// <summary>
 /// Gestion du personnage joueur
 /// </summary>
-public class PlayerManager : Character
-{
+public class PlayerManager : Character {
 	public GameObject polyartSkin;      // apparence basic = plyart
 	public GameObject hpSkin;           // apparence medium = hand painted
 	public GameObject pbrSkin;          // apparence high =	PBR
@@ -44,6 +43,7 @@ public class PlayerManager : Character
 
 	#region Intéractions
 
+	Vector3 dir;
 	public void OnTriggerStay(Collider other) {
 		if (other.gameObject.layer != LayerMask.NameToLayer("Interactable"))
 			return;
@@ -51,8 +51,9 @@ public class PlayerManager : Character
 		if (other.gameObject != gameObject) {
 			interactable = other.gameObject.GetComponent<InteractableObject>();
 			if (interactable != null) {                         // si l'objet rencontré est un 'intéractible'
-				interactable.isInPlayerCollider = true;
-				interactable.Highlight(true);                   //			montrer le sprite d'action
+				interactable.isInPlayerCollider = Vector3.Dot(App.playerManager.transform.forward, dir) > 0.5f;
+				dir = (other.transform.position - App.playerManager.transform.position).normalized;
+				interactable.Highlight(interactable.isInPlayerCollider);      //	montrer le sprite d'action si l'objet est devant le joueur
 			}
 		}
 	}
@@ -71,6 +72,7 @@ public class PlayerManager : Character
 		}
 	}
 	public override void Act() { }
+
 	#endregion
 
 	#region Navigation
@@ -97,23 +99,25 @@ public class PlayerManager : Character
 	}
 
 	void ShowSkin(Equipment.EquipmentLevel? level) {
+		return;
+
 		// la peau
-		GameObject activeSkin = polyartSkin;
-		switch (level) {
-			case Equipment.EquipmentLevel.medium:
-				activeSkin = hpSkin;
-				break;
-			case Equipment.EquipmentLevel.high:
-				activeSkin = pbrSkin;
-				break;
-		}
-		polyartSkin.SetActive(activeSkin == polyartSkin);
-		hpSkin.SetActive(activeSkin == hpSkin);
-		pbrSkin.SetActive(activeSkin == pbrSkin);
-		// les équipements
-		EquipmentSet set = activeSkin.GetComponent<EquipmentSet>();
-		set.Equip(set.shield, shieldHand);
-		set.Equip(set.sword, swordHand);
+		//GameObject activeSkin = polyartSkin;
+		//switch (level) {
+		//	case Equipment.EquipmentLevel.medium:
+		//		activeSkin = hpSkin;
+		//		break;
+		//	case Equipment.EquipmentLevel.high:
+		//		activeSkin = pbrSkin;
+		//		break;
+		//}
+		//polyartSkin.SetActive(activeSkin == polyartSkin);
+		//hpSkin.SetActive(activeSkin == hpSkin);
+		//pbrSkin.SetActive(activeSkin == pbrSkin);
+		//// les équipements
+		//EquipmentSet set = activeSkin.GetComponent<EquipmentSet>();
+		//set.Equip(set.shield, shieldHand);
+		//set.Equip(set.sword, swordHand);
 	}
 	#endregion
 
@@ -156,7 +160,6 @@ public class PlayerManager : Character
 /// Classe pour la sauvegarde
 /// </summary>
 [System.Serializable]
-public class SPlayer : SCharacter
-{
+public class SPlayer : SCharacter {
 	public EquipmentData equipment;             // équipement
 }

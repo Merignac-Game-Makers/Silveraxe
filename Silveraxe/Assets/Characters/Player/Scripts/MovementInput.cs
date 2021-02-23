@@ -47,6 +47,7 @@ public class MovementInput : MonoBehaviour {
 	private void Awake() {
 		navAgent = GetComponent<NavMeshAgent>();
 		navAgent.updateRotation = false;
+		navAgent.enabled = false;
 	}
 
 
@@ -76,7 +77,7 @@ public class MovementInput : MonoBehaviour {
 				//if (HasGround(transform.position + v + Vector3.up))		// ne pas tomber hors du monde !
 				//	transform.position += v;
 				//velocity += Vector3.forward * vAxis * vSpeed;
-				dest += transform.forward * vAxis * vSpeed;
+				dest += transform.forward * vAxis * 3;// * vSpeed;
 			} else {
 				vTimer = 0;
 				vSpeed = 0;
@@ -97,8 +98,9 @@ public class MovementInput : MonoBehaviour {
 				hSpeed = 0;
 			}
 
-			navAgent.SetDestination(dest);
-			velocity = transform.InverseTransformVector( navAgent.velocity);
+			if (navAgent.enabled)  
+				navAgent.SetDestination(dest);
+			velocity = navAgent ? transform.InverseTransformVector(navAgent.velocity) : Vector3.zero;
 
 			// rotation gauche/droite
 			if (hMouse != 0 && (vSpeed != 0 || hSpeed != 0 || Input.GetButton("Fire2"))) {
@@ -116,20 +118,6 @@ public class MovementInput : MonoBehaviour {
 
 
 		}
-
-
-
-
-
-		//// A => regarder le ciel
-		//if (Input.GetKeyDown(KeyCode.A)) {
-		//	var c = cameraController.vCamFollow.GetCinemachineComponent<CinemachineComposer>();
-		//	c.m_TrackedObjectOffset.y = 6;
-		//}
-		//if (Input.GetKeyUp(KeyCode.A)) {
-		//	var c = cameraController.vCamFollow.GetCinemachineComponent<CinemachineComposer>();
-		//	c.m_TrackedObjectOffset.y = 2;
-		//}
 	}
 
 	private bool HasGround(Vector3 fromSkyPosition) {

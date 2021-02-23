@@ -11,7 +11,7 @@ public class PNJEditor : Editor
 
 	PNJ m_PNJ;
 
-	public void OnEnable() {
+	public virtual void OnEnable() {
 		m_PNJ = (PNJ)target;
 		p_mode = serializedObject.FindProperty(nameof(m_PNJ.mode));
 		p_alignment = serializedObject.FindProperty(nameof(m_PNJ.alignment));

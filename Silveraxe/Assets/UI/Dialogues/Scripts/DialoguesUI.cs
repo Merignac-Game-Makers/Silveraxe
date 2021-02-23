@@ -9,12 +9,10 @@ using static UIManager.State;
 using Cinemachine;
 using System.Collections;
 
-public class DialoguesUI : UIBase
-{
+public class DialoguesUI : UIBase {
 
 	//public GameObject questButton;
 	//public GameObject diaryButton;
-	public GameObject inventory;
 
 	public GameObject container_NPC;
 	public TMP_Text NPC_label;
@@ -70,21 +68,42 @@ public class DialoguesUI : UIBase
 		}
 	}
 
-	public override void Toggle() {}
+	public override void Toggle() { }
 
 	public void Show() {
 		if (SceneModeManager.sceneMode == SceneMode.dialogue)
 			StartCoroutine(IShow());
 	}
+
+	float x, y, w;
 	IEnumerator IShow() {
 		var cm = Camera.main.GetComponent<CinemachineBrain>();
 		while (cm.ActiveBlend != null)
-			yield return new WaitForEndOfFrame();
-		panel.SetActive(true);
+			yield return new WaitForEndOfFrame();                                                                       // attendre la fin du déplacement de caméra
+		panel.SetActive(true);                                                                                          // afficher le panneau de dialogue
 		uiManager.ManageButtons(dialog);
-		container_NPC.transform.position = Camera.main.WorldToScreenPoint(pnj.transform.position);
-		container_PLAYER.transform.position = Camera.main.WorldToScreenPoint(playerManager.transform.position);
 
+		var top = Screen.height - pnj.ScreenTop();
+		var bottom = pnj.ScreenBottom();
+		var rt = container_NPC.GetComponent<RectTransform>();
+		if (top > bottom) {
+			rt.localPosition = new Vector3(-Screen.width / 4f, Screen.height / 2f - top / 2f, 0);
+			rt.sizeDelta = new Vector2(Screen.width / 3f, top);
+		} else {
+			rt.localPosition = new Vector3(-Screen.width / 4f, -Screen.height / 2f + bottom / 2f + 50, 0);
+			rt.sizeDelta = new Vector2(Screen.width / 3f, bottom + 50);
+		}
+
+		top = Screen.height - playerManager.ScreenTop();
+		bottom = playerManager.ScreenBottom();
+		rt = container_PLAYER.GetComponent<RectTransform>();
+		if (top > bottom) {
+			rt.localPosition = new Vector3(Screen.width / 4f, Screen.height / 2f - top / 2f, 0);
+			rt.sizeDelta = new Vector2(Screen.width / 3f, top);
+		} else {
+			rt.localPosition = new Vector3(Screen.width / 4f, -Screen.height / 2f + bottom / 2f + 50, 0);
+			rt.sizeDelta = new Vector2(Screen.width / 3f, bottom + 50);
+		}
 	}
 	public void Hide() {
 		panel.SetActive(false);
@@ -163,12 +182,14 @@ public class DialoguesUI : UIBase
 			VD.Next();
 	}
 
+	// au clic sur le fond du panneau dialogue
 	public void nextNPC() {
 		if (container_NPC.activeInHierarchy)
 			VD.Next();
+		else NextPlayer();
 	}
 
-	public void Next() {
+	public void NextPlayer() {
 		if (VD.nodeData.comments.Length == 1)
 			VD.Next();
 	}

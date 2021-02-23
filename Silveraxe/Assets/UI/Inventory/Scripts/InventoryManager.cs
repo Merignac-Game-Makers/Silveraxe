@@ -36,6 +36,8 @@ public class InventoryManager
 	public void AddItem(Loot item) {
 		if (isFull) return;
 
+		App.inventoryUI.panel.SetActive(true);
+
 		bool found = false;
 		for (int i = 0; i < entries.Count; ++i) {           // pour chaque entrée existante
 			if (entries[i].item.Equals(item)) {				// si l'objet contenu est identique
