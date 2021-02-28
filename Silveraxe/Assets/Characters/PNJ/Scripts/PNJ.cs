@@ -19,7 +19,7 @@ public class PNJ : Character
 	float initialRadius = 1.5f;
 	CapsuleCollider cCollider;
 
-	DialogueTrigger dialogueTrigger;
+	DialogueManager dialogueManager;
 
 	PlayerManager player => App.playerManager;
 
@@ -44,7 +44,7 @@ public class PNJ : Character
 	protected override void Start() {
 		base.Start();
 
-		dialogueTrigger = GetComponentInChildren<DialogueTrigger>();     // si le PNJ a-t-il un dialogue trigger
+		dialogueManager = GetComponentInChildren<DialogueManager>();     // si le PNJ a-t-il un dialogue trigger
 
 		SetAlignmentActionSprite();
 
@@ -121,24 +121,8 @@ public class PNJ : Character
 
 
 	private void Talk() {
-		if (dialogueTrigger.HasDialogue()) {                                                        // si le PNJ a un dialogue
-			SceneModeManager.SetSceneMode(SceneMode.dialogue, true, this);                          // joueur en mode 'dialogue'
+		if (dialogueManager) {                                                        // si le PNJ a un dialogue
+			SceneModeManager.SetSceneMode(SceneMode.dialogue, true, this);            // joueur en mode 'dialogue'
 		}
 	}
-
-
-	// intéraction avec un PNJ
-	//public override void InteractWith(CharacterData character, Action action = talk, HighlightableObject target = null) {
-	//	if (dialogueTrigger.HasDialogue()) {                                // si le PNJ a un dialogue
-	//		playerManager.StopAgent();                                      //	stopper la navigation
-	//		GetComponentInChildren<DialogueTrigger>().Run();                //	démarrer le dialogue	
-
-	//		if (mode == Mode.onTheFlyOnce) {                                            // si le PNJ est en mode 'onTheFlyOnce'
-	//																					//Collider dtc = dialogueTrigger.gameObject.GetComponent<Collider>();   // et qu'il existe un collider spécifique de ce mode
-	//			ResetColliderRadius();                                                  // restaurer le rayon initial du collider (pour éviter à l'avenir une intéraction sur un rayon élargi)
-	//		}
-	//	}
-
-	//	base.InteractWith(character, target, action);                      // intéraction par défaut
-	//}
 }

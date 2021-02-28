@@ -50,6 +50,9 @@ public class MinimapController : MonoBehaviour
 	void Update() {
 		// bascule d'affichage de la minimap
 		if (Input.GetKeyDown(KeyCode.M)) {
+			if (!App.instructionsUI.showM)			// si on n'a pas encore trouvé la boussole
+				return;								// la carte n'est pas affichable
+
 			mode = (mode + 1) % 3;
 			smallView.SetActive(mode == 1);
 			largeView.SetActive(mode == 2);

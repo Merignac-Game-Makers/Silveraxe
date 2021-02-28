@@ -14,9 +14,6 @@ public class CameraController : MonoBehaviour
 	public CinemachineVirtualCamera vCamFollow;
 	public CinemachineVirtualCamera vCamLateral;
 
-	Transform lateralCameraTarget;
-	Transform followCameraTarget;
-
 	public CinemachineVirtualCamera activeCamera => cinemachineBrain?.ActiveVirtualCamera?.VirtualCameraGameObject.GetComponent<CinemachineVirtualCamera>();
 
 	CinemachineBrain cinemachineBrain;
@@ -38,8 +35,6 @@ public class CameraController : MonoBehaviour
 
 	void Start() {
 		cinemachineBrain = GetComponent<CinemachineBrain>();
-		lateralCameraTarget = vCamLateral.m_LookAt;
-		followCameraTarget = vCamFollow.m_LookAt; 
 		SetFollowCamera();
 		Zoom(0);
 	}
@@ -65,7 +60,7 @@ public class CameraController : MonoBehaviour
 	}
 
 	public void SetLateralCamera(Transform other) {
-		lateralCameraTarget.position = (other.transform.position + App.playerManager.transform.position) / 2f;
+		vCamLateral.m_LookAt.position = (other.transform.position + App.playerManager.transform.position) / 2f;
 
 		vCamFollow.gameObject.SetActive(false);
 		vCamLateral.gameObject.SetActive(true);

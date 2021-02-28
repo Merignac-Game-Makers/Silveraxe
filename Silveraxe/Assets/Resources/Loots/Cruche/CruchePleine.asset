@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: CruchePleine
   m_EditorClassIdentifier: 
   itemName: Cruche<br>pleine
-  itemSprite: {fileID: 21300000, guid: 03d6c3e4463b8cb4f9a9b0f104deda2f, type: 3}
+  itemSprite: {fileID: 21300000, guid: 7a013676fc3ef564d894e0d2164ae046, type: 3}
   description: Cruche pleine
-  prefab: {fileID: 1085883031562116, guid: 957bb31991bce1640a18d0a109c71f3d, type: 3}
   animate: 1
   dropable: 1
   lootCategory: 2

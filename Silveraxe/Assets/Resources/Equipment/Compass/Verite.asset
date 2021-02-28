@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54f4d040c0cb77148a9d40017be294fa, type: 3}
+  m_Name: Verite
+  m_EditorClassIdentifier: 
+  title: Proverbe
+  explanation: "Bravo !\n\nEnviron 400 ans avant notre \xE8re, le philosophe grec
+    D\xE9mocrite disait \xAB en r\xE9alit\xE9, nous ne savons rien, car la v\xE9rit\xE9
+    est au fond du puits \xBB... Il posait ainsi les bases du \"septicisme\" qui
+    est l'un des fondements de la d\xE9marche scientifique moderne.\n\nCette phrase
+    a \xE9t\xE9 reprise dans un dicton populaire : \xAB La v\xE9rit\xE9 est cach\xE9e
+    au fond du puits \xBB, pour exprimer que la v\xE9rit\xE9 est difficile \xE0 trouver."
+  bottom: 
+  picture: {fileID: 21300000, guid: 393373d11c0ea934b9f9ca1994a6e313, type: 3}

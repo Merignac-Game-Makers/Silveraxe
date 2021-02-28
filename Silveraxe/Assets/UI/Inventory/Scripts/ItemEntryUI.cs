@@ -17,6 +17,9 @@ public class ItemEntryUI : EntryUI
 
 	public bool isFree => entry == null || (entry as InventoryEntry).count <= 0;
 
+	Color selectedColor = Color.yellow;
+	Color unselectedColor = new Color(1f, 1f, 1f, .5f);
+
 	private void Start() {
 		Show(!isFree);
 	}
@@ -30,6 +33,7 @@ public class ItemEntryUI : EntryUI
 		iconeImage.sprite = loot.itemBase.itemSprite;
 		count.text = "";
 		label.text = loot.itemBase.itemName;
+		label.color = unselectedColor;
 		Show(true);
 	}
 
@@ -72,11 +76,13 @@ public class ItemEntryUI : EntryUI
 
 	public override void Select(bool on) {
 		if (on) {
+			label.color = selectedColor;
 			iconeImage.transform.localPosition = new Vector2(0, 20);
 			iconeImage.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
 			inventoryUI.Select(this);
 			targetsManager.OnItemSelect();
 		} else {
+			label.color = unselectedColor;
 			iconeImage.transform.localPosition = new Vector2(0, 0);
 			iconeImage.transform.localScale = new Vector3(.9f, .9f, .9f);
 			targetsManager.OnTake();

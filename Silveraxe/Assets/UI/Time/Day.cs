@@ -12,11 +12,10 @@ public class Day : MonoBehaviour {
 	public Color clearColor = Color.green;
 	public Color passedColor = Color.red;
 
-	Image frame;
+	public Image frame;
 
 
 	void Awake() {
-		frame = GetComponent<Image>();
 		number.text = day.ToString();
 		Clear();
 	}
@@ -25,7 +24,7 @@ public class Day : MonoBehaviour {
 		badge.enabled = false;
 		frame.color = clearColor;
 		//badge.color = clearColor;
-		number.color = Color.white;
+		number.color = Color.black;
 	}
 
 	public void Passed() {

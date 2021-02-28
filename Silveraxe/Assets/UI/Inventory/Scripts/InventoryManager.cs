@@ -10,17 +10,15 @@ using static App;
 /// health potions)
 /// </summary>
 [Serializable]
-public class InventoryManager
-{
+public class InventoryManager {
 
-	private int numSlots = 0;							// capacité de l'inventaire
-	public bool isFull => entries.Count == numSlots;	// l'inventaire est-il complet ?
+	private int numSlots = 0;                           // capacité de l'inventaire
+	public bool isFull => entries.Count == numSlots;    // l'inventaire est-il complet ?
 
 	public List<InventoryEntry> entries = new List<InventoryEntry>();
 
 
 	//CharacterData owner;
-
 	public void Init(CharacterData owner, int capacity) {
 		//this.owner = owner;
 		numSlots = capacity;
@@ -37,10 +35,13 @@ public class InventoryManager
 		if (isFull) return;
 
 		App.inventoryUI.panel.SetActive(true);
+		if (App.inventoryUI.firstUse) {
+			App.inventoryUI.OnFirstUse();
+		}
 
 		bool found = false;
 		for (int i = 0; i < entries.Count; ++i) {           // pour chaque entrée existante
-			if (entries[i].item.Equals(item)) {				// si l'objet contenu est identique
+			if (entries[i].item.Equals(item)) {             // si l'objet contenu est identique
 				entries[i].ChangeQuantity(1);               // ajouter 1 à la quantité
 				found = true;                               // trouvé
 				item.entry = entries[i];
@@ -49,9 +50,9 @@ public class InventoryManager
 			}
 		}
 
-		if (!found) {												// si on n'a pas trouvé
-			InventoryEntry entry = new InventoryEntry(item);			// créer une nouvelle entrée d'inventaire
-			foreach (ItemEntryUI entryUI in inventoryUI.entries) {		// trouver un emplacement d'affichage libre
+		if (!found) {                                               // si on n'a pas trouvé
+			InventoryEntry entry = new InventoryEntry(item);            // créer une nouvelle entrée d'inventaire
+			foreach (ItemEntryUI entryUI in inventoryUI.entries) {      // trouver un emplacement d'affichage libre
 				if (entryUI.isFree) {
 					entryUI.Init(entry);
 					break;
@@ -73,11 +74,11 @@ public class InventoryManager
 	public bool UseItem(Entry entry) {
 		if (entry is InventoryEntry) {
 			var iEntry = entry as InventoryEntry;
-			if (iEntry.item.itemBase.usable) {														// si l'objet est utilisable
-				SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() {	// jouer le son associé
+			if (iEntry.item.itemBase.usable) {                                                      // si l'objet est utilisable
+				SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() {    // jouer le son associé
 					Clip = SFXManager.ItemUsedSound
 				});
-				iEntry.ChangeQuantity(-1);													// retirer 1 à la quantité
+				iEntry.ChangeQuantity(-1);                                                  // retirer 1 à la quantité
 				return true;
 			}
 		}

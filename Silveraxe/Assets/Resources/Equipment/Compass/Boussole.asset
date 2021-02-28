@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Boussole
   m_EditorClassIdentifier: 
   itemName: Boussole
-  itemSprite: {fileID: 0}
-  description: "Avec \xE7a, je sais enfin o\xF9 je vais"
+  itemSprite: {fileID: 21300000, guid: 5524c23813e82284b8789b550ddc985f, type: 3}
+  description: "Avec \xE7a, je sais enfin o\xF9 je vais\n\nLa touche 'M' permet maintenant
+    d'afficher la carte du pays de NiNi"
   animate: 0
   dropable: 0
   lootCategory: 1
   usable: 0
   usageEffects: []
+  explanation: {fileID: 11400000, guid: 7947df73c1648de46a801a989ee14813, type: 2}

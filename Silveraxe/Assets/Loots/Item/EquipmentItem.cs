@@ -17,9 +17,11 @@ public class EquipmentItem : ItemBase
 {
 	public enum EquipmentSlot
 	{
-		Book,
-		Sun,
-		Moon
+		Compass,
+		Armmor,
+		Helmet,
+		Sword,
+		Shield
 	}
 
 	public abstract class EquippedEffect : ScriptableObject
@@ -113,19 +115,12 @@ public class EquipmentItemEditor : Editor
 
 	SerializedProperty m_SlotProperty;
 
-	//SerializedProperty m_MinimumStrengthProperty;
-	//SerializedProperty m_MinimumAgilityProperty;
-	//SerializedProperty m_MinimumDefenseProperty;
 
 	void OnEnable() {
 		m_Target = target as EquipmentItem;
 		m_EquippedEffectListProperty = serializedObject.FindProperty(nameof(EquipmentItem.EquippedEffects));
 
 		m_SlotProperty = serializedObject.FindProperty(nameof(EquipmentItem.Slot));
-
-		//m_MinimumStrengthProperty = serializedObject.FindProperty(nameof(EquipmentItem.MinimumStrength));
-		//m_MinimumAgilityProperty = serializedObject.FindProperty(nameof(EquipmentItem.MinimumAgility));
-		//m_MinimumDefenseProperty = serializedObject.FindProperty(nameof(EquipmentItem.MinimumDefense));
 
 		m_ItemEditor = CreateInstance<ItemBaseEditor>(); 
 		m_ItemEditor.Init(serializedObject);
@@ -142,10 +137,6 @@ public class EquipmentItemEditor : Editor
 		m_ItemEditor.GUI(m_Target);
 
 		EditorGUILayout.PropertyField(m_SlotProperty);
-
-		//EditorGUILayout.PropertyField(m_MinimumStrengthProperty);
-		//EditorGUILayout.PropertyField(m_MinimumAgilityProperty);
-		//EditorGUILayout.PropertyField(m_MinimumDefenseProperty);
 
 		int choice = EditorGUILayout.Popup("Add new Effect", -1, m_AvailableEquipEffectType.ToArray());
 

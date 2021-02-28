@@ -7,19 +7,19 @@ public class EnvironmentSwitch : MonoBehaviour {
 	public GameObject fake;
 	public GameObject heavy;
 
-	private void Start() {
+	protected virtual void Start() {
 		fake.gameObject.SetActive(true);
 		heavy.gameObject.SetActive(false);
 	}
 
-	private void OnTriggerEnter(Collider other) {
+	protected virtual void OnTriggerEnter(Collider other) {
 		if (other.gameObject == App.playerManager.gameObject) {
 			fake.gameObject.SetActive(false);
 			heavy.gameObject.SetActive(true);
 		}
 	}
 
-	private void OnTriggerExit(Collider other) {
+	protected virtual void OnTriggerExit(Collider other) {
 		if (other.gameObject == App.playerManager.gameObject) {
 			fake.gameObject.SetActive(true);
 			heavy.gameObject.SetActive(false);

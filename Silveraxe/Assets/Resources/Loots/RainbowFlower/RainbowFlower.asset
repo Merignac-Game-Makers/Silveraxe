@@ -15,8 +15,7 @@ MonoBehaviour:
   itemName: Fleur Arc en ciel
   itemSprite: {fileID: 21300000, guid: a5cc98ef8cfabb3428ae6e9d02747021, type: 3}
   description: Une fleur lumineuse
-  prefab: {fileID: 7079354426711927086, guid: 1cbb7989af26c424fb9feafb7357c876, type: 3}
-  animate: 0
+  animate: 1
   dropable: 1
   lootCategory: 3
   usable: 0

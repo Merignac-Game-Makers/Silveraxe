@@ -364,6 +364,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d6204aa9588cd894d9ff9697b0627429, type: 3}
   victory:
   - {fileID: 8300000, guid: 1182750778ad5ae4f8d9072f7fd30fd3, type: 3}
+  door: {fileID: 0}
   attackRate: 2
   lightDetector: {fileID: 5634913203319229806}
   polyartSkin: {fileID: 6109209198345868032}
@@ -484,6 +485,7 @@ MonoBehaviour:
   useLight: 1
   useOutline: 1
   mode: 0
+  interactionDistance: 1.5
   PNJName: Grunt
   onTheFlyRadius: 1
   alignment: 2
@@ -1634,9 +1636,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7752807449562099180}
-  - component: {fileID: 7915825207359015663}
-  - component: {fileID: 8131886597544687674}
   - component: {fileID: 7493807043624832950}
+  - component: {fileID: 8131886597544687674}
   m_Layer: 9
   m_Name: DialogTrigger
   m_TagString: Untagged
@@ -1658,7 +1659,7 @@ Transform:
   m_Father: {fileID: 3145145079023089156}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7915825207359015663
+--- !u!114 &7493807043624832950
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1667,10 +1668,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7752807449562099181}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1380d64d7d5f314ea50abccfd40ddde, type: 3}
+  m_Script: {fileID: 11500000, guid: 9725d1d7eb3894841bc9c14e23d93c6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueCursor: {fileID: 2800000, guid: 6afbc9b991e770b4599bd361bf3e3e5e, type: 3}
 --- !u!114 &8131886597544687674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1684,6 +1684,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diags:
+  - CastleGuard
   - Charlie
   - CommentModifier
   - CrazyCap
@@ -1691,18 +1692,19 @@ MonoBehaviour:
   - demo_Narration
   - Example3Dialogue
   - Example4_dialogue
+  - Fairy
   - Grunt000
   - Item_LookUp
   - Laura
   - Lich
   - MrCube
+  - MyDialogue
   - NPCOnly
-  - PNJDefault
   - QuestChartDemo
   - TriggeredDude
   - Witch
   - ZZZ
-  assignedIndex: 7
+  assignedIndex: 9
   assignedID: 55919
   assignedDialogue: Grunt000
   interactionCount: 0
@@ -1719,18 +1721,6 @@ MonoBehaviour:
   langs: []
   S_playerDiags: []
   S_actionNodes: []
---- !u!114 &7493807043624832950
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7752807449562099181}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9725d1d7eb3894841bc9c14e23d93c6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8226053360218082477
 GameObject:
   m_ObjectHideFlags: 0
@@ -2703,6 +2693,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5194640791191878161, guid: dd667057055f4f04f87907d7f4469972,
         type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5194640791191878161, guid: dd667057055f4f04f87907d7f4469972,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
       objectReference: {fileID: 0}
@@ -2718,6 +2713,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5194640791191878161, guid: dd667057055f4f04f87907d7f4469972,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5194640791191878161, guid: dd667057055f4f04f87907d7f4469972,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -2730,16 +2730,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5194640791191878161, guid: dd667057055f4f04f87907d7f4469972,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5194640791191878161, guid: dd667057055f4f04f87907d7f4469972,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5194640791191878161, guid: dd667057055f4f04f87907d7f4469972,
         type: 3}
@@ -2763,6 +2753,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd667057055f4f04f87907d7f4469972, type: 3}
+--- !u!4 &5634913203319229805 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5194640791191878161, guid: dd667057055f4f04f87907d7f4469972,
+    type: 3}
+  m_PrefabInstance: {fileID: 442524786619234172}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5634913203319229806 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5194640791191878162, guid: dd667057055f4f04f87907d7f4469972,
@@ -2775,12 +2771,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 742ca7df225bac641bb1b265f54123b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &5634913203319229805 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5194640791191878161, guid: dd667057055f4f04f87907d7f4469972,
-    type: 3}
-  m_PrefabInstance: {fileID: 442524786619234172}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6325257420204573015
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2800,23 +2790,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3011890522710704439, guid: dd667057055f4f04f87907d7f4469972,
         type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3011890522710704439, guid: dd667057055f4f04f87907d7f4469972,
-        type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.6976772
       objectReference: {fileID: 0}
     - target: {fileID: 3011890522710704439, guid: dd667057055f4f04f87907d7f4469972,
         type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      propertyPath: m_LocalRotation.x
+      value: 0.71641237
       objectReference: {fileID: 0}
     - target: {fileID: 3011890522710704439, guid: dd667057055f4f04f87907d7f4469972,
         type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.71641237
+      propertyPath: m_LocalRotation.y
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3011890522710704439, guid: dd667057055f4f04f87907d7f4469972,
         type: 3}
@@ -2830,8 +2815,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3011890522710704439, guid: dd667057055f4f04f87907d7f4469972,
         type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3011890522710704439, guid: dd667057055f4f04f87907d7f4469972,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3011890523267436560, guid: dd667057055f4f04f87907d7f4469972,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3011890523267436560, guid: dd667057055f4f04f87907d7f4469972,
         type: 3}
@@ -2850,6 +2845,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3011890523267436560, guid: dd667057055f4f04f87907d7f4469972,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3011890523267436560, guid: dd667057055f4f04f87907d7f4469972,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -2862,16 +2862,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3011890523267436560, guid: dd667057055f4f04f87907d7f4469972,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3011890523267436560, guid: dd667057055f4f04f87907d7f4469972,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3011890523267436560, guid: dd667057055f4f04f87907d7f4469972,
         type: 3}

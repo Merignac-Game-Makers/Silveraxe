@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b55d035b5b2631a4a8b827870fa720c0, type: 3}
+  m_Name: ChronoMaitre
+  m_EditorClassIdentifier: 
+  itemName: "ChronoMa\xEEtre"
+  itemSprite: {fileID: 21300000, guid: 264c6840d1319c54fb1c2ad6da31b7eb, type: 3}
+  description: "Wouah ! Il y a comme un chronom\xE8tre, mais \xE7a COMMANDE le temps
+    ?! C'est un ChronoMa\xEEtre !!!\n\nHmmm... On dirait qu'on peut acc\xE9l\xE9rer
+    le passage du temps... mais pas le ralentir... Je dois \xEAtre prudent avec \xE7a
+    !"
+  animate: 0
+  dropable: 0
+  lootCategory: 1
+  usable: 0
+  usageEffects: []
+  explanation: {fileID: 0}

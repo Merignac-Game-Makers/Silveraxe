@@ -31,7 +31,7 @@ public class InteractableObjectsManager : MonoBehaviour
 			.ForEach(g => objects.AddRange(g.GetComponentsInChildren<InteractableObject>(true)));
 
 		objects.Remove(App.playerManager);
-		allItemBases = Resources.LoadAll("", typeof(ItemBase)); // lister les Loot et Equipment
+		//allItemBases = Resources.LoadAll("", typeof(ItemBase)); // lister les Loot et Equipment
 	}
 
 	private void FixedUpdate() {
@@ -72,12 +72,12 @@ public class InteractableObjectsManager : MonoBehaviour
 		}
 	}
 
-	public Object[] allItemBases;
-	public ItemBase GetItemBase(string name) {
-		foreach (ItemBase itemBase in allItemBases) {
-			if (itemBase.name == name)
-				return itemBase as ItemBase;
-		}
-		return null;
-	}
+	//public Object[] allItemBases;
+	//public ItemBase GetItemBase(string name) {
+	//	foreach (ItemBase itemBase in allItemBases) {
+	//		if (itemBase.name == name)
+	//			return itemBase as ItemBase;
+	//	}
+	//	return null;
+	//}
 }

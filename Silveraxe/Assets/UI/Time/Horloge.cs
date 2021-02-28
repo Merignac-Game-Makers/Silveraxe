@@ -36,6 +36,10 @@ public class Horloge : MonoBehaviour {
 		daySpeed = 1;
 		skyAnimator.SetFloat("SunTime", sunTime);
 		skyAnimator.SetFloat("MoonTime", sunTime * 1.05f);
+
+		days.days = days.GetComponentsInChildren<Day>(true);
+		days.SetDay(0);
+
 	}
 
 	void Update() {

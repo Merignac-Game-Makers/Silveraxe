@@ -2,8 +2,6 @@
 using System.Collections;
 using UnityEngine;
 
-using static InteractableObject.Action;
-using static App;
 using UnityEngine.UI;
 using System.Reflection;
 using UnityEngine.EventSystems;
@@ -47,7 +45,7 @@ public class Loot : InteractableObject {
 
 	protected virtual void Update() {
 		// bouton d'action
-		if (Input.GetButtonDown("Fire1") && !uiManager.isClicOnUI) {
+		if (Input.GetButtonDown("Fire1") && !App.uiManager.isClicOnUI) {
 			Act();
 		}
 	}
@@ -86,11 +84,11 @@ public class Loot : InteractableObject {
 	protected virtual void Take() {
 		EventSystem.current.SetSelectedGameObject(null);		// éviter les actions multiples en 1 seul clic
 		// on ramasse l'objet
-		if (!isAnimationRunning && !playerManager.characterData.inventory.isFull) {                                                                // si l'inventaire n'est pas plein
-			playerManager.characterData.inventory.AddItem(this);                                                            //		ajouter l'objet à l'inventaire
+		if (!isAnimationRunning && !App.playerManager.characterData.inventory.isFull) {                                                                // si l'inventaire n'est pas plein
+			App.playerManager.characterData.inventory.AddItem(this);                                                            //		ajouter l'objet à l'inventaire
 			isInPlayerCollider = false;                                                                                     //		l'objet n'est plus dans le collider du joueur (=> non intéractible)
 			SFXManager.PlaySound(SFXManager.Use.Sound2D, new SFXManager.PlayData() { Clip = SFXManager.PickupSound });      //		son
-			targetsManager.OnTake();                                                                                        //		extinction de toutes les cibles
+			App.targetsManager.OnTake();                                                                                        //		extinction de toutes les cibles
 			if (target) {                                                                                                   //		mise à jour de la cible (s'il était sur une cible)
 				target.item = null;
 				target = null;
@@ -113,7 +111,7 @@ public class Loot : InteractableObject {
 		itemBase.animate = true;
 		transform.position = target.targetPos;
 		StartAnimation();
-		playerManager.characterData.inventory.RemoveItem(entry as InventoryEntry);       // retirer l'objet déposé de l'inventaire
+		App.playerManager.characterData.inventory.RemoveItem(entry as InventoryEntry);       // retirer l'objet déposé de l'inventaire
 		OnDrop(target);
 	}
 

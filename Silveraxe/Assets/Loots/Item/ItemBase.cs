@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 
 #if UNITY_EDITOR
@@ -11,18 +12,19 @@ using UnityEditor;
 /// Base clase of all items in the game. This is an abstract class and need to be inherited to specify behaviour.
 /// The project offer 3 type of items : UsableItem, Equipment and Weapon
 /// </summary>
-public class ItemBase : ScriptableObject
-{
+public class ItemBase : ScriptableObject {
 	public string itemName;
 	public Sprite itemSprite;
+	[TextArea(1, 10)]
 	public string description;
 	public bool animate = true;
 	public bool dropable = true;
 	public LootCategory lootCategory;
 	public bool usable = false;
 	public List<UsageEffect> usageEffects;
+	public Explanation explanation;
 
-	public Entry entry = null;								// L'entrée d'inventaire lorsque l'objet a été ramassé
+	public Entry entry = null;                              // L'entrée d'inventaire lorsque l'objet a été ramassé
 
 	/// <summary>
 	/// Called by the inventory system when the object is "used" (double clicked)
@@ -37,20 +39,26 @@ public class ItemBase : ScriptableObject
 		return description;
 	}
 
+	public virtual void ShowExplanation(Action callback = null) {
+		App.explanationsUI.callback = callback;
+		if (explanation) {
+			App.explanationsUI.Show(explanation);
+		} else {
+			App.explanationsUI.Show(false);
+		}
+	}
+
 }
 
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(ItemBase))]
-public class ItemBaseEditor : Editor
-{
+public class ItemBaseEditor : Editor {
 	SerializedProperty pNameProperty;
 	SerializedProperty pIconProperty;
 	SerializedProperty pDescriptionProperty;
 	SerializedProperty pAnimate;
 	SerializedProperty pDropable;
-
-
 
 	public void Init(SerializedObject target) {
 		pNameProperty = target.FindProperty(nameof(ItemBase.itemName));
@@ -58,14 +66,16 @@ public class ItemBaseEditor : Editor
 		pDescriptionProperty = target.FindProperty(nameof(ItemBase.description));
 		pAnimate = target.FindProperty(nameof(ItemBase.animate));
 		pDropable = target.FindProperty(nameof(ItemBase.dropable));
+
+
 	}
 
 	public void GUI(ItemBase item) {
-		EditorGUILayout.PropertyField(pIconProperty);
 		EditorGUILayout.PropertyField(pNameProperty);
-		EditorGUILayout.PropertyField(pDescriptionProperty, GUILayout.MinHeight(128));
+		EditorGUILayout.PropertyField(pIconProperty);
+		EditorGUILayout.PropertyField(pDescriptionProperty);
 		EditorGUILayout.PropertyField(pAnimate);
-		item.dropable = EditorGUILayout.Toggle("Dropable", pDropable.boolValue);
+		EditorGUILayout.PropertyField(pDropable);
 	}
 }
 #endif

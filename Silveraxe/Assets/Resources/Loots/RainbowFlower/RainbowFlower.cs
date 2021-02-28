@@ -13,6 +13,7 @@ public class RainbowFlower : Loot {
 	public MeshRenderer rend;
 	public float speed = 10;
 
+	public HazelDialogueManager hazelDialogueManager;
 
 	protected override void Start() {
 		base.Start();
@@ -38,5 +39,7 @@ public class RainbowFlower : Loot {
 
 	protected override void OnDrop(Target target) {
 		base.OnDrop(target);
+		hazelDialogueManager.SetStartNode();
+		isHighlightable = false;
 	}
 }

@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class Boussole : Equipment
 {
-	public string texte;
+	public Compass compassUI;
 	protected override void OnTake() {
-		App.readableUI.ShowText(texte);
+		App.instructionsUI.showM = true;
+		App.readableUI.ShowMessage(itemBase.description, itemBase.itemSprite, new System.Action(() =>
+			itemBase.ShowExplanation(new System.Action(() =>
+				compassUI.Show(true)
+			)))
+		) ;
 	}
 }

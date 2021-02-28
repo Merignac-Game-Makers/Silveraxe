@@ -21,7 +21,6 @@ public class Target : InteractableObject
 	public Loot item { get; set; }
 
 	public TargetEffect targetEffect;
-	public TargetAction targetAction { get; private set; }
 
 	public override bool IsHighlightable() {
 		if (item != null) return false;																			// ne peut contenir qu'un seul objet d'inventaire
@@ -59,8 +58,6 @@ public class Target : InteractableObject
 			if (obj != null)
 				obj.gameObject.AddComponent<UnityEngine.AI.NavMeshObstacle>();
 		}
-		// action
-		targetAction = GetComponent<TargetAction>();
 	}
 
 	private void FixedUpdate() {
@@ -76,9 +73,6 @@ public class Target : InteractableObject
 			item = inventoryUI.selectedEntry.loot;
 			inventoryUI.selectedEntry?.Select(false);
 			item.Drop(this);
-			if (targetAction) {
-				targetAction.Act(item);
-			}
 		}
 	}
 

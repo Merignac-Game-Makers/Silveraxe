@@ -8,8 +8,13 @@ public class InventoryUI : UIBase
 	public ItemEntryUI selectedEntry { get; private set; }
 	public ItemEntryUI[] entries { get; private set; }
 	public int capacity { get; private set; }
+	public bool firstUse { get; set; } = true;
+	[TextArea(1, 10)]
+	public string firstUseText;
 
 	EntryUI hoveredItem;
+
+
 
 	private void Awake() {
 		inventoryUI = this;
@@ -30,7 +35,11 @@ public class InventoryUI : UIBase
 		selectedEntry = entry;
 	}
 
-
+	public void OnFirstUse() {
+		firstUse = false;
+		App.instructionsUI.showI = true;
+		App.readableUI.ShowMessage(firstUseText);
+	}
 
 	/// <summary>
 	/// utiliser un objet (ex: boire une potion...)
@@ -49,9 +58,13 @@ public class InventoryUI : UIBase
 	/// <param name="hovered">L'entrée sous la souris</param>
 	public void ObjectHoveredEnter(EntryUI hovered) {       // début de survol
 		hoveredItem = hovered;
+		if (hovered != selectedEntry)
+			hoveredItem.label.enabled = true;
 	}
 	public void ObjectHoverExited(EntryUI exited) {         // fin de survol
 		if (hoveredItem == exited) {
+			if (exited!=selectedEntry)
+				hoveredItem.label.enabled = false;
 			hoveredItem = null;
 		}
 	}

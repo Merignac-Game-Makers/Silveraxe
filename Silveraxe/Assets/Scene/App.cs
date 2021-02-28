@@ -27,6 +27,8 @@ public static class App
 	public static StatsUI statsUI;
 	public static ReadableUI readableUI;
 	public static InstructionsUI instructionsUI;
+	public static ExplanationsUI explanationsUI;
+	public static TimeUI timeUI;
 
 	//--------------------
 	// strings

@@ -50,10 +50,9 @@ public class DialoguesUI : UIBase {
 	/// Commencer le dialogue
 	/// </summary>
 	/// <param name="dialog"></param>
-	public void Begin(VIDE_Assign dialog) {
+	public void Begin(PNJ pnj, VIDE_Assign dialog) {
 		// personnages
-		pnj = dialog.GetComponentInParent<PNJ>();                               // retrouver le PNJ						
-
+		this.pnj = pnj;
 		if (string.IsNullOrEmpty(dialog.alias))
 			dialog.alias = pnj.PNJName;                                         // indiquer le nom du PNJ
 
@@ -165,11 +164,12 @@ public class DialoguesUI : UIBase {
 	public void End(VD.NodeData data) {
 		// interface
 		Hide();                                             // masquer l'interface dialogue
-		SceneModeManager.SetSceneMode(SceneMode.dialogue, false, pnj);      //container_NPC.SetActive(false);
 
 		VD.OnNodeChange -= UpdateUI;                        // supprimer callback 'changement de noeud'
 		VD.OnEnd -= End;                                    // supprimer callback 'fin de dialogue'
 		VD.EndDialogue();
+
+		SceneModeManager.SetSceneMode(SceneMode.dialogue, false, pnj);      //container_NPC.SetActive(false);
 	}
 	//private void OnDisable() {
 	//	if (container_NPC != null)
@@ -184,13 +184,13 @@ public class DialoguesUI : UIBase {
 
 	// au clic sur le fond du panneau dialogue
 	public void nextNPC() {
-		if (container_NPC.activeInHierarchy)
+		if (VD.isActive && container_NPC.activeInHierarchy)
 			VD.Next();
 		else NextPlayer();
 	}
 
 	public void NextPlayer() {
-		if (VD.nodeData.comments.Length == 1)
+		if (VD.isActive && VD.nodeData.comments.Length == 1)
 			VD.Next();
 	}
 

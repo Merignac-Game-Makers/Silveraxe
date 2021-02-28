@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-
-using static InteractableObject.Action;
-using static App;
 using UnityEngine.UI;
 using UnityEngine.Animations;
 using System.Reflection;

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 
 /// <summary>
@@ -8,14 +9,20 @@ public abstract class UIBase : MonoBehaviour
 {
 
 	public GameObject panel;
+	public Action callback;
+
 	public virtual bool isOn => (panel==null && gameObject.activeInHierarchy) || panel.activeInHierarchy;
 
 
 	public virtual void Toggle() {
-		panel.SetActive(!panel.activeInHierarchy);
+		Show(!panel.activeInHierarchy);
 	}
 
 	public virtual void Show(bool on) {
 		panel.SetActive(on);
+		if (!on && callback != null) {
+			callback.Invoke();
+			callback = null;
+		}
 	}
 }

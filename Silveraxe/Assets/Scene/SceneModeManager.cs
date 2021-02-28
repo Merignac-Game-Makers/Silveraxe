@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using VIDE_Data;
 
 public static class SceneModeManager {
 	public static SceneMode sceneMode => GetSceneMode();
@@ -27,7 +27,7 @@ public static class SceneModeManager {
 					// PNJ
 					other.FaceTo(on, App.playerManager.gameObject);								// orienter le PNJ vers le joueur 						
 					other?.animatorController?.anim?.SetBool(App.DIALOGUE, true);				// activer l'animation 'dialogue' du pnj
-					other.GetComponentInChildren<DialogueTrigger>().Run();						// démarrer le dialogue	
+					other.GetComponentInChildren<DialogueManager>().Run();						// démarrer le dialogue	
 				} else {											// sortie du mode Dialogue et retour au mode Normal
 					// player
 					App.playerManager.FaceTo(false);                                            // cesser d'orienter le joueur vers le PNJ
@@ -37,7 +37,15 @@ public static class SceneModeManager {
 					other?.FaceTo(false);														// cesser d'orienter le PNJ vers le joueur
 					other?.animatorController?.anim?.SetBool(App.DIALOGUE, false);              // désactiver l'animation 'dialogue' du pnj
 
+					VD.isActive = false;
 					SetSceneMode(SceneMode.normal, true, other);
+
+					App.playerManager.StartCoroutine(PNJTimer(other));							// empêcher la reprise immédiate d'un dialogue
+					IEnumerator PNJTimer(Character pnj) {										// par un clic trop rapide
+						pnj.enabled = false;													//
+						yield return new WaitForSeconds(1f);									//
+						pnj.enabled = true;														//
+					}
 				}
 				// personnages
 				break;

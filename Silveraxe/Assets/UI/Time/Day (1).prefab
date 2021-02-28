@@ -268,13 +268,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8f9359a05087d1c459e5fbc1186ba8e4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a26f0531429a62a44a0046652a6303de, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -299,5 +299,6 @@ MonoBehaviour:
   day: 1
   badge: {fileID: 66798975387881920}
   number: {fileID: 6626285579102849687}
-  clearColor: {r: 0, g: 1, b: 0, a: 1}
+  clearColor: {r: 1, g: 1, b: 1, a: 1}
   passedColor: {r: 1, g: 0, b: 0, a: 0.29803923}
+  frame: {fileID: 3408358406479253578}

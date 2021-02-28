@@ -73,6 +73,11 @@ public class PlayerManager : Character {
 	}
 	public override void Act() { }
 
+	private void OnControllerColliderHit(ControllerColliderHit hit) {
+		Rigidbody body = hit.collider.attachedRigidbody;
+		if (body != null && !body.isKinematic)
+			body.velocity += hit.controller.velocity;
+	}
 	#endregion
 
 	#region Navigation

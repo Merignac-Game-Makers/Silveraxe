@@ -5218,6 +5218,9 @@ public class VIDE_Editor : EditorWindow
     {
         for (int i = 0; i < namespaceBlackList.Length; i++)
         {
+            if (mb == null) {
+                Debug.Log("mb null");
+			}
             if (mb.GetType().Namespace != null && mb.GetType().Namespace.Contains(namespaceBlackList[i]))
                 return false;
 
@@ -5324,7 +5327,7 @@ public class VIDE_Editor : EditorWindow
 
         foreach (MonoBehaviour mb in mbs)
         {
-            if (notInBlackList(mb))
+            if (mb!=null && notInBlackList(mb))
             {
                 methods.AddRange(mb.GetType().GetMethods(publicFlags));
             }

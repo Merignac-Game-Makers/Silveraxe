@@ -39,7 +39,7 @@ public class Readable : InteractableObject
 
 	protected virtual void Read() {
 		// on lit l'objet
-		App.readableUI.ShowText(text);
+		App.readableUI.ShowMessage(text);
 		read = true;
 	}
 

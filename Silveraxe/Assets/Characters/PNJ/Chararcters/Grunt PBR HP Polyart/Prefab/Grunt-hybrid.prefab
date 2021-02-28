@@ -871,9 +871,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1499880866727747782}
-  - component: {fileID: 1341384296248068037}
-  - component: {fileID: 1125168979140801808}
   - component: {fileID: 1781311307988124316}
+  - component: {fileID: 1125168979140801808}
   m_Layer: 9
   m_Name: DialogTrigger
   m_TagString: Untagged
@@ -895,7 +894,7 @@ Transform:
   m_Father: {fileID: 6116706563147037486}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1341384296248068037
+--- !u!114 &1781311307988124316
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -904,10 +903,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1499880866727747783}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1380d64d7d5f314ea50abccfd40ddde, type: 3}
+  m_Script: {fileID: 11500000, guid: 9725d1d7eb3894841bc9c14e23d93c6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueCursor: {fileID: 2800000, guid: 6afbc9b991e770b4599bd361bf3e3e5e, type: 3}
 --- !u!114 &1125168979140801808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -921,6 +919,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diags:
+  - CastleGuard
   - Charlie
   - CommentModifier
   - CrazyCap
@@ -928,18 +927,19 @@ MonoBehaviour:
   - demo_Narration
   - Example3Dialogue
   - Example4_dialogue
+  - Fairy
   - Grunt000
   - Item_LookUp
   - Laura
   - Lich
   - MrCube
+  - MyDialogue
   - NPCOnly
-  - PNJDefault
   - QuestChartDemo
   - TriggeredDude
   - Witch
   - ZZZ
-  assignedIndex: 7
+  assignedIndex: 9
   assignedID: 55919
   assignedDialogue: Grunt000
   interactionCount: 0
@@ -956,18 +956,6 @@ MonoBehaviour:
   langs: []
   S_playerDiags: []
   S_actionNodes: []
---- !u!114 &1781311307988124316
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1499880866727747783}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9725d1d7eb3894841bc9c14e23d93c6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3138834781512396904
 GameObject:
   m_ObjectHideFlags: 0
@@ -2033,24 +2021,7 @@ MonoBehaviour:
   useLight: 1
   useOutline: 1
   mode: 0
-  characterData: {fileID: 0}
-  navAgent: {fileID: 0}
-  serialized:
-    guid: 
-    position: []
-    rotation: []
-    stats:
-      health: 0
-      strength: 0
-      defense: 0
-      agility: 0
-      elementalProtection: 00000000000000000000000000000000
-      elementalBoosts: 00000000000000000000000000000000
-    inventory:
-      entries: []
-    equipment:
-      entries: []
-    navAgentDestination: []
+  interactionDistance: 1.5
   PNJName: Grunt
   onTheFlyRadius: 1
   alignment: 2
@@ -2171,8 +2142,6 @@ MonoBehaviour:
       agility: 0
       elementalProtection: 00000000000000000000000000000000
       elementalBoosts: 00000000000000000000000000000000
-  inventory:
-    entries: []
   HitClip: []
 --- !u!114 &1781311307995314103
 MonoBehaviour:
@@ -2264,6 +2233,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d6204aa9588cd894d9ff9697b0627429, type: 3}
   victory:
   - {fileID: 8300000, guid: 1182750778ad5ae4f8d9072f7fd30fd3, type: 3}
+  door: {fileID: 0}
   attackRate: 2
   lightDetector: {fileID: 5813988191230159429}
   polyartSkin: {fileID: 3138834783050964522}
@@ -2277,6 +2247,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6116706563147037486}
     m_Modifications:
+    - target: {fileID: 3011890523267436560, guid: dd667057055f4f04f87907d7f4469972,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3011890523267436560, guid: dd667057055f4f04f87907d7f4469972,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2294,6 +2269,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3011890523267436560, guid: dd667057055f4f04f87907d7f4469972,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3011890523267436560, guid: dd667057055f4f04f87907d7f4469972,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -2306,16 +2286,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3011890523267436560, guid: dd667057055f4f04f87907d7f4469972,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3011890523267436560, guid: dd667057055f4f04f87907d7f4469972,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3011890523267436560, guid: dd667057055f4f04f87907d7f4469972,
         type: 3}

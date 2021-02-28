@@ -10,7 +10,7 @@ using static App;
 /// </summary>
 public class EquipmentUI : UIBase
 {
-	public EquipmentEntryUI helmetSot;
+	public EquipmentEntryUI helmetSlot;
 	public EquipmentEntryUI armorSlot;
 	public EquipmentEntryUI weaponSlot;
 	public EquipmentEntryUI shieldSlot;
@@ -31,12 +31,12 @@ public class EquipmentUI : UIBase
 	}
 
 	void Update() {
-		if (Input.GetKeyDown(KeyCode.E)) {
-			Toggle();
-		}
+		//if (Input.GetKeyDown(KeyCode.E)) {
+		//	Toggle();
+		//}
 	}
 	public override void Toggle() {
-		helmetSot.gameObject.SetActive(!helmetSot.gameObject.activeInHierarchy);
+		helmetSlot.gameObject.SetActive(!helmetSlot.gameObject.activeInHierarchy);
 		armorSlot.gameObject.SetActive(!armorSlot.gameObject.activeInHierarchy);
 		weaponSlot.gameObject.SetActive(!weaponSlot.gameObject.activeInHierarchy);
 		shieldSlot.gameObject.SetActive(!shieldSlot.gameObject.activeInHierarchy);
