@@ -10,8 +10,7 @@ using UnityEngine.EventSystems;
 /// <summary>
 /// Objets statiques disponibles dans l'ensemble de l'application
 /// </summary>
-public static class App
-{
+public static class App {
 	public static CameraController cameraController;
 
 	public static UIManager uiManager;
@@ -108,14 +107,14 @@ public static class App
 		IEnumerator Igoto() {
 			navAgent.updateRotation = true;
 			navAgent.SetDestination(pos);
+			while (navAgent.pathPending || navAgent.remainingDistance > navAgent.radius/2f)
+				yield return null;
+			navAgent.updateRotation = false;
 			if (callback != null) {
-				while (navAgent.pathPending || navAgent.remainingDistance > navAgent.radius)
-					yield return null;
 				callback();
 			}
 		}
 	}
-
 
 	//----------------------------------------------------------------------------------------------
 	// Extension pour permettre la sérialisation / désérialisation de Vector3

@@ -67,7 +67,17 @@ public abstract class Character : InteractableObject {
 	public void FaceTo(bool on, GameObject other = null) {
 		lookAt.constraintActive = on;
 		if (on && other != null) {
-			lookAt.SetSource(0, new ConstraintSource() { sourceTransform = other.transform, weight = 1 });
+			ConstraintSource constraint = new ConstraintSource() { sourceTransform = other.transform, weight = 1 };
+			lookAt.SetSource(0,constraint);
+
+			//IEnumerator IFaceTo() {
+			//	Vector3 start;
+			//	Vector3 end = other.transform.position;
+			//	Transform t = Transform
+			//	ConstraintSource constraint = new ConstraintSource() { sourceTransform = start, weight = 1 };
+			//	lookAt.SetSource(0,constraint);
+
+			}
 		}
 	}
 

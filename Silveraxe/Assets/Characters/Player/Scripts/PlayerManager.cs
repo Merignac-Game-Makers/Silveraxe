@@ -85,6 +85,9 @@ public class PlayerManager : Character {
 	/// interrompre la navigation
 	/// </summary>
 	public void StopAgent(bool on) {
+		navAgent.isStopped = on;
+		navAgent.velocity = Vector3.zero;
+		animatorController.anim.SetFloat("InputZ", 0);
 		movementInput.canMove = !on;
 	}
 	#endregion
